@@ -10,3 +10,7 @@ Download `Common` and `Examples` from instructor's [website](http://www.cs.unm.e
 wget -r -nH --cut-dirs=4 --no-parent --reject="index.html*" http://www.cs.unm.edu/~angel/COURSERA/CODE/Common/
 wget -r -nH --cut-dirs=4 --no-parent --reject="index.html*" http://www.cs.unm.edu/~angel/COURSERA/CODE/EXAMPLES/
 ```
+
+## Week 1
+
+OpenGL can only deal with triangular polygons.
