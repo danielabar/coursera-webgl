@@ -25,13 +25,15 @@ module.exports = function(grunt) {
           {src: ['index.html'], dest: 'dist/'},
           {src: ['EXAMPLES/*.js'], dest: 'dist/', expand: true},
           {src: ['Common/*.js'], dest: 'dist/', expand: true},
-          {src: ['Common/*.html'], dest: 'dist/', expand: true}
+          {src: ['Common/*.html'], dest: 'dist/', expand: true},
+          {src: ['homework/**/*.js'], dest: 'dist/', expand: true},
+          {src: ['homework/**/*.html'], dest: 'dist/', expand: true}
         ]
       }
     }
 
   });
 
-  grunt.registerTask('deploy', ['clean:dist', 'copy:dist']);
+  grunt.registerTask('dist', ['clean:dist', 'copy:dist']);
 
 };
