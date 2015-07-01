@@ -1,5 +1,7 @@
 # Week 1 Lecture Notes
 
+WebGL is a JavaScript implementation of OpenGL ES 2.0 (embedded systems)
+
 OpenGL can only deal with triangular polygons.
 
 Each application will have a minimum of these three parts:
@@ -12,6 +14,8 @@ This course will use some pre-built common utilities provided by the instructor
 
 * [webgl-utils.js](../Common/webgl-utils.js)
 * [initShader.js](../Common/initShaders.js)
+
+Shaders are written in OpenGL Shading Language (GLSL)
 
 ## Vertex Shader
 
@@ -181,3 +185,13 @@ var render = function() {
   gl.drawArrays( gl.TRIANGLES, 0, 3 );
 }
 ```
+
+## Model Graphics Process
+
+Computer graphics is about displaying geometry. There are two parts:
+* Building geometric models
+* Rendering (displaying the models)
+
+The modeller produces geometry, which goes out to the renderer.
+
+Renderer produces a realistic looking image.
