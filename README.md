@@ -12,6 +12,12 @@ Install grunt cli (Mac users add `sudo`)
 npm install -g grunt-cli
 ```
 
+From root of project directory
+
+```
+npm install
+```
+
 Add html and js to homework directory and test in browser.
 
 Add a link to each homework assignment in [index.html](index.html)
@@ -36,3 +42,4 @@ wget -r -nH --cut-dirs=4 --no-parent --reject="index.html*" http://www.cs.unm.ed
 ## Lecture Notes
 
 * [Week 1](lecture-notes/week1.md)
+* [Week 2](lecture-notes/week2.md)
