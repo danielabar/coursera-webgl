@@ -88,7 +88,7 @@ Use JavaScript's [Float32Array](https://developer.mozilla.org/en-US/docs/Web/Jav
 In this example, the array contains 3 two-dimensional verticies:
 * {-1, -1} : Bottom left corner of triangle
 * { 0,  1} : Top middle point of triangle
-* { 1, -1} : Botom right corner of triangle
+* { 1, -1} : Bottom right corner of triangle
 
 ```javascript
 var verticies = new Float32Array([-1, -1, 0, 1, 1, -1]);
