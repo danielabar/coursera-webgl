@@ -28,7 +28,9 @@ module.exports = function(grunt) {
               'EXAMPLES/*.html',
               'Common/*.js',
               'homework/**/*.js',
-              'homework/**/*.html'
+              'homework/**/*.html',
+              'experiments/**/*.js',
+              'experiments/**/*.html'
             ],
             dest: 'dist/',
             expand: true
