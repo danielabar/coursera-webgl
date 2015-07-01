@@ -1,30 +1,32 @@
 <!DOCTYPE html>
 <html>
 <head>
-<script id="vertex-shader" type="x-shader/x-vertex">
-attribute vec2 vPosition;
+  <title>Experiments | Multiple Triangles</title>
 
-void
-main()
-{
-    gl_Position = vec4(vPosition, 0.0, 1.0);
-}
-</script>
+  <script id="vertex-shader" type="x-shader/x-vertex">
+  attribute vec2 vPosition;
 
-<script id="fragment-shader" type="x-shader/x-fragment">
-precision mediump float;
+  void
+  main()
+  {
+      gl_Position = vec4(vPosition, 0.0, 1.0);
+  }
+  </script>
 
-void
-main()
-{
-    gl_FragColor = vec4(0.28, 0.32, 0.84, 1);
-}
-</script>
+  <script id="fragment-shader" type="x-shader/x-fragment">
+  precision mediump float;
 
-<script type="text/javascript" src="../../Common/webgl-utils.js"></script>
-<script type="text/javascript" src="../../Common/initShaders.js"></script>
-<script type="text/javascript" src="../../Common/flatten.js"></script>
-<script type="text/javascript" src="triangle.js"></script>
+  void
+  main()
+  {
+      gl_FragColor = vec4(0.28, 0.32, 0.84, 1);
+  }
+  </script>
+
+  <script type="text/javascript" src="../../Common/webgl-utils.js"></script>
+  <script type="text/javascript" src="../../Common/initShaders.js"></script>
+  <script type="text/javascript" src="../../Common/flatten.js"></script>
+  <script type="text/javascript" src="triangle.js"></script>
 </head>
 
 <body>
