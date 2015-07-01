@@ -20,6 +20,10 @@
   "globals": {
     "canvas": false,
     "module": false,
-    "require": false
+    "require": false,
+    "WebGLUtils": false,
+    "alert": false,
+    "initShaders": false,
+    "flatten": false
   }
 }
