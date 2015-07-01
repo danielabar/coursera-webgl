@@ -11,7 +11,7 @@ Each application will have a minimum of these pieces:
 This course will use some pre-built common utilities provided by the instructor
 
 * [webgl-utils.js](../Common/webgl-utils.js)
-* [initShader.js](../Common/initShader.js)
+* [initShader.js](../Common/initShaders.js)
 
 _Vertex shader_ plays with the geometry. It takes in geometry in the form of verticies and outputs verticies.
 In this course, the vertex shader will be defined in a script tag in the html. Example
