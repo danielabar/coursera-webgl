@@ -24,15 +24,15 @@ grunt deploy
 
 Your site should be available at `http://{your github username}.github.io/coursera-webgl/`
 
-## Reference Sample Code
+## Reference
 
-Download `Common` and `Examples` from instructor's [website](http://www.cs.unm.edu/~angel/COURSERA/CODE/)
+`Common` and `Examples` from instructor's [website](http://www.cs.unm.edu/~angel/COURSERA/CODE/)
 
 ```bash
 wget -r -nH --cut-dirs=4 --no-parent --reject="index.html*" http://www.cs.unm.edu/~angel/COURSERA/CODE/Common/
 wget -r -nH --cut-dirs=4 --no-parent --reject="index.html*" http://www.cs.unm.edu/~angel/COURSERA/CODE/EXAMPLES/
 ```
 
-## Week 1
+## Lecture Notes
 
-OpenGL can only deal with triangular polygons.
+* [Week 1](lecture-notes/week1.md)
