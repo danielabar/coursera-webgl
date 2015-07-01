@@ -27,14 +27,8 @@ window.onload = function init() {
   gl = WebGLUtils.setupWebGL( canvas );
   if ( !gl ) { alert( 'WebGL isnt available' ); }
 
-  // Setup data
-  var triangle1 = new Float32Array([-1, -1, 0, 1, 1, -1]);
-  var triangle2 = new Float32Array([-1, 1, 0, -1, 1, 1]);
-
-  //  Configure WebGL
+  // Setup canvas
   gl.viewport( 0, 0, canvas.width, canvas.height );
-
-  // Set canvas background color
   gl.clearColor( 0.15, 0.17, 0.15, 0.8 );
 
   // Load shaders
@@ -42,15 +36,18 @@ window.onload = function init() {
   gl.useProgram( program );
 
   // Load triangle 1 onto the GPU
+  var triangle1 = new Float32Array([-1, -1, 0, 0, 1, -1]);
   var bufferId1 = gl.createBuffer();
   gl.bindBuffer( gl.ARRAY_BUFFER, bufferId1 );
   gl.bufferData( gl.ARRAY_BUFFER, flatten(triangle1), gl.STATIC_DRAW );
 
   // Load triangle 2 onto the GPU
+  var triangle2 = new Float32Array([-1, 1, 0, 0, 1, 1]);
   var bufferId2 = gl.createBuffer();
   gl.bindBuffer( gl.ARRAY_BUFFER, bufferId2 );
   gl.bufferData( gl.ARRAY_BUFFER, flatten(triangle2), gl.STATIC_DRAW );
 
+  // Draw the triangles
   render(true, bufferId1, program);
   render(false, bufferId2, program);
 };
