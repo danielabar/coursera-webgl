@@ -23,11 +23,16 @@ module.exports = function(grunt) {
       dist: {
         files: [
           {src: ['index.html'], dest: 'dist/'},
-          {src: ['EXAMPLES/*.js'], dest: 'dist/', expand: true},
-          {src: ['EXAMPLES/*.html'], dest: 'dist/', expand: true},
-          {src: ['Common/*.js'], dest: 'dist/', expand: true},
-          {src: ['homework/**/*.js'], dest: 'dist/', expand: true},
-          {src: ['homework/**/*.html'], dest: 'dist/', expand: true}
+          {src: [
+              'EXAMPLES/*.js',
+              'EXAMPLES/*.html',
+              'Common/*.js',
+              'homework/**/*.js',
+              'homework/**/*.html'
+            ],
+            dest: 'dist/',
+            expand: true
+          }
         ]
       }
     },
