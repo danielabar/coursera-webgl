@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script id="vertex-shader" type="x-shader/x-vertex">
+attribute vec2 vPosition;
+
+void
+main()
+{
+    gl_Position = vec4(vPosition, 0.0, 1.0);
+}
+</script>
+
+<script id="fragment-shader" type="x-shader/x-fragment">
+precision mediump float;
+
+void
+main()
+{
+    gl_FragColor = vec4(0.28, 0.32, 0.84, 1);
+}
+</script>
+
+<script type="text/javascript" src="../../Common/webgl-utils.js"></script>
+<script type="text/javascript" src="../../Common/initShaders.js"></script>
+<script type="text/javascript" src="../../Common/flatten.js"></script>
+<script type="text/javascript" src="triangle.js"></script>
+</head>
+
+<body>
+
+  <header>
+    <h1>Hello World WebGL</h1>
+    <h2>Triangle point positions</h2>
+  </header>
+
+  <section>
+    <canvas id="gl-canvas" width="512" height="512">
+      Oops ... your browser doesn't support the HTML5 canvas element
+    </canvas>
+  </section>
+</body>
+</html>
