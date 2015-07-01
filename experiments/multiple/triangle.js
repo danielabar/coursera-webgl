@@ -1,14 +1,29 @@
 var gl;       // WebGL context
 
-/*var render = function() {
-  gl.clear( gl.COLOR_BUFFER_BIT );
+var render = function(clear, bufferId, program) {
+  var vPosition;
+
+  // Clear canvas if requested
+  if (clear) {
+    gl.clear( gl.COLOR_BUFFER_BIT );
+  }
+
+  // Outer program already calls this, but still needed here again
+  gl.bindBuffer( gl.ARRAY_BUFFER, bufferId );
+
+  // Associate shader variables with data buffer
+  vPosition = gl.getAttribLocation( program, 'vPosition' );
+  gl.vertexAttribPointer( vPosition, 2, gl.FLOAT, false, 0, 0 );
+  gl.enableVertexAttribArray( vPosition );
+
+  // Draw triangle
   gl.drawArrays( gl.TRIANGLES, 0, 3 );
 };
-*/
 
 window.onload = function init() {
-  var canvas = document.getElementById( 'gl-canvas' );
 
+  // Initialize WebGL context
+  var canvas = document.getElementById( 'gl-canvas' );
   gl = WebGLUtils.setupWebGL( canvas );
   if ( !gl ) { alert( 'WebGL isnt available' ); }
 
@@ -22,7 +37,7 @@ window.onload = function init() {
   // Set canvas background color
   gl.clearColor( 0.15, 0.17, 0.15, 0.8 );
 
-  //  Load shaders and initialize attribute buffers
+  // Load shaders
   var program = initShaders( gl, 'vertex-shader', 'fragment-shader' );
   gl.useProgram( program );
 
@@ -36,29 +51,6 @@ window.onload = function init() {
   gl.bindBuffer( gl.ARRAY_BUFFER, bufferId2 );
   gl.bufferData( gl.ARRAY_BUFFER, flatten(triangle2), gl.STATIC_DRAW );
 
-  // Prepare canvas for drawing
-  gl.clear( gl.COLOR_BUFFER_BIT );
-
-  // Render first triangle
-  gl.bindBuffer( gl.ARRAY_BUFFER, bufferId1 );
-
-  // Associate shader variables with data buffer for first triangle
-  var vPosition1 = gl.getAttribLocation( program, 'vPosition' );
-  gl.vertexAttribPointer( vPosition1, 2, gl.FLOAT, false, 0, 0 );
-  gl.enableVertexAttribArray( vPosition1 );
-
-  // Draw first triangle
-  gl.drawArrays( gl.TRIANGLES, 0, 3 );
-
-  // Render second triangle
-  gl.bindBuffer( gl.ARRAY_BUFFER, bufferId2 );
-
-  // Associate shader variables with data buffer for second triangle
-  var vPosition2 = gl.getAttribLocation( program, 'vPosition' );
-  gl.vertexAttribPointer( vPosition2, 2, gl.FLOAT, false, 0, 0 );
-  gl.enableVertexAttribArray( vPosition2 );
-
-  // Draw second triangle
-  gl.drawArrays( gl.TRIANGLES, 0, 3 );
-
+  render(true, bufferId1, program);
+  render(false, bufferId2, program);
 };
