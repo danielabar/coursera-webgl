@@ -1,6 +1,6 @@
 var gl;       // WebGL context
 
-var render = function(clear, bufferId, program) {
+var render = function(clear, bufferId, program, numVerticies) {
   var vPosition;
 
   // Clear canvas if requested
@@ -16,7 +16,7 @@ var render = function(clear, bufferId, program) {
   gl.vertexAttribPointer( vPosition, 2, gl.FLOAT, false, 0, 0 );
   gl.enableVertexAttribArray( vPosition );
 
-  gl.drawArrays( gl.TRIANGLES, 0, 6 );
+  gl.drawArrays( gl.TRIANGLES, 0, numVerticies );
 };
 
 window.onload = function init() {
@@ -43,5 +43,5 @@ window.onload = function init() {
   gl.bindBuffer( gl.ARRAY_BUFFER, bufferId );
   gl.bufferData( gl.ARRAY_BUFFER, rectangle, gl.STATIC_DRAW );
 
-  render(true, bufferId, program);
+  render(true, bufferId, program, rectangle.length/2);
 };
