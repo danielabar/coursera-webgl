@@ -28,6 +28,8 @@ function flatten( v )
         }
     }
 
+    // temp debug
+    console.table(floats);
+
     return floats;
 }
-
