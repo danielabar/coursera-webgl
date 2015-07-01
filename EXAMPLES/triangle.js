@@ -9,7 +9,7 @@ window.onload = function init()
     gl = WebGLUtils.setupWebGL( canvas );
     if ( !gl ) { alert( "WebGL isn't available" ); }
 
-    // Data
+    // Setup data
     var vertices = [-1, -1, 0, 1, 1, -1];
 
     //  Configure WebGL
