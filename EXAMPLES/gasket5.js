@@ -5,9 +5,11 @@ var gl;
 
 var points = [];
 
-var NumTimesToSubdivide = 5;
+var numTimesToSubdivide = 0;
 
-window.onload = function init()
+var bufferId;
+
+function init()
 {
     canvas = document.getElementById( "gl-canvas" );
 
@@ -20,14 +22,6 @@ window.onload = function init()
 
     // First, initialize the corners of our gasket with three points.
 
-    var vertices = [
-        vec2( -1, -1 ),
-        vec2(  0,  1 ),
-        vec2(  1, -1 )
-    ];
-
-    divideTriangle( vertices[0], vertices[1], vertices[2],
-                    NumTimesToSubdivide);
 
     //
     //  Configure WebGL
@@ -42,15 +36,23 @@ window.onload = function init()
 
     // Load the data into the GPU
 
-    var bufferId = gl.createBuffer();
+    bufferId = gl.createBuffer();
     gl.bindBuffer( gl.ARRAY_BUFFER, bufferId );
-    gl.bufferData( gl.ARRAY_BUFFER, flatten(points), gl.STATIC_DRAW );
+    gl.bufferData( gl.ARRAY_BUFFER, 8*Math.pow(3, 6), gl.STATIC_DRAW );
+
+
 
     // Associate out shader variables with our data buffer
 
     var vPosition = gl.getAttribLocation( program, "vPosition" );
     gl.vertexAttribPointer( vPosition, 2, gl.FLOAT, false, 0, 0 );
     gl.enableVertexAttribArray( vPosition );
+
+        document.getElementById("slider").onchange = function() {
+        numTimesToSubdivide = event.srcElement.value;
+        render();
+    };
+
 
     render();
 };
@@ -86,8 +88,22 @@ function divideTriangle( a, b, c, count )
     }
 }
 
+window.onload = init;
+
 function render()
 {
+    var vertices = [
+        vec2( -1, -1 ),
+        vec2(  0,  1 ),
+        vec2(  1, -1 )
+    ];
+    points = [];
+    divideTriangle( vertices[0], vertices[1], vertices[2],
+                    numTimesToSubdivide);
+
+    gl.bufferSubData(gl.ARRAY_BUFFER, 0, flatten(points));
     gl.clear( gl.COLOR_BUFFER_BIT );
     gl.drawArrays( gl.TRIANGLES, 0, points.length );
+    points = [];
+    //requestAnimFrame(render);
 }

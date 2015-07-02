@@ -13,12 +13,12 @@ window.onload = function init()
 
     // Four Vertices
 
-    var vertices = [
+    var vertices = new Float32Array([
       -0.5, -0.5,
       -0.5,  0.5,
       0.5, 0.5,
       0.5, -0.5
-    ];
+    ]);
 
 
     //
@@ -36,7 +36,7 @@ window.onload = function init()
 
     var bufferId = gl.createBuffer();
     gl.bindBuffer( gl.ARRAY_BUFFER, bufferId );
-    gl.bufferData( gl.ARRAY_BUFFER, flatten(vertices), gl.STATIC_DRAW );
+    gl.bufferData( gl.ARRAY_BUFFER, vertices, gl.STATIC_DRAW );
 
     // Associate out shader variables with our data buffer
 
