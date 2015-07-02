@@ -1,3 +1,4 @@
+"use strict";
 
 var canvas;
 var gl;
@@ -16,12 +17,10 @@ var theta = [ 0, 0, 0 ];
 
 var thetaLoc;
 
-var flag = true;
-
 window.onload = function init()
 {
     canvas = document.getElementById( "gl-canvas" );
-    
+
     gl = WebGLUtils.setupWebGL( canvas );
     if ( !gl ) { alert( "WebGL isn't available" ); }
 
@@ -29,7 +28,7 @@ window.onload = function init()
 
     gl.viewport( 0, 0, canvas.width, canvas.height );
     gl.clearColor( 1.0, 1.0, 1.0, 1.0 );
-    
+
     gl.enable(gl.DEPTH_TEST);
 
     //
@@ -37,7 +36,7 @@ window.onload = function init()
     //
     var program = initShaders( gl, "vertex-shader", "fragment-shader" );
     gl.useProgram( program );
-    
+
     var cBuffer = gl.createBuffer();
     gl.bindBuffer( gl.ARRAY_BUFFER, cBuffer );
     gl.bufferData( gl.ARRAY_BUFFER, flatten(colors), gl.STATIC_DRAW );
@@ -49,16 +48,16 @@ window.onload = function init()
     var vBuffer = gl.createBuffer();
     gl.bindBuffer( gl.ARRAY_BUFFER, vBuffer );
     gl.bufferData( gl.ARRAY_BUFFER, flatten(points), gl.STATIC_DRAW );
-    
+
 
     var vPosition = gl.getAttribLocation( program, "vPosition" );
     gl.vertexAttribPointer( vPosition, 4, gl.FLOAT, false, 0, 0 );
     gl.enableVertexAttribArray( vPosition );
 
-    thetaLoc = gl.getUniformLocation(program, "theta"); 
-    
+    thetaLoc = gl.getUniformLocation(program, "theta");
+
     //event listeners for buttons
-    
+
     document.getElementById( "xButton" ).onclick = function () {
         axis = xAxis;
     };
@@ -68,8 +67,7 @@ window.onload = function init()
     document.getElementById( "zButton" ).onclick = function () {
         axis = zAxis;
     };
-    document.getElementById("ButtonT").onclick = function(){flag = !flag;};
-        
+
     render();
 }
 
@@ -83,17 +81,17 @@ function colorCube()
     quad( 5, 4, 0, 1 );
 }
 
-function quad(a, b, c, d) 
+function quad(a, b, c, d)
 {
     var vertices = [
-        [ -0.5, -0.5,  0.5, 1.0 ],
-        [ -0.5,  0.5,  0.5, 1.0 ],
-        [  0.5,  0.5,  0.5, 1.0 ],
-        [  0.5, -0.5,  0.5, 1.0 ],
-        [ -0.5, -0.5, -0.5, 1.0 ],
-        [ -0.5,  0.5, -0.5, 1.0 ],
-        [  0.5,  0.5, -0.5, 1.0 ],
-        [  0.5, -0.5, -0.5, 1.0 ]
+        vec4( -0.5, -0.5,  0.5, 1.0 ),
+        vec4( -0.5,  0.5,  0.5, 1.0 ),
+        vec4(  0.5,  0.5,  0.5, 1.0 ),
+        vec4(  0.5, -0.5,  0.5, 1.0 ),
+        vec4( -0.5, -0.5, -0.5, 1.0 ),
+        vec4( -0.5,  0.5, -0.5, 1.0 ),
+        vec4(  0.5,  0.5, -0.5, 1.0 ),
+        vec4(  0.5, -0.5, -0.5, 1.0 )
     ];
 
     var vertexColors = [
@@ -110,18 +108,18 @@ function quad(a, b, c, d)
     // We need to parition the quad into two triangles in order for
     // WebGL to be able to render it.  In this case, we create two
     // triangles from the quad indices
-    
+
     //vertex color assigned by the index of the vertex
-    
+
     var indices = [ a, b, c, a, c, d ];
 
     for ( var i = 0; i < indices.length; ++i ) {
         points.push( vertices[indices[i]] );
         //colors.push( vertexColors[indices[i]] );
-    
-        // for solid colored faces use 
+
+        // for solid colored faces use
         colors.push(vertexColors[a]);
-        
+
     }
 }
 
@@ -129,11 +127,10 @@ function render()
 {
     gl.clear( gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-    if(flag) theta[axis] += 2.0;
+    theta[axis] += 2.0;
     gl.uniform3fv(thetaLoc, theta);
 
     gl.drawArrays( gl.TRIANGLES, 0, NumVertices );
 
     requestAnimFrame( render );
 }
-

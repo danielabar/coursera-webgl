@@ -36,6 +36,8 @@ void main()
     fColor = vColor;
     gl_Position = rz * ry * rx * vPosition;
 } 
+
+
 </script>
 
 <script id="fragment-shader" type="x-shader/x-fragment">
@@ -53,8 +55,8 @@ main()
 
 <script type="text/javascript" src="../Common/webgl-utils.js"></script>
 <script type="text/javascript" src="../Common/initShaders.js"></script>
-<script type="text/javascript" src="../Common/flatten.js"></script>
-<script type="text/javascript" src="cube.js"></script>
+<script type="text/javascript" src="../Common/MV.js"></script>
+<script type="text/javascript" src="cubef.js"></script>
 
 <body>
 <canvas id="gl-canvas" width="512"" height="512">
@@ -66,7 +68,6 @@ Oops ... your browser doesn't support the HTML5 canvas element
 <button id= "xButton">Rotate X</button>
 <button id= "yButton">Rotate Y</button>
 <button id= "zButton">Rotate Z</button>
-<button id = "ButtonT">Toggle Rotation</button>
 
 </body>
 </html>

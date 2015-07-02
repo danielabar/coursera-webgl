@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" >
+<title>2D Sierpinski Gasket</title>
+
 
 <script id="vertex-shader" type="x-shader/x-vertex">
 attribute vec4 vPosition;
@@ -24,10 +27,16 @@ main()
 
 <script type="text/javascript" src="../Common/webgl-utils.js"></script>
 <script type="text/javascript" src="../Common/initShaders.js"></script>
-<script type="text/javascript" src="triangles2.js"></script>
-</head>
+<script type="text/javascript" src="../Common/MV.js"></script>
+<script type="text/javascript" src="gasket5.js"></script>
+</head>   
 
 <body>
+<div>
+recursive steps  0 <input id="slider" type="range"
+ min="0" max="5" step="1" value="0" />
+ 5
+</div>
 <canvas id="gl-canvas" width="512" height="512">
 Oops ... your browser doesn't support the HTML5 canvas element
 </canvas>
