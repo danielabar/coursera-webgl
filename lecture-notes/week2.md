@@ -13,7 +13,7 @@ OpenGL is not object oriented (historical), so there are different named functio
 
 Action happens in shaders (because they run in the GPU).
 
-### Vertex Shader
+## Vertex Shader
 
 ```
 // Input from application -> vPosition must link to variable in application
@@ -36,7 +36,7 @@ GLSL has types such as float, int etc, but also additional types like vectors an
 
 Each shader is an entire program.
 
-### Fragment Shader
+## Fragment Shader
 
 Processes fragments outputted from the Rasterizer.
 
@@ -59,3 +59,57 @@ main()
 ```
 
 `gl_FragColor` is a built in variable.
+
+## Square Example
+
+Note that a vertex is not just a point in space. It also contains other attributes such as color, texture co-ordinates, normal direction, etc.
+
+This code creates a **vertex buffer object** (VBO) on the GPU, and makes it the current VBO:
+
+```javascript
+var bufferId = gl.createBuffer();
+gl.bindBuffer( gl.ARRAY_BUFFER, bufferId );
+gl.bufferData( gl.ARRAY_BUFFER, flatten(vertices), gl.STATIC_DRAW );
+```
+
+Other VBOs can contain data such as colors and texture co-ordinates.
+
+`flatten` is defined in `Common/MV.js` that converts JavaScript array object to a C-like array required by OpenGL.
+
+`gl.STATIC_DRAW` allows GPU to optimize.
+
+This code associates shader variables with variables in the JavaScript:
+
+```javascript
+var vPosition = gl.getAttribLocation( program, "vPosition" );
+
+// Describe what vPosition looks like: 2 dimensional, floating point
+gl.vertexAttribPointer( vPosition, 2, gl.FLOAT, false, 0, 0 );
+
+gl.enableVertexAttribArray( vPosition );
+```
+
+This code draws the square (must draw two triangles to make a square):
+
+```javascript
+function render() {
+  gl.clear( gl.COLOR_BUFFER_BIT );
+
+  // start at first (i.e. 0th) vertex, there are 4 of them
+  gl.drawArrays( gl.TRIANGLE_FAN, 0, 4 );
+}
+```
+
+`gl.TRIANGLE_FAN` is more efficient than repeated triangles if you're drawing triangles that share vertecies.
+This can draw `n` triangles, but the first vertex is always fixed.
+
+`gl.TRIANGLE_STRIP` takes a long list of vetecies, 4th vertex forms a triangle with previous two and so on.
+So each vertex after third one always generates a new triangle.
+
+Be careful with order of vertecies in data array with respect to the gl draw mode.
+
+GL_TRIANGLES are filled shapes. To get a triangle with a border, need to draw a triangle with a LINE_LOOP outside of it.
+
+## Coordinate Systems
+
+[8:21]
