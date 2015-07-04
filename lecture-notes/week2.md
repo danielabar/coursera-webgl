@@ -112,4 +112,61 @@ GL_TRIANGLES are filled shapes. To get a triangle with a border, need to draw a 
 
 ## Coordinate Systems
 
-[8:21]
+Can use any coordinate system you like. Use units that are natural to the problem space.
+Are called _object, world, model or problem_ coordinates.
+
+Viewing device (camera) is specified in object coordiantes.
+
+Display is a physical device so it wrks in _window_ or _screen_ coordinates.
+
+Vertex shaders output _clip coordiantes_, a normalized system that internals of the implementation must work with.
+
+Input to fragment shader is in _window coordinates_.
+
+## WebGL Camera
+
+By default, camera is at the origin in object coordinates, pointing in -z direction.
+That is, the -z's are in _front_ of the camera.
+
+A real camera only sees what's in front of it, but the WebGL camera can also see behind itself.
+
+Default viewing volume is a box centered at the origin with sides of length 2.
+Everything outside of the viewing volume is automatically clipped out and will not appear on the display.
+
+Coordinate system is a right-handed system,
+i.e can use thumb, index and middle fingers of your right hand to determine:
+* `x` goes off to the right - thumb
+* `y` goes up - index finter
+* `z` comes out of the display - middle finger pointing towards youx`
+
+(right, top, far)     ===   (1, 1, -1)   === (x, y, z)
+(left, bottom, near)  ===   (-1, -1, -1) === (x, y, z)
+
+## Orthographic Viewing
+
+Takes all (x,y,z) coordinates and sets the z's to 0.
+Pushes all points to the z=0 plane.
+
+2D is a special case of 3D, where the z plane is 0.
+
+## Viewport
+
+Don't need to use entire display (i.e. all of the width and height declared on canvas element).
+Can define the viewport to be a subset of the display size:
+
+```javascript
+gl.viewport(x, y, w, h);
+```
+
+Arguments to `gl.viewport` are provided in pixels:
+
+`x, y` : left, bottom point where the viewport starts
+`w, h` : width and height of viewport
+
+If not otherwise specified, by default the viewport = canvas size.
+
+## Transformation and Viewing
+
+Transformation functions (carried out with a projection matrix) are used to translate between different coordinate systems.
+
+Preferably, transformations should be defined in the shaders, although technically can also be done in application code (slower).
