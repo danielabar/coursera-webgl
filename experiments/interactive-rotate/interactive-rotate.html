@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Experiments | Interactive Rotate</title>
+  <script id="vertex-shader" type="x-shader/x-vertex">
+  attribute vec4 vPosition;
+
+  void
+  main()
+  {
+      gl_Position = vPosition;
+  }
+  </script>
+
+  <script id="fragment-shader" type="x-shader/x-fragment">
+  precision mediump float;
+
+  void
+  main()
+  {
+      gl_FragColor = vec4( 1.0, 0.0, 0.0, 1.0 );
+  }
+  </script>
+
+  <script type="text/javascript" src="../../Common/webgl-utils.js"></script>
+  <script type="text/javascript" src="../../Common/initShaders.js"></script>
+  <script type="text/javascript" src="../../Common/MV.js"></script>
+  <script type="text/javascript" src="interactive-rotate.js"></script>
+</head>
+
+<body>
+
+  <div class="section">
+    <!-- http://www.html5rocks.com/en/tutorials/forms/html5forms/ -->
+    <form>
+      <div class="form-group">
+        <label for="theta">Degrees</label>
+        <input type="number" id="theta" required min="0" max="360" step="1" />
+      </div>
+      <div class="form-group">
+        <button id="rotate" type="submit">Rotate</button>
+      </div>
+    </form>
+  </div>
+
+  <div class="section">
+    <canvas id="gl-canvas" width="512" height="512">
+      Oops ... your browser doesn't support the HTML5 canvas element
+    </canvas>
+  </div>
+
+</body>
+</html>
