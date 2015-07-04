@@ -52,10 +52,18 @@ var doRotate = function(evt) {
   }
 };
 
+var doReset = function(evt) {
+  evt.preventDefault();
+  loadBuffer(originalTriangle);
+  render();
+  document.getElementById('theta').value = 0;
+};
+
 window.onload = function init() {
 
   // register event handlers
   document.getElementById('rotate').addEventListener('click', doRotate);
+  document.getElementById('reset').addEventListener('click', doReset);
 
   // init
   var canvas = document.getElementById( 'gl-canvas' );
