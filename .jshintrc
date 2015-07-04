@@ -24,6 +24,8 @@
     "WebGLUtils": false,
     "alert": false,
     "initShaders": false,
-    "flatten": false
+    "flatten": false,
+    "vec2": false,
+    "vec3": false
   }
 }
