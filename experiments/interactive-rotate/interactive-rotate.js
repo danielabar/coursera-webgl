@@ -26,7 +26,7 @@ var loadBuffer = function(data) {
   gl.enableVertexAttribArray( vPosition );
 };
 
-var rotate = function(vec2Point, theta) {
+var calculateRotation = function(vec2Point, theta) {
   var originalX = vec2Point[0];
   var originalY = vec2Point[1];
   var newX = (originalX * Math.cos(theta)) - (originalY * Math.sin(theta));
@@ -37,16 +37,14 @@ var rotate = function(vec2Point, theta) {
 var doRotate = function(evt) {
   evt.preventDefault();
   var input = document.getElementById('theta');
-  console.log(input.checkValidity());
 
   if (input.checkValidity()) {
     var theta = input.valueAsNumber;
-    console.log(theta);
 
     var rotatedTriangle = [
-      rotate(originalTriangle[0], theta),
-      rotate(originalTriangle[1], theta),
-      rotate(originalTriangle[2], theta)
+      calculateRotation(originalTriangle[0], theta),
+      calculateRotation(originalTriangle[1], theta),
+      calculateRotation(originalTriangle[2], theta)
     ];
 
     loadBuffer(rotatedTriangle);
@@ -63,14 +61,6 @@ window.onload = function init() {
   var canvas = document.getElementById( 'gl-canvas' );
   gl = WebGLUtils.setupWebGL( canvas );
   if ( !gl ) { alert( 'WebGL isn\'t available' ); }
-
-
-  // var theta = 30;
-  // var rotatedTriangle = [
-  //   rotate(originalTriangle[0], theta),
-  //   rotate(originalTriangle[1], theta),
-  //   rotate(originalTriangle[2], theta)
-  // ];
 
   // configure display
   gl.viewport( 0, 0, canvas.width, canvas.height );
