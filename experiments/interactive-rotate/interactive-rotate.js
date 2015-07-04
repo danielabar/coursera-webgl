@@ -1,6 +1,7 @@
 'use strict';
 
 var gl;
+var program;
 
 var originalTriangle = [
   vec2(-0.5, -0.5),
@@ -11,6 +12,18 @@ var originalTriangle = [
 var render = function() {
   gl.clear( gl.COLOR_BUFFER_BIT );
   gl.drawArrays( gl.TRIANGLES, 0, 3 );
+};
+
+var loadBuffer = function(data) {
+  // load data onto gpu
+  var bufferId = gl.createBuffer();
+  gl.bindBuffer( gl.ARRAY_BUFFER, bufferId );
+  gl.bufferData( gl.ARRAY_BUFFER, flatten(data), gl.STATIC_DRAW );
+
+  // associate shader variables with data buffer
+  var vPosition = gl.getAttribLocation( program, 'vPosition' );
+  gl.vertexAttribPointer( vPosition, 2, gl.FLOAT, false, 0, 0 );
+  gl.enableVertexAttribArray( vPosition );
 };
 
 var rotate = function(vec2Point, theta) {
@@ -25,8 +38,20 @@ var doRotate = function(evt) {
   evt.preventDefault();
   var input = document.getElementById('theta');
   console.log(input.checkValidity());
-  var rotationDegrees = input.valueAsNumber;
-  console.log(rotationDegrees);
+
+  if (input.checkValidity()) {
+    var theta = input.valueAsNumber;
+    console.log(theta);
+
+    var rotatedTriangle = [
+      rotate(originalTriangle[0], theta),
+      rotate(originalTriangle[1], theta),
+      rotate(originalTriangle[2], theta)
+    ];
+
+    loadBuffer(rotatedTriangle);
+    render();
+  }
 };
 
 window.onload = function init() {
@@ -38,7 +63,6 @@ window.onload = function init() {
   var canvas = document.getElementById( 'gl-canvas' );
   gl = WebGLUtils.setupWebGL( canvas );
   if ( !gl ) { alert( 'WebGL isn\'t available' ); }
-
 
 
   // var theta = 30;
@@ -53,7 +77,7 @@ window.onload = function init() {
   gl.clearColor( 0, 0, 0, 1.0 );
 
   // load shaders
-  var program = initShaders( gl, 'vertex-shader', 'fragment-shader' );
+  program = initShaders( gl, 'vertex-shader', 'fragment-shader' );
   gl.useProgram( program );
 
   // load the data into the GPU
