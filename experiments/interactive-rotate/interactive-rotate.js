@@ -40,7 +40,6 @@ var doRotate = function(evt) {
 
   if (input.checkValidity()) {
     var theta = input.valueAsNumber;
-    console.log('Rotating by ' + theta + ' degrees...');
 
     var rotatedTriangle = [
       calculateRotation(originalTriangle[0], theta),
