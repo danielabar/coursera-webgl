@@ -40,11 +40,12 @@ var doRotate = function(evt) {
 
   if (input.checkValidity()) {
     var theta = input.valueAsNumber;
+    var radians = (Math.PI / 180) * theta;
 
     var rotatedTriangle = [
-      calculateRotation(originalTriangle[0], theta),
-      calculateRotation(originalTriangle[1], theta),
-      calculateRotation(originalTriangle[2], theta)
+      calculateRotation(originalTriangle[0], radians),
+      calculateRotation(originalTriangle[1], radians),
+      calculateRotation(originalTriangle[2], radians)
     ];
 
     loadBuffer(rotatedTriangle);

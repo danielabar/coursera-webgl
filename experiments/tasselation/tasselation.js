@@ -88,7 +88,7 @@ var doRotate = function(evt) {
 
 var doReset = function(evt) {
   evt.preventDefault();
-  loadBuffer(originalTriangle);
+  loadBuffer(flatten(points));
   render();
   document.getElementById('theta').value = 0;
 };
