@@ -12,11 +12,13 @@ html {
 body {
   font-family: 'Nixie One', sans-serif;
   font-weight: 300;
+  background: url(../images/skyscraper.jpg) no-repeat fixed;
+  background-size: cover;
 }
 
 h1 {
   font-family: 'Open Sans', serif;
-  font-size: 100px;
+  font-size: 101px;
   margin-bottom: 40px;
 }
 
@@ -33,6 +35,10 @@ p {
 section h1,
 footer h1 {
   text-transform: lowercase;
+}
+
+a {
+  text-decoration: none;
 }
 
 
@@ -85,6 +91,18 @@ nav a:hover {
 }
 
 
+/* ---------------------------------- */
+/* Assignments */
+/* ---------------------------------- */
+
+.assignments {
+  background: #fff;
+  color: #000;
+}
+
+.assignments a {
+  color: #000;
+}
 
 /* ---------------------------------- */
 /* Experiments */
