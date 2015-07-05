@@ -24,6 +24,8 @@ module.exports = function(grunt) {
         files: [
           {src: ['index.html'], dest: 'dist/'},
           {src: [
+              'css/*.css',
+              'vendor/*.js',
               'EXAMPLES/*.js',
               'EXAMPLES/*.html',
               'Common/*.js',
