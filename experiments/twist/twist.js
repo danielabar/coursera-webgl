@@ -6,10 +6,12 @@ var points = [];
 var numDivisions = 4;
 var _gasket = false;
 
+// http://math.stackexchange.com/questions/240169/how-to-find-the-other-vertices-of-an-equilateral-triangle-given-one-vertex-and-c
+// equilateral triangle centered about the origin
 var originalTriangle = [
-  vec2(-0.5, -0.5),
-  vec2(0, 0.5),
-  vec2(0.5, -0.5)
+  vec2(-(Math.sqrt(3)/2), -0.5),   // bottom left
+  vec2(0, 1),                      // top middle
+  vec2((Math.sqrt(3)/2), -0.5)     // bottom right
 ];
 
 var resetPoints = function() {
