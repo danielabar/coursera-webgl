@@ -1,38 +1,74 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8">
-		<title>Daniela Baron | Coursera WebGL</title>
-	</head>
+<head>
+	<link href='http://fonts.googleapis.com/css?family=Nixie+One|Open+Sans:300italic,300,700|Pacifico' rel='stylesheet' type='text/css'>
+	<meta charset="UTF-8">
+	<title>Daniela Baron | Coursera WebGL</title>
+	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+	<link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
 
-	<body>
+	<nav data-scroll-header>
+		<a data-scroll href="#assignments">Assignments</a>
+		<a data-scroll href="#experiments">Experiments</a>
+		<a data-scroll href="#contact">Contact</a>
+	</nav>
 
-		<header>
-			<h1>Coursera WebGL - Daniela Baron</h1>
-		</header>
+	<header>
+		<h1>Daniela Baron</h1>
+		<h2>Homework <strong>assignments</strong> and <strong>experiments</strong> for Coursera WebGL 2015</h2>
+	</header>
 
-		<section>
-			<h1>Homework Assignments</h1>
-			<ul>
-				<li><a href="EXAMPLES/triangle.html">Triangle Example</a></li>
-				<li><a href="homework/test/cube.html">Test Cube in Homework dir</a></li>
-			</ul>
-		</section>
+	<section id="assignments" class="assignments">
+		<h1>Assignments</h1>
+		<ul>
+			<li><a href="EXAMPLES/triangle.html">Test 1</a></li>
+			<li><a href="homework/test/cube.html">Test 2</a></li>
+		</ul>
+	</section>
 
-		<section>
-			<h1>Experiments</h1>
-			<ul>
-				<li><a href="experiments/triangle-color/triangle.html">Triangle Color</a></li>
-				<li><a href="experiments/canvas-background/triangle.html">Canvas Background</a></li>
-				<li><a href="experiments/position/triangle.html">Vertex Position</a></li>
-				<li><a href="experiments/multiple/triangle.html">Multiple Triangles</a></li>
-				<li><a href="experiments/rectange/rectangle.html">Rectangle</a></li>
-				<li><a href="experiments/simple-rotate/simple-rotate.html">Simple Rotate</a></li>
-				<li><a href="experiments/interactive-rotate/interactive-rotate.html">Interactive Rotate</a></li>
-				<li><a href="experiments/tasselation/tasselation.html">Tasselation</a></li>
-				<li><a href="experiments/twist/twist.html">Twist</a></li>
-			</ul>
-		</section>
+	<section id="experiments" class="experiments">
+		<h1>Experiments</h1>
+		<ul>
+			<li><a href="experiments/triangle-color/triangle.html">Triangle Color</a></li>
+			<li><a href="experiments/canvas-background/triangle.html">Canvas Background</a></li>
+			<li><a href="experiments/position/triangle.html">Vertex Position</a></li>
+			<li><a href="experiments/multiple/triangle.html">Multiple Triangles</a></li>
+			<li><a href="experiments/rectange/rectangle.html">Rectangle</a></li>
+			<li><a href="experiments/simple-rotate/simple-rotate.html">Simple Rotate</a></li>
+			<li><a href="experiments/interactive-rotate/interactive-rotate.html">Interactive Rotate</a></li>
+			<li><a href="experiments/tasselation/tasselation.html">Tasselation</a></li>
+			<li><a href="experiments/twist/twist.html">Twist</a></li>
+		</ul>
+	</section>
 
-	</body>
+	<footer id="contact">
+    <h1>Contact Me</h1>
+    <span class="fa-stack fa-2x">
+			<a href="https://twitter.com/DanielaMBaron">
+      	<i class="fa fa-circle fa-stack-2x contact-circle"></i>
+      	<i class="fa fa-twitter fa-stack-1x fa-inverse contact-icon"></i>
+			</a>
+    </span>
+    <span class="fa-stack fa-2x">
+			<a href="https://github.com/danielabar">
+      	<i class="fa fa-circle fa-stack-2x contact-circle"></i>
+      	<i class="fa fa-github fa-stack-1x fa-inverse contact-icon"></i>
+			</a>
+    </span>
+    <span class="fa-stack fa-2x">
+			<a href="http://codepen.io/danielabar/">
+      	<i class="fa fa-circle fa-stack-2x contact-circle"></i>
+      	<i class="fa fa-codepen fa-stack-1x fa-inverse contact-icon"></i>
+			</a>
+    </span>
+  </footer>
+
+	<script src="vendor/smooth-scroll.min.js"></script>
+	<script>
+		smoothScroll.init();
+	</script>
+</body>
 </html>

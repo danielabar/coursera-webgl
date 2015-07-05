@@ -1,0 +1,154 @@
+/* ---------------------------------- */
+/* Global Styles */
+/* ---------------------------------- */
+
+html {
+  box-sizing: border-box;
+}
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
+body {
+  font-family: 'Nixie One', sans-serif;
+  font-weight: 300;
+  background: url(../images/skyscraper.jpg) no-repeat fixed;
+  background-size: cover;
+}
+
+h1 {
+  font-family: 'Open Sans', serif;
+  font-size: 101px;
+  margin-bottom: 40px;
+}
+
+header, section, footer {
+  padding: 100px 150px;
+}
+
+p {
+  margin-bottom: 20px;
+  font-size: 18px;
+  line-height: 1.5;
+}
+
+section h1,
+footer h1 {
+  text-transform: lowercase;
+}
+
+a {
+  text-decoration: none;
+}
+
+
+/* ---------------------------------- */
+/* Header */
+/* ---------------------------------- */
+
+header {
+  background: #CECCCC;
+  padding-top: 250px;
+}
+
+header h1 {
+  font-size: 124px;
+}
+
+header h2 {
+  font-size: 34px;
+}
+
+
+/* ---------------------------------- */
+/* Nav */
+/* ---------------------------------- */
+
+
+nav {
+  background: #CECCCC;
+  position: fixed;
+  width: 100%;
+  top: 0;
+  left: 0;
+  text-align: right;
+  box-shadow: 0px 3px 3px 0px rgba(195,189,189,1);
+}
+
+nav a {
+  margin: 10px;
+  padding: 15px;
+  display: inline-block;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: #000;
+}
+
+nav a:hover {
+  background: #9D6381;
+  color: #CECCCC;
+  border-radius: 4px;
+}
+
+
+/* ---------------------------------- */
+/* Assignments */
+/* ---------------------------------- */
+
+.assignments {
+  background: #fff;
+  color: #000;
+}
+
+.assignments a {
+  color: #000;
+}
+
+/* ---------------------------------- */
+/* Experiments */
+/* ---------------------------------- */
+
+.experiments {
+  background: rgba(97, 41, 64, 0.95);
+  color: #fff;
+}
+
+.experiments a {
+  color: #fff;
+}
+
+
+/* ---------------------------------- */
+/* Contact */
+/* ---------------------------------- */
+
+.contact-circle {
+  color: #A09D9D;
+}
+
+.contact-icon {
+  color: #000;
+}
+
+.contact-icon:hover {
+  color: rgba(97, 41, 64, 0.95);
+}
+
+/* ---------------------------------- */
+/* Footer */
+/* ---------------------------------- */
+
+footer {
+  background: #0F110C;
+  color: #CECCCC;
+  text-align: center;
+}
+
+
+/* ---------------------------------- */
+/* Utilities */
+/* ---------------------------------- */
+
+strong, a {
+  color: #9D6381;
+}
