@@ -3,8 +3,6 @@
 var gl;
 var program;
 var points = [];
-
-// TODO This should come from user input
 var numDivisions = 4;
 
 var originalTriangle = [
@@ -12,6 +10,10 @@ var originalTriangle = [
   vec2(0, 1),
   vec2(1, -1)
 ];
+
+var resetPoints = function() {
+  points = [];
+};
 
 var addTriangle = function(bottomLeft, topMiddle, bottomRight) {
   points.push(bottomLeft, topMiddle, bottomRight);
@@ -86,17 +88,34 @@ var doRotate = function(evt) {
   }
 };
 
+var doDivide = function(evt) {
+  evt.preventDefault();
+  var input = document.getElementById('numDivisions');
+
+  if (input.checkValidity()) {
+    var numDivisions = input.valueAsNumber;
+    resetPoints();
+    divideTriangle(originalTriangle[0], originalTriangle[1], originalTriangle[2], numDivisions);
+    loadBuffer(points);
+    render();
+  }
+};
+
 var doReset = function(evt) {
   evt.preventDefault();
-  loadBuffer(flatten(points));
+  resetPoints();
+  divideTriangle(originalTriangle[0], originalTriangle[1], originalTriangle[2], numDivisions);
+  loadBuffer(points);
   render();
   document.getElementById('theta').value = 0;
+  document.getElementById('numDivisions').value = 4;
 };
 
 window.onload = function init() {
 
   // register event handlers
   document.getElementById('theta').addEventListener('change', doRotate);
+  document.getElementById('numDivisions').addEventListener('change', doDivide);
   document.getElementById('reset').addEventListener('click', doReset);
 
   // init
