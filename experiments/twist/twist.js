@@ -5,6 +5,7 @@ var program;
 var points = [];
 var numDivisions = 4;
 
+// [0 ,1], [-1/2, -sqrt(3)/2], and [1/2, -sqrt(3)/2],
 var originalTriangle = [
   vec2(-0.5, -0.5),
   vec2(0, 0.5),
@@ -49,6 +50,7 @@ var divideTriangle = function(a, b, c, count) {
     divideTriangle(b, bc, ab, count-1);
 
     // TODO fill in middle triangle also
+    divideTriangle(ac, ab, bc, count-1);
   }
 };
 

@@ -30,6 +30,10 @@
 
 <body>
 
+  <!--[if lt IE 9]>
+    <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+  <![endif]-->
+
   <header>
     <h1>Twist</h1>
   </header>
@@ -38,11 +42,11 @@
     <form>
       <div class="form-group">
         <label for="theta">Degrees</label>
-        <input type="number" id="theta" required min="0" max="360" step="1" value="0"/>
+        <input type=range id=theta min=0 value=0 max=360 step=15>
       </div>
       <div class="form-group">
-        <label for="theta">Number of Divisions</label>
-        <input type="number" id="numDivisions" required min="1" max="8" step="1" value="4"/>
+        <label for="theta">Divisions</label>
+        <input type=range id=numDivisions min=1 value=4 max=7 step=1>
       </div>
       <div class="form-group">
         <input id="reset" type="button" value="Reset">
