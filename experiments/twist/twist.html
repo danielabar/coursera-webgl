@@ -47,7 +47,7 @@
       </div>
       <div class="form-group">
         <label for="numDivisions">Divisions</label>
-        <input type=range id=numDivisions min=1 value=4 max=7 step=1 oninput="outputNumDivisionsValue(value)">
+        <input type=range id=numDivisions min=0 value=4 max=7 step=1 oninput="outputNumDivisionsValue(value)">
         <output for=numDivisions id=numDivisionsValue>4</output>
       </div>
       <div class="form-group">
@@ -61,6 +61,15 @@
       Oops ... your browser doesn't support the HTML5 canvas element
     </canvas>
   </div>
+
+  <script>
+  var outputThetaValue = function(value) {
+    document.querySelector('#thetaValue').value = value;
+  };
+  var outputNumDivisionsValue = function(value) {
+    document.querySelector('#numDivisionsValue').value = value;
+  };
+  </script>
 
 </body>
 </html>
