@@ -80,12 +80,7 @@ var calculateRotation = function(vec2Point, theta) {
   return vec2(newX, newY);
 };
 
-var doRotate = function(evt) {
-  evt.preventDefault();
-  var input = document.getElementById('theta');
-
-  if (input.checkValidity()) {
-    var theta = input.valueAsNumber;
+var doRotate = function(theta) {
     var radians = (Math.PI / 180) * theta;
 
     var rotatedPoints = points.map(function(vertex) {
@@ -94,19 +89,53 @@ var doRotate = function(evt) {
 
     loadBuffer(rotatedPoints);
     render();
-  }
 };
+// var doRotate = function(evt) {
+//   evt.preventDefault();
+//   var input = document.getElementById('theta');
+//
+//   if (input.checkValidity()) {
+//     var theta = input.valueAsNumber;
+//     var radians = (Math.PI / 180) * theta;
+//
+//     var rotatedPoints = points.map(function(vertex) {
+//       return calculateRotation(vertex, radians);
+//     });
+//
+//     loadBuffer(rotatedPoints);
+//     render();
+//   }
+// };
 
-var doDivide = function(evt) {
+var doDivide = function(numDivisions) {
+  resetPoints();
+  divideTriangle(originalTriangle[0], originalTriangle[1], originalTriangle[2], numDivisions);
+  loadBuffer(points);
+  render();
+};
+// var doDivide = function(evt) {
+//   evt.preventDefault();
+//   var input = document.getElementById('numDivisions');
+//
+//   if (input.checkValidity()) {
+//     var numDivisions = input.valueAsNumber;
+//     resetPoints();
+//     divideTriangle(originalTriangle[0], originalTriangle[1], originalTriangle[2], numDivisions);
+//     loadBuffer(points);
+//     render();
+//   }
+// };
+
+var updateTriangle = function(evt) {
   evt.preventDefault();
-  var input = document.getElementById('numDivisions');
-
-  if (input.checkValidity()) {
-    var numDivisions = input.valueAsNumber;
-    resetPoints();
-    divideTriangle(originalTriangle[0], originalTriangle[1], originalTriangle[2], numDivisions);
-    loadBuffer(points);
-    render();
+  if (evt && evt.target) {
+    if (evt.target.id === 'theta') {
+      doRotate(document.getElementById('theta').valueAsNumber);
+    }
+    if (evt.target.id === 'numDivisions') {
+      doDivide(document.getElementById('numDivisions').valueAsNumber);
+      doRotate(document.getElementById('theta').valueAsNumber);
+    }
   }
 };
 
@@ -123,8 +152,9 @@ var doReset = function(evt) {
 window.onload = function init() {
 
   // register event handlers
-  document.getElementById('theta').addEventListener('change', doRotate);
-  document.getElementById('numDivisions').addEventListener('change', doDivide);
+  document.getElementById('settings').addEventListener('change', updateTriangle);
+  // document.getElementById('theta').addEventListener('change', doRotate);
+  // document.getElementById('numDivisions').addEventListener('change', doDivide);
   document.getElementById('reset').addEventListener('click', doReset);
 
   // init
