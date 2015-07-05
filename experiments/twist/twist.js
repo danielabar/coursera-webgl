@@ -23,6 +23,12 @@ var calculateMidPoint = function(vec2PointA, vec2PointB) {
   return mix(vec2PointA, vec2PointB, 0.5);
 };
 
+var calculateDistance = function(vec2Point) {
+  var xSquared = Math.pow(vec2Point[0], 2);
+  var ySquared = Math.pow(vec2Point[1], 2);
+  return Math.sqrt(xSquared + ySquared);
+};
+
 var divideTriangle = function(a, b, c, count) {
   var ab,
     ac,
@@ -64,10 +70,11 @@ var loadBuffer = function(data) {
 };
 
 var calculateRotation = function(vec2Point, theta) {
+  var distance = calculateDistance(vec2Point);
   var originalX = vec2Point[0];
   var originalY = vec2Point[1];
-  var newX = (originalX * Math.cos(theta)) - (originalY * Math.sin(theta));
-  var newY = (originalX * Math.sin(theta)) + (originalY * Math.cos(theta));
+  var newX = (originalX * Math.cos(distance * theta)) - (originalY * Math.sin(distance * theta));
+  var newY = (originalX * Math.sin(distance * theta)) + (originalY * Math.cos(distance * theta));
   return vec2(newX, newY);
 };
 
