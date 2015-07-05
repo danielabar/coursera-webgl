@@ -5,7 +5,6 @@ var program;
 var points = [];
 var numDivisions = 4;
 
-// [0 ,1], [-1/2, -sqrt(3)/2], and [1/2, -sqrt(3)/2],
 var originalTriangle = [
   vec2(-0.5, -0.5),
   vec2(0, 0.5),
@@ -49,7 +48,7 @@ var divideTriangle = function(a, b, c, count) {
     divideTriangle(c, ac, bc, count-1);
     divideTriangle(b, bc, ab, count-1);
 
-    // TODO fill in middle triangle also
+    // Nice to have: gasket option to turn this on/off
     divideTriangle(ac, ab, bc, count-1);
   }
 };
@@ -80,12 +79,7 @@ var calculateRotation = function(vec2Point, theta) {
   return vec2(newX, newY);
 };
 
-var doRotate = function(evt) {
-  evt.preventDefault();
-  var input = document.getElementById('theta');
-
-  if (input.checkValidity()) {
-    var theta = input.valueAsNumber;
+var doRotate = function(theta) {
     var radians = (Math.PI / 180) * theta;
 
     var rotatedPoints = points.map(function(vertex) {
@@ -94,19 +88,25 @@ var doRotate = function(evt) {
 
     loadBuffer(rotatedPoints);
     render();
-  }
 };
 
-var doDivide = function(evt) {
-  evt.preventDefault();
-  var input = document.getElementById('numDivisions');
+var doDivide = function(numDivisions) {
+  resetPoints();
+  divideTriangle(originalTriangle[0], originalTriangle[1], originalTriangle[2], numDivisions);
+  loadBuffer(points);
+  render();
+};
 
-  if (input.checkValidity()) {
-    var numDivisions = input.valueAsNumber;
-    resetPoints();
-    divideTriangle(originalTriangle[0], originalTriangle[1], originalTriangle[2], numDivisions);
-    loadBuffer(points);
-    render();
+var updateTriangle = function(evt) {
+  evt.preventDefault();
+  if (evt && evt.target) {
+    if (evt.target.id === 'theta') {
+      doRotate(document.getElementById('theta').valueAsNumber);
+    }
+    if (evt.target.id === 'numDivisions') {
+      doDivide(document.getElementById('numDivisions').valueAsNumber);
+      doRotate(document.getElementById('theta').valueAsNumber);
+    }
   }
 };
 
@@ -123,8 +123,7 @@ var doReset = function(evt) {
 window.onload = function init() {
 
   // register event handlers
-  document.getElementById('theta').addEventListener('change', doRotate);
-  document.getElementById('numDivisions').addEventListener('change', doDivide);
+  document.getElementById('settings').addEventListener('change', updateTriangle);
   document.getElementById('reset').addEventListener('click', doReset);
 
   // init
