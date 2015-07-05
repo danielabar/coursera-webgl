@@ -4,8 +4,8 @@ var gl;
 var program;
 var points = [];
 var numDivisions = 4;
+var _gasket = false;
 
-// [0 ,1], [-1/2, -sqrt(3)/2], and [1/2, -sqrt(3)/2],
 var originalTriangle = [
   vec2(-0.5, -0.5),
   vec2(0, 0.5),
@@ -49,8 +49,10 @@ var divideTriangle = function(a, b, c, count) {
     divideTriangle(c, ac, bc, count-1);
     divideTriangle(b, bc, ab, count-1);
 
-    // TODO fill in middle triangle also
-    divideTriangle(ac, ab, bc, count-1);
+    // don't fill in the middle triangle if user wants a gasket
+    if (!_gasket) {
+      divideTriangle(ac, ab, bc, count-1);
+    }
   }
 };
 
@@ -90,22 +92,6 @@ var doRotate = function(theta) {
     loadBuffer(rotatedPoints);
     render();
 };
-// var doRotate = function(evt) {
-//   evt.preventDefault();
-//   var input = document.getElementById('theta');
-//
-//   if (input.checkValidity()) {
-//     var theta = input.valueAsNumber;
-//     var radians = (Math.PI / 180) * theta;
-//
-//     var rotatedPoints = points.map(function(vertex) {
-//       return calculateRotation(vertex, radians);
-//     });
-//
-//     loadBuffer(rotatedPoints);
-//     render();
-//   }
-// };
 
 var doDivide = function(numDivisions) {
   resetPoints();
@@ -113,18 +99,6 @@ var doDivide = function(numDivisions) {
   loadBuffer(points);
   render();
 };
-// var doDivide = function(evt) {
-//   evt.preventDefault();
-//   var input = document.getElementById('numDivisions');
-//
-//   if (input.checkValidity()) {
-//     var numDivisions = input.valueAsNumber;
-//     resetPoints();
-//     divideTriangle(originalTriangle[0], originalTriangle[1], originalTriangle[2], numDivisions);
-//     loadBuffer(points);
-//     render();
-//   }
-// };
 
 var updateTriangle = function(evt) {
   evt.preventDefault();
@@ -136,25 +110,34 @@ var updateTriangle = function(evt) {
       doDivide(document.getElementById('numDivisions').valueAsNumber);
       doRotate(document.getElementById('theta').valueAsNumber);
     }
+    if (evt.target.id === 'gasket') {
+      if (document.getElementById('gasket').checked) {
+        _gasket = true;
+      } else {
+        _gasket = false;
+      }
+      doDivide(document.getElementById('numDivisions').valueAsNumber);
+      doRotate(document.getElementById('theta').valueAsNumber);
+    }
   }
 };
 
 var doReset = function(evt) {
   evt.preventDefault();
   resetPoints();
+  _gasket = false;
   divideTriangle(originalTriangle[0], originalTriangle[1], originalTriangle[2], numDivisions);
   loadBuffer(points);
   render();
   document.getElementById('theta').value = 0;
   document.getElementById('numDivisions').value = 4;
+  document.getElementById('gasket').checked = false;
 };
 
 window.onload = function init() {
 
   // register event handlers
   document.getElementById('settings').addEventListener('change', updateTriangle);
-  // document.getElementById('theta').addEventListener('change', doRotate);
-  // document.getElementById('numDivisions').addEventListener('change', doDivide);
   document.getElementById('reset').addEventListener('click', doReset);
 
   // init
