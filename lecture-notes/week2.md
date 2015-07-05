@@ -32,7 +32,7 @@ Attribtues are properties of verticies. Every vertex has a position (simplest at
 `vec4` is a built in type of 4 dimensional vector.
 GLSL has types such as float, int etc, but also additional types like vectors and matricies.
 
-`gl_Position` is a built in variable. Every vertex shader _must_ output `gl_Position`.
+`gl_Position` is a built in variable. Every vertex shader _must_ output `gl_Position` in clip coordinates.
 
 Each shader is an entire program.
 
@@ -170,3 +170,21 @@ If not otherwise specified, by default the viewport = canvas size.
 Transformation functions (carried out with a projection matrix) are used to translate between different coordinate systems.
 
 Preferably, transformations should be defined in the shaders, although technically can also be done in application code (slower).
+
+## Moving to 3D
+
+Use `vec3`, `gl.uniform3f`
+
+Have to worry about hidden surface removal, do not show surfaces that are hidden behind opaque surfaces.
+
+z-buffer stores depth information as geometry travels down the pipeline. Enable it
+
+```javascript
+g.enable(gl.DEPTH_TEST);
+```
+
+Clear in for each render
+
+```javascript
+gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+```
