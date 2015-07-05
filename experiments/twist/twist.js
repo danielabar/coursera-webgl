@@ -120,6 +120,10 @@ var doReset = function(evt) {
   document.getElementById('numDivisions').value = 4;
 };
 
+var outputThetaValue = function(value) {
+  document.querySelector('#thetaValue').value = value;
+};
+
 window.onload = function init() {
 
   // register event handlers

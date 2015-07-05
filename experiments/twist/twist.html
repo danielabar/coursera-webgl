@@ -42,11 +42,13 @@
     <form>
       <div class="form-group">
         <label for="theta">Degrees</label>
-        <input type=range id=theta min=0 value=0 max=360 step=15>
+        <input type=range id=theta min=0 value=0 max=360 step=15 oninput="outputThetaValue(value)">
+        <output for=theta id=thetaValue>0</output>
       </div>
       <div class="form-group">
-        <label for="theta">Divisions</label>
-        <input type=range id=numDivisions min=1 value=4 max=7 step=1>
+        <label for="numDivisions">Divisions</label>
+        <input type=range id=numDivisions min=1 value=4 max=7 step=1 oninput="outputNumDivisionsValue(value)">
+        <output for=numDivisions id=numDivisionsValue>4</output>
       </div>
       <div class="form-group">
         <input id="reset" type="button" value="Reset">
