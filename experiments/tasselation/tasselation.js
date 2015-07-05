@@ -5,9 +5,8 @@ var program;
 var points = [];
 
 // TODO This should come from user input
-var numDivisions = 5;
+var numDivisions = 4;
 
-//1, -1, 0, 1, 1, -1
 var originalTriangle = [
   vec2(-1, -1),
   vec2(0, 1),
@@ -40,6 +39,8 @@ var divideTriangle = function(a, b, c, count) {
     divideTriangle(a, ab, ac, count-1);
     divideTriangle(c, ac, bc, count-1);
     divideTriangle(b, bc, ab, count-1);
+
+    // TODO fill in middle triangle also
   }
 };
 
@@ -74,14 +75,13 @@ var doRotate = function(evt) {
 
   if (input.checkValidity()) {
     var theta = input.valueAsNumber;
+    var radians = (Math.PI / 180) * theta;
 
-    var rotatedTriangle = [
-      calculateRotation(originalTriangle[0], theta),
-      calculateRotation(originalTriangle[1], theta),
-      calculateRotation(originalTriangle[2], theta)
-    ];
+    var rotatedPoints = points.map(function(vertex) {
+      return calculateRotation(vertex, radians);
+    });
 
-    loadBuffer(rotatedTriangle);
+    loadBuffer(rotatedPoints);
     render();
   }
 };
