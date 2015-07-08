@@ -68,15 +68,43 @@ var divideTriangle = function(a, b, c, count) {
   }
 };
 
+var addSquare = function(a, b, c, e) {
+  points.push(a, b, c);
+  points.push(c, e, a);
+};
+
+var divideSquare = function(a, b, c, e, count) {
+  var ae,
+    aebc,
+    ab,
+    bc,
+    ce;
+
+  if (count === 0) {
+    addSquare(a, b, c, e);
+  } else {
+    ae = calculateMidPoint(a, e);
+    ab = calculateMidPoint(a, b);
+    bc = calculateMidPoint(b, c);
+    ce = calculateMidPoint(c, e);
+    aebc = calculateMidPoint(ae, bc);
+
+    divideSquare(ab, b, bc, bc, count-1);   // bottom right
+    divideSquare(ae, aebc, ce, e, count-1);   // top left
+    divideSquare(aebc, bc, c, ce, count-1);   // top right
+    divideSquare(a, ab, aebc, ae, count-1);   // bottom left
+  }
+};
+
 var render = function() {
   gl.clear( gl.COLOR_BUFFER_BIT );
   gl.drawArrays( gl.TRIANGLES, 0, points.length );
 };
 
-var renderAny = function(numPoints) {
-  gl.clear( gl.COLOR_BUFFER_BIT );
-  gl.drawArrays( gl.TRIANGLES, 0, numPoints );
-};
+// var renderAny = function(numPoints) {
+//   gl.clear( gl.COLOR_BUFFER_BIT );
+//   gl.drawArrays( gl.TRIANGLES, 0, numPoints );
+// };
 
 var loadBuffer = function(data) {
   // load data onto gpu
@@ -117,6 +145,13 @@ var doDivide = function(numDivisions) {
   render();
 };
 
+var doDivideSquare = function(numDivisions) {
+  resetPoints();
+  divideSquare(originalSquare[0], originalSquare[1], originalSquare[2], originalSquare[4], numDivisions);
+  loadBuffer(points);
+  render();
+};
+
 var updateTriangle = function(evt) {
   evt.preventDefault();
   if (evt && evt.target) {
@@ -137,9 +172,8 @@ var updateTriangle = function(evt) {
       doRotate(document.getElementById('theta').valueAsNumber);
     }
     if (evt.target.value === 'square') {
-      resetPoints();
-      loadBuffer(originalSquare);
-      renderAny(6);
+      doDivideSquare(document.getElementById('numDivisions').valueAsNumber);
+      doRotate(document.getElementById('theta').valueAsNumber);
     }
     if (evt.target.value === 'triangle') {
       doDivide(document.getElementById('numDivisions').valueAsNumber);
@@ -154,8 +188,6 @@ var doReset = function(evt) {
   _gasket = false;
   divideTriangle(originalTriangle[0], originalTriangle[1], originalTriangle[2], numDivisions);
   doRotate(_initialRotation);
-  // loadBuffer(points);
-  // render();
   document.getElementById('theta').value = _initialRotation;
   document.getElementById('thetaValue').value = _initialRotation;
   document.getElementById('numDivisions').value = 4;
@@ -185,16 +217,6 @@ window.onload = function init() {
   // Generate tasselated triangle data (modifies global points array)
   divideTriangle(originalTriangle[0], originalTriangle[1], originalTriangle[2], numDivisions);
   doRotate(_initialRotation);
-
-  // load the data into the GPU
-  // var bufferId = gl.createBuffer();
-  // gl.bindBuffer( gl.ARRAY_BUFFER, bufferId );
-  // gl.bufferData( gl.ARRAY_BUFFER, flatten(points), gl.STATIC_DRAW );
-
-  // associate shader variables with data buffer
-  // var vPosition = gl.getAttribLocation( program, 'vPosition' );
-  // gl.vertexAttribPointer( vPosition, 2, gl.FLOAT, false, 0, 0 );
-  // gl.enableVertexAttribArray( vPosition );
 
   render();
 };
