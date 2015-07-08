@@ -5,6 +5,7 @@ var program;
 var points = [];
 var numDivisions = 4;
 var _gasket = false;
+var _initialRotation = 60;
 
 // http://math.stackexchange.com/questions/240169/how-to-find-the-other-vertices-of-an-equilateral-triangle-given-one-vertex-and-c
 // equilateral triangle centered about the origin
@@ -152,10 +153,13 @@ var doReset = function(evt) {
   resetPoints();
   _gasket = false;
   divideTriangle(originalTriangle[0], originalTriangle[1], originalTriangle[2], numDivisions);
-  loadBuffer(points);
-  render();
-  document.getElementById('theta').value = 0;
+  doRotate(_initialRotation);
+  // loadBuffer(points);
+  // render();
+  document.getElementById('theta').value = _initialRotation;
+  document.getElementById('thetaValue').value = _initialRotation;
   document.getElementById('numDivisions').value = 4;
+  document.getElementById('numDivisionsValue').value = 4;
   document.getElementById('gasket').checked = false;
 };
 
@@ -180,16 +184,17 @@ window.onload = function init() {
 
   // Generate tasselated triangle data (modifies global points array)
   divideTriangle(originalTriangle[0], originalTriangle[1], originalTriangle[2], numDivisions);
+  doRotate(_initialRotation);
 
   // load the data into the GPU
-  var bufferId = gl.createBuffer();
-  gl.bindBuffer( gl.ARRAY_BUFFER, bufferId );
-  gl.bufferData( gl.ARRAY_BUFFER, flatten(points), gl.STATIC_DRAW );
+  // var bufferId = gl.createBuffer();
+  // gl.bindBuffer( gl.ARRAY_BUFFER, bufferId );
+  // gl.bufferData( gl.ARRAY_BUFFER, flatten(points), gl.STATIC_DRAW );
 
   // associate shader variables with data buffer
-  var vPosition = gl.getAttribLocation( program, 'vPosition' );
-  gl.vertexAttribPointer( vPosition, 2, gl.FLOAT, false, 0, 0 );
-  gl.enableVertexAttribArray( vPosition );
+  // var vPosition = gl.getAttribLocation( program, 'vPosition' );
+  // gl.vertexAttribPointer( vPosition, 2, gl.FLOAT, false, 0, 0 );
+  // gl.enableVertexAttribArray( vPosition );
 
   render();
 };
