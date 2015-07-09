@@ -163,36 +163,6 @@ var updateTriangle = function(evt) {
   doRotate(document.getElementById('theta').valueAsNumber);
 };
 
-// var updateTriangle = function(evt) {
-//   evt.preventDefault();
-//   if (evt && evt.target) {
-//     if (evt.target.id === 'theta') {
-//       doRotate(document.getElementById('theta').valueAsNumber);
-//     }
-//     if (evt.target.id === 'numDivisions') {
-//       doDivide(document.getElementById('numDivisions').valueAsNumber);
-//       doRotate(document.getElementById('theta').valueAsNumber);
-//     }
-//     if (evt.target.id === 'gasket') {
-//       if (document.getElementById('gasket').checked) {
-//         _gasket = true;
-//       } else {
-//         _gasket = false;
-//       }
-//       doDivide(document.getElementById('numDivisions').valueAsNumber);
-//       doRotate(document.getElementById('theta').valueAsNumber);
-//     }
-//     if (evt.target.value === 'square') {
-//       doDivideSquare(document.getElementById('numDivisions').valueAsNumber);
-//       doRotate(document.getElementById('theta').valueAsNumber);
-//     }
-//     if (evt.target.value === 'triangle') {
-//       doDivide(document.getElementById('numDivisions').valueAsNumber);
-//       doRotate(document.getElementById('theta').valueAsNumber);
-//     }
-//   }
-// };
-
 var doReset = function(evt) {
   evt.preventDefault();
   resetPoints();
@@ -228,7 +198,7 @@ window.onload = function init() {
 
   // Generate tasselated triangle data (modifies global points array)
   divideTriangle(originalTriangle[0], originalTriangle[1], originalTriangle[2], numDivisions);
-  doRotate(_initialRotation);
 
-  render();
+  // Rotate the shape and render
+  doRotate(_initialRotation);
 };
