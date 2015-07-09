@@ -136,8 +136,6 @@ var doRotate = function(theta) {
 var doDivide = function(numDivisions) {
   resetPoints();
   divideTriangle(originalTriangle[0], originalTriangle[1], originalTriangle[2], numDivisions);
-  loadBuffer(points);
-  render();
 };
 
 var doDivideSquare = function(numDivisions) {
