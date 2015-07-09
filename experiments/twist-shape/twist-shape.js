@@ -155,9 +155,11 @@ var updateTriangle = function(evt) {
     }
   }
   if (document.getElementById('squareShape').checked) {
+    document.getElementById('gasketGroup').style.visibility = 'hidden';
     doDivideSquare(document.getElementById('numDivisions').valueAsNumber);
   }
   if (document.getElementById('triangleShape').checked) {
+    document.getElementById('gasketGroup').style.visibility = '';
     doDivide(document.getElementById('numDivisions').valueAsNumber);
   }
   doRotate(document.getElementById('theta').valueAsNumber);
@@ -174,7 +176,9 @@ var doReset = function(evt) {
   document.getElementById('numDivisions').value = 4;
   document.getElementById('numDivisionsValue').value = 4;
   document.getElementById('gasket').checked = false;
+  document.getElementById('gasketGroup').style.visibility = '';
   document.getElementById('triangleShape').checked = true;
+  document.getElementById('gasketGroup').style.display = '';
 };
 
 window.onload = function init() {
