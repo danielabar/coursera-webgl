@@ -16,12 +16,12 @@ var originalTriangle = [
 ];
 
 var originalSquare = [
-  vec2(-1, -1),
-  vec2(1, -1),
-  vec2(1, 1),
-  vec2(1, 1),
-  vec2(-1, 1),
-  vec2(-1, -1),
+  vec2(-0.5, -0.5),
+  vec2(0.5, -0.5),
+  vec2(0.5, 0.5),
+  vec2(0.5, 0.5),
+  vec2(-0.5, 0.5),
+  vec2(-0.5, -0.5),
 ];
 
 var resetPoints = function() {
@@ -73,7 +73,7 @@ var addSquare = function(a, b, c, e) {
   points.push(c, e, a);
 };
 
-var divideSquare = function(a, b, c, e, count, message) {
+var divideSquare = function(a, b, c, e, count) {
   var ae,
     aebc,
     ab,
