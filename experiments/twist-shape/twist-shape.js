@@ -17,10 +17,10 @@ var originalTriangle = [
 
 var originalSquare = [
   vec2(-1, -1),
-  vec2(-1, 1),
-  vec2(1, 1),
-  vec2(1, 1),
   vec2(1, -1),
+  vec2(1, 1),
+  vec2(1, 1),
+  vec2(-1, 1),
   vec2(-1, -1),
 ];
 
@@ -73,7 +73,7 @@ var addSquare = function(a, b, c, e) {
   points.push(c, e, a);
 };
 
-var divideSquare = function(a, b, c, e, count) {
+var divideSquare = function(a, b, c, e, count, message) {
   var ae,
     aebc,
     ab,
@@ -89,7 +89,7 @@ var divideSquare = function(a, b, c, e, count) {
     ce = calculateMidPoint(c, e);
     aebc = calculateMidPoint(ae, bc);
 
-    divideSquare(ab, b, bc, bc, count-1);   // bottom right
+    divideSquare(ab, b, bc, aebc, count-1);   // bottom right
     divideSquare(ae, aebc, ce, e, count-1);   // top left
     divideSquare(aebc, bc, c, ce, count-1);   // top right
     divideSquare(a, ab, aebc, ae, count-1);   // bottom left
@@ -100,11 +100,6 @@ var render = function() {
   gl.clear( gl.COLOR_BUFFER_BIT );
   gl.drawArrays( gl.TRIANGLES, 0, points.length );
 };
-
-// var renderAny = function(numPoints) {
-//   gl.clear( gl.COLOR_BUFFER_BIT );
-//   gl.drawArrays( gl.TRIANGLES, 0, numPoints );
-// };
 
 var loadBuffer = function(data) {
   // load data onto gpu
