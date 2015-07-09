@@ -98,7 +98,10 @@ var divideSquare = function(a, b, c, e, count) {
 
 var render = function() {
   gl.clear( gl.COLOR_BUFFER_BIT );
-  gl.drawArrays( gl.TRIANGLES, 0, points.length );
+  // gl.drawArrays( gl.TRIANGLES, 0, points.length );
+  for (var i=0; i<points.length; i+=3) {
+    gl.drawArrays( gl.LINE_LOOP, i, 3);
+  }
 };
 
 var loadBuffer = function(data) {
