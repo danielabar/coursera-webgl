@@ -147,33 +147,51 @@ var doDivideSquare = function(numDivisions) {
 
 var updateTriangle = function(evt) {
   evt.preventDefault();
-  if (evt && evt.target) {
-    if (evt.target.id === 'theta') {
-      doRotate(document.getElementById('theta').valueAsNumber);
-    }
-    if (evt.target.id === 'numDivisions') {
-      doDivide(document.getElementById('numDivisions').valueAsNumber);
-      doRotate(document.getElementById('theta').valueAsNumber);
-    }
-    if (evt.target.id === 'gasket') {
-      if (document.getElementById('gasket').checked) {
-        _gasket = true;
-      } else {
-        _gasket = false;
-      }
-      doDivide(document.getElementById('numDivisions').valueAsNumber);
-      doRotate(document.getElementById('theta').valueAsNumber);
-    }
-    if (evt.target.value === 'square') {
-      doDivideSquare(document.getElementById('numDivisions').valueAsNumber);
-      doRotate(document.getElementById('theta').valueAsNumber);
-    }
-    if (evt.target.value === 'triangle') {
-      doDivide(document.getElementById('numDivisions').valueAsNumber);
-      doRotate(document.getElementById('theta').valueAsNumber);
+  if (evt.target.id === 'gasket') {
+    if (document.getElementById('gasket').checked) {
+      _gasket = true;
+    } else {
+      _gasket = false;
     }
   }
+  if (document.getElementById('squareShape').checked) {
+    doDivideSquare(document.getElementById('numDivisions').valueAsNumber);
+  }
+  if (document.getElementById('triangleShape').checked) {
+    doDivide(document.getElementById('numDivisions').valueAsNumber);
+  }
+  doRotate(document.getElementById('theta').valueAsNumber);
 };
+
+// var updateTriangle = function(evt) {
+//   evt.preventDefault();
+//   if (evt && evt.target) {
+//     if (evt.target.id === 'theta') {
+//       doRotate(document.getElementById('theta').valueAsNumber);
+//     }
+//     if (evt.target.id === 'numDivisions') {
+//       doDivide(document.getElementById('numDivisions').valueAsNumber);
+//       doRotate(document.getElementById('theta').valueAsNumber);
+//     }
+//     if (evt.target.id === 'gasket') {
+//       if (document.getElementById('gasket').checked) {
+//         _gasket = true;
+//       } else {
+//         _gasket = false;
+//       }
+//       doDivide(document.getElementById('numDivisions').valueAsNumber);
+//       doRotate(document.getElementById('theta').valueAsNumber);
+//     }
+//     if (evt.target.value === 'square') {
+//       doDivideSquare(document.getElementById('numDivisions').valueAsNumber);
+//       doRotate(document.getElementById('theta').valueAsNumber);
+//     }
+//     if (evt.target.value === 'triangle') {
+//       doDivide(document.getElementById('numDivisions').valueAsNumber);
+//       doRotate(document.getElementById('theta').valueAsNumber);
+//     }
+//   }
+// };
 
 var doReset = function(evt) {
   evt.preventDefault();
@@ -186,6 +204,7 @@ var doReset = function(evt) {
   document.getElementById('numDivisions').value = 4;
   document.getElementById('numDivisionsValue').value = 4;
   document.getElementById('gasket').checked = false;
+  document.getElementById('triangleShape').checked = true;
 };
 
 window.onload = function init() {
