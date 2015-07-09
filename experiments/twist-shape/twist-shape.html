@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Experiments | Twist | Shapes</title>
+  <script id="vertex-shader" type="x-shader/x-vertex">
+  attribute vec4 vPosition;
+
+  void
+  main()
+  {
+      gl_Position = vPosition;
+  }
+  </script>
+
+  <script id="fragment-shader" type="x-shader/x-fragment">
+  precision mediump float;
+
+  void
+  main()
+  {
+      gl_FragColor = vec4( 1.0, 0.0, 0.0, 1.0 );
+  }
+  </script>
+
+  <script type="text/javascript" src="../../Common/webgl-utils.js"></script>
+  <script type="text/javascript" src="../../Common/initShaders.js"></script>
+  <script type="text/javascript" src="../../Common/MV.js"></script>
+  <script type="text/javascript" src="twist-shape.js"></script>
+</head>
+
+<body>
+
+  <!--[if lt IE 9]>
+    <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+  <![endif]-->
+
+  <header>
+    <h1>Twist Shapes</h1>
+  </header>
+
+  <div class="section">
+    <form id="settings">
+      <div class="form-group">
+        <label for="theta">Degrees</label>
+        <input type=range id=theta min=0 value=60 max=360 step=15 oninput="outputThetaValue(value)">
+        <output for=theta id=thetaValue>60</output>
+      </div>
+      <div class="form-group">
+        <label for="numDivisions">Divisions</label>
+        <input type=range id=numDivisions min=0 value=4 max=7 step=1 oninput="outputNumDivisionsValue(value)">
+        <output for=numDivisions id=numDivisionsValue>4</output>
+      </div>
+      <div class="form-group">
+        <input type="radio" id="triangleShape" name="shape" value="triangle" checked>Triangle
+        <input type="radio" id="squareShape" name="shape" value="square">Square
+      </div>
+      <div id="gasketGroup" class="form-group">
+        <label for="gasket">Gasket</label>
+        <input type="checkbox" id="gasket" name="gasket" value="gasket">
+      </div>
+      <div class="form-group">
+        <input id="reset" type="button" value="Reset">
+      </div>
+    </form>
+  </div>
+
+  <div class="section">
+    <canvas id="gl-canvas" width="600" height="600">
+      Oops ... your browser doesn't support the HTML5 canvas element
+    </canvas>
+  </div>
+
+  <script>
+  var outputThetaValue = function(value) {
+    document.querySelector('#thetaValue').value = value;
+  };
+  var outputNumDivisionsValue = function(value) {
+    document.querySelector('#numDivisionsValue').value = value;
+  };
+  </script>
+
+</body>
+</html>
