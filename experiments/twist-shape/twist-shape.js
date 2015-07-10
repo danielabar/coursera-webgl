@@ -6,6 +6,7 @@ var points = [];
 var numDivisions = 4;
 var _gasket = false;
 var _initialRotation = 60;
+var _fill = 'solid';
 
 // http://math.stackexchange.com/questions/240169/how-to-find-the-other-vertices-of-an-equilateral-triangle-given-one-vertex-and-c
 // equilateral triangle centered about the origin
@@ -98,9 +99,13 @@ var divideSquare = function(a, b, c, e, count) {
 
 var render = function() {
   gl.clear( gl.COLOR_BUFFER_BIT );
-  // gl.drawArrays( gl.TRIANGLES, 0, points.length );
-  for (var i=0; i<points.length; i+=3) {
-    gl.drawArrays( gl.LINE_LOOP, i, 3);
+  if (_fill === 'solid') {
+    gl.drawArrays( gl.TRIANGLES, 0, points.length );
+  }
+  if (_fill === 'mesh') {
+    for (var i=0; i<points.length; i+=3) {
+      gl.drawArrays( gl.LINE_LOOP, i, 3);
+    }
   }
 };
 
@@ -165,6 +170,13 @@ var updateTriangle = function(evt) {
     document.getElementById('gasketGroup').style.visibility = '';
     doDivide(document.getElementById('numDivisions').valueAsNumber);
   }
+  var fills = document.getElementsByName('fill');
+  for (var i = 0; i < fills.length; i++) {
+    if (fills[i].checked) {
+        _fill = fills[i].value;
+        break;
+    }
+  }
   doRotate(document.getElementById('theta').valueAsNumber);
 };
 
@@ -172,6 +184,7 @@ var doReset = function(evt) {
   evt.preventDefault();
   resetPoints();
   _gasket = false;
+  _fill = 'solid';
   divideTriangle(originalTriangle[0], originalTriangle[1], originalTriangle[2], numDivisions);
   doRotate(_initialRotation);
   document.getElementById('theta').value = _initialRotation;
@@ -181,6 +194,7 @@ var doReset = function(evt) {
   document.getElementById('gasket').checked = false;
   document.getElementById('gasketGroup').style.visibility = '';
   document.getElementById('triangleShape').checked = true;
+  document.getElementById('fillSolid').checked = true;
   document.getElementById('gasketGroup').style.display = '';
 };
 
