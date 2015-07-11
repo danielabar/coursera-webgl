@@ -12,6 +12,9 @@ html {
 body {
   font-family: 'Nixie One', sans-serif;
   font-weight: 300;
+}
+
+body.home {
   background: url(../images/skyscraper.jpg) no-repeat fixed;
   background-size: cover;
 }
