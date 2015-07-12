@@ -1,7 +1,26 @@
+/* ---------------------------------- */
+/* Header */
+/* ---------------------------------- */
+
 .assignment header {
-  padding-top: 85px;
+  padding-top: 95px;
+  padding-bottom: 75px;
 }
 
 .assignment header h1 {
-  font-size: 100px;
+  font-size: 80px;
+}
+
+
+/* ---------------------------------- */
+/* Settings */
+/* ---------------------------------- */
+
+.assignment section {
+  padding-top: 30px;
+  padding-bottom: 30px;
+}
+
+.assignment section h1 {
+  font-size: 50px;
 }
