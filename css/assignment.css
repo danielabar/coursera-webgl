@@ -11,14 +11,18 @@
   font-size: 80px;
 }
 
+.assignment h1 {
+  margin-bottom: 20px;
+}
+
 
 /* ---------------------------------- */
-/* Settings */
+/* Section */
 /* ---------------------------------- */
 
 .assignment section {
   padding-top: 20px;
-  padding-bottom: 10px;
+  padding-bottom: 1px;
   background: rgba(81, 78, 78, 1);
   color: #fff;
 }
@@ -26,6 +30,16 @@
 .assignment section h1 {
   font-size: 50px;
 }
+
+section.drawing {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+
+/* ---------------------------------- */
+/* Settings Form */
+/* ---------------------------------- */
 
 .assignment form label,
 .assignment form input,
@@ -41,10 +55,6 @@
 .assignment form label {
   width: 7%;
 }
-
-/* ---------------------------------- */
-/* Range */
-/* ---------------------------------- */
 
 input[type=range] {
   /*removes default webkit styles*/
@@ -135,10 +145,6 @@ input[type=range]:focus::-ms-fill-lower {
 input[type=range]:focus::-ms-fill-upper {
   background: #ccc;
 }
-
-/* ---------------------------------- */
-/* Button */
-/* ---------------------------------- */
 
 input[type=button] {
   outline: none;
