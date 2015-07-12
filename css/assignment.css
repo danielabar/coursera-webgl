@@ -11,16 +11,172 @@
   font-size: 80px;
 }
 
+.assignment h1 {
+  margin-bottom: 20px;
+}
+
 
 /* ---------------------------------- */
-/* Settings */
+/* Section */
 /* ---------------------------------- */
 
 .assignment section {
-  padding-top: 30px;
-  padding-bottom: 30px;
+  padding-top: 20px;
+  padding-bottom: 1px;
+  background: rgba(81, 78, 78, 1);
+  color: #fff;
 }
 
 .assignment section h1 {
   font-size: 50px;
+}
+
+section.drawing {
+  padding-top: 0;
+  padding-bottom: 20px;
+}
+
+
+/* ---------------------------------- */
+/* Settings Form */
+/* ---------------------------------- */
+
+.assignment form {
+  font-family: 'Open Sans', serif;
+  font-size: 1.1em;
+}
+
+.assignment form label,
+.assignment form input,
+.assignment form output {
+  display: inline-block;
+}
+
+.assignment .form-group {
+  margin-top: 7px;
+  margin-bottom: 7px;
+}
+
+.assignment form label {
+  width: 7%;
+}
+
+input[type=range] {
+  /*removes default webkit styles*/
+  -webkit-appearance: none;
+
+  /*fix for FF unable to apply focus style bug */
+  border: 1px solid white;
+
+  /*required for proper track sizing in FF*/
+  width: 220px;
+}
+input[type=range]::-webkit-slider-runnable-track {
+  width: 220px;
+  height: 5px;
+  background: #ddd;
+  border: none;
+  border-radius: 3px;
+}
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  border: none;
+  height: 16px;
+  width: 16px;
+  border-radius: 50%;
+  background: #9D6381;
+  margin-top: -4px;
+}
+input[type=range]:focus {
+  outline: none;
+}
+input[type=range]:focus::-webkit-slider-runnable-track {
+  background: #ccc;
+}
+
+input[type=range]::-moz-range-track {
+  width: 220px;
+  height: 5px;
+  background: #ddd;
+  border: none;
+  border-radius: 3px;
+}
+input[type=range]::-moz-range-thumb {
+  border: none;
+  height: 16px;
+  width: 16px;
+  border-radius: 50%;
+  background: #9D6381;
+}
+
+/*hide the outline behind the border*/
+input[type=range]:-moz-focusring{
+  outline: 1px solid white;
+  outline-offset: -1px;
+}
+
+input[type=range]::-ms-track {
+  width: 220px;
+  height: 5px;
+
+  /*remove bg colour from the track, we'll use ms-fill-lower and ms-fill-upper instead */
+  background: transparent;
+
+  /*leave room for the larger thumb to overflow with a transparent border */
+  border-color: transparent;
+  border-width: 6px 0;
+
+  /*remove default tick marks*/
+  color: transparent;
+}
+input[type=range]::-ms-fill-lower {
+  background: #777;
+  border-radius: 10px;
+}
+input[type=range]::-ms-fill-upper {
+  background: #ddd;
+  border-radius: 10px;
+}
+input[type=range]::-ms-thumb {
+  border: none;
+  height: 16px;
+  width: 16px;
+  border-radius: 50%;
+  background: #9D6381;
+}
+input[type=range]:focus::-ms-fill-lower {
+  background: #888;
+}
+input[type=range]:focus::-ms-fill-upper {
+  background: #ccc;
+}
+
+input[type=button] {
+  outline: none;
+  border: solid 1px #ccc;
+  padding: 5px 10px;
+  letter-spacing: 1px;
+  font-size: 1em;
+  text-transform: lowercase;
+  color: #474747;
+  cursor: pointer;
+  border-radius: 3px;
+  background-image: -webkit-linear-gradient(top, #ddd, #CECCCC);
+  background-image: linear-gradient(top, #ddd, #CECCCC);
+}
+
+
+/* ---------------------------------- */
+/* Footer */
+/* ---------------------------------- */
+
+.assignment footer {
+  padding-top: 20px;
+  padding-bottom: 20px;
+  padding-left: 20px;
+  text-align: left;
+}
+
+.assignment footer p {
+  margin-bottom: 0;
 }

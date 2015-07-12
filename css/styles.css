@@ -12,11 +12,29 @@ html {
 body {
   font-family: 'Nixie One', sans-serif;
   font-weight: 300;
+  color: #4D4946;
 }
 
 body.home {
-  background: url(../images/skyscraper.jpg) no-repeat fixed;
-  background-size: cover;
+  background: -webkit-linear-gradient(60deg, rgb(153,153,153) 12%, rgba(0,0,0,0) 12.5%, rgba(0,0,0,0) 87%, rgb(153,153,153) 87.5%, rgb(153,153,153) 0), -webkit-linear-gradient(-60deg, rgb(153,153,153) 12%, rgba(0,0,0,0) 12.5%, rgba(0,0,0,0) 87%, rgb(153,153,153) 87.5%, rgb(153,153,153) 0), -webkit-linear-gradient(60deg, rgb(153,153,153) 12%, rgba(0,0,0,0) 12.5%, rgba(0,0,0,0) 87%, rgb(153,153,153) 87.5%, rgb(153,153,153) 0), -webkit-linear-gradient(-60deg, rgb(153,153,153) 12%, rgba(0,0,0,0) 12.5%, rgba(0,0,0,0) 87%, rgb(153,153,153) 87.5%, rgb(153,153,153) 0), -webkit-linear-gradient(30deg, rgb(187,187,187) 25%, rgba(0,0,0,0) 25.5%, rgba(0,0,0,0) 75%, rgb(187,187,187) 75%, rgb(187,187,187) 0), -webkit-linear-gradient(30deg, rgb(187,187,187) 25%, rgba(0,0,0,0) 25.5%, rgba(0,0,0,0) 75%, rgb(187,187,187) 75%, rgb(187,187,187) 0), rgb(170, 170, 170);
+  background: -moz-linear-gradient(30deg, rgb(153,153,153) 12%, rgba(0,0,0,0) 12.5%, rgba(0,0,0,0) 87%, rgb(153,153,153) 87.5%, rgb(153,153,153) 0), -moz-linear-gradient(150deg, rgb(153,153,153) 12%, rgba(0,0,0,0) 12.5%, rgba(0,0,0,0) 87%, rgb(153,153,153) 87.5%, rgb(153,153,153) 0), -moz-linear-gradient(30deg, rgb(153,153,153) 12%, rgba(0,0,0,0) 12.5%, rgba(0,0,0,0) 87%, rgb(153,153,153) 87.5%, rgb(153,153,153) 0), -moz-linear-gradient(150deg, rgb(153,153,153) 12%, rgba(0,0,0,0) 12.5%, rgba(0,0,0,0) 87%, rgb(153,153,153) 87.5%, rgb(153,153,153) 0), -moz-linear-gradient(60deg, rgb(187,187,187) 25%, rgba(0,0,0,0) 25.5%, rgba(0,0,0,0) 75%, rgb(187,187,187) 75%, rgb(187,187,187) 0), -moz-linear-gradient(60deg, rgb(187,187,187) 25%, rgba(0,0,0,0) 25.5%, rgba(0,0,0,0) 75%, rgb(187,187,187) 75%, rgb(187,187,187) 0), rgb(170, 170, 170);
+  background: linear-gradient(30deg, rgb(153,153,153) 12%, rgba(0,0,0,0) 12.5%, rgba(0,0,0,0) 87%, rgb(153,153,153) 87.5%, rgb(153,153,153) 0), linear-gradient(150deg, rgb(153,153,153) 12%, rgba(0,0,0,0) 12.5%, rgba(0,0,0,0) 87%, rgb(153,153,153) 87.5%, rgb(153,153,153) 0), linear-gradient(30deg, rgb(153,153,153) 12%, rgba(0,0,0,0) 12.5%, rgba(0,0,0,0) 87%, rgb(153,153,153) 87.5%, rgb(153,153,153) 0), linear-gradient(150deg, rgb(153,153,153) 12%, rgba(0,0,0,0) 12.5%, rgba(0,0,0,0) 87%, rgb(153,153,153) 87.5%, rgb(153,153,153) 0), linear-gradient(60deg, rgb(187,187,187) 25%, rgba(0,0,0,0) 25.5%, rgba(0,0,0,0) 75%, rgb(187,187,187) 75%, rgb(187,187,187) 0), linear-gradient(60deg, rgb(187,187,187) 25%, rgba(0,0,0,0) 25.5%, rgba(0,0,0,0) 75%, rgb(187,187,187) 75%, rgb(187,187,187) 0), rgb(170, 170, 170);
+  background-position: 0 0, 0 0, 40px 70px, 40px 70px, 0 0, 40px 70px;
+  -webkit-background-origin: padding-box;
+  background-origin: padding-box;
+  -webkit-background-clip: border-box;
+  background-clip: border-box;
+  -webkit-background-size: 80px 140px;
+  background-size: 80px 140px;
+  -webkit-box-shadow: none;
+  -webkit-transition: none;
+  -moz-transition: none;
+  -o-transition: none;
+  transition: none;
+  -webkit-transform: none;
+  transform: none;
+  -webkit-transform-origin: 50% 50% 0;
+  transform-origin: 50% 50% 0;
 }
 
 h1 {
@@ -51,7 +69,7 @@ a {
 
 header {
   background: #CECCCC;
-  padding-top: 250px;
+  padding-top: 200px;
 }
 
 header h1 {
@@ -84,7 +102,7 @@ nav a {
   display: inline-block;
   text-transform: uppercase;
   text-decoration: none;
-  color: #000;
+  color: #4D4946;
 }
 
 nav a:hover {
@@ -100,11 +118,10 @@ nav a:hover {
 
 .assignments {
   background: #fff;
-  color: #000;
 }
 
 .assignments a {
-  color: #000;
+  color: #4D4946;
 }
 
 /* ---------------------------------- */
@@ -112,7 +129,7 @@ nav a:hover {
 /* ---------------------------------- */
 
 .experiments {
-  background: rgba(97, 41, 64, 0.95);
+  background: rgba(97, 41, 64, 0.7);
   color: #fff;
 }
 

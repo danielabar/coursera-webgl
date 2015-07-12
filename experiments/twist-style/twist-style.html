@@ -13,7 +13,7 @@
   void
   main()
   {
-      gl_Position = vPosition;
+    gl_Position = vPosition;
   }
   </script>
 
@@ -23,7 +23,7 @@
   void
   main()
   {
-      gl_FragColor = vec4( 1.0, 0.0, 0.0, 1.0 );
+    gl_FragColor = vec4(0.28, 0.32, 0.84, 1);
   }
   </script>
 
@@ -52,7 +52,7 @@
 
   <section class="settings">
     <h1>Settings</h1>
-    <form id="settings">
+    <form id="settings" class="settings-form">
       <div class="form-group">
         <label for="theta">Degrees</label>
         <input type=range id=theta min=0 value=60 max=360 step=15 oninput="outputThetaValue(value)">
@@ -83,11 +83,15 @@
     </form>
   </section>
 
-  <section>
+  <section class="drawing">
     <canvas id="gl-canvas" width="600" height="600">
       Oops ... your browser doesn't support the HTML5 canvas element
     </canvas>
   </section>
+
+  <footer>
+    <p>Daniela Baron <a href="https://www.coursera.org/course/webgl">Coursera WebGL</a></p>
+  </footer>
 
   <script>
   var outputThetaValue = function(value) {
