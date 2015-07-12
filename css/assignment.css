@@ -33,13 +33,18 @@
 
 section.drawing {
   padding-top: 0;
-  padding-bottom: 0;
+  padding-bottom: 20px;
 }
 
 
 /* ---------------------------------- */
 /* Settings Form */
 /* ---------------------------------- */
+
+.assignment form {
+  font-family: 'Open Sans', serif;
+  font-size: 1.1em;
+}
 
 .assignment form label,
 .assignment form input,
@@ -158,4 +163,20 @@ input[type=button] {
   border-radius: 3px;
   background-image: -webkit-linear-gradient(top, #ddd, #CECCCC);
   background-image: linear-gradient(top, #ddd, #CECCCC);
+}
+
+
+/* ---------------------------------- */
+/* Footer */
+/* ---------------------------------- */
+
+.assignment footer {
+  padding-top: 20px;
+  padding-bottom: 20px;
+  padding-left: 20px;
+  text-align: left;
+}
+
+.assignment footer p {
+  margin-bottom: 0;
 }
