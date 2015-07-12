@@ -113,6 +113,25 @@ nav a:hover {
 
 
 /* ---------------------------------- */
+/* Section */
+/* ---------------------------------- */
+
+section li {
+  display: inline-block;
+  margin: 10px;
+  padding: 16px;
+  font-size: 1.1em;
+  border: 1px solid #9D6381;
+  border-radius: 5px;
+  width: 230px;
+  text-align: center;
+}
+
+section li a {
+  color: #9D6381;
+}
+
+/* ---------------------------------- */
 /* Assignments */
 /* ---------------------------------- */
 
@@ -120,9 +139,9 @@ nav a:hover {
   background: #fff;
 }
 
-.assignments a {
+/*.assignments a {
   color: #4D4946;
-}
+}*/
 
 /* ---------------------------------- */
 /* Experiments */
@@ -131,6 +150,10 @@ nav a:hover {
 .experiments {
   background: rgba(97, 41, 64, 0.7);
   color: #fff;
+}
+
+.experiments li {
+  border: 1px solid #fff;
 }
 
 .experiments a {
