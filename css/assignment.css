@@ -61,6 +61,10 @@ section.drawing {
   width: 7%;
 }
 
+input:hover {
+  cursor: pointer;
+}
+
 /* http://brennaobrien.com/blog/2014/05/style-input-type-range-in-every-browser.html */
 input[type=range] {
   /*removes default webkit styles*/
