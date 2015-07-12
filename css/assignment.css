@@ -24,3 +24,14 @@
 .assignment section h1 {
   font-size: 50px;
 }
+
+.assignment form label,
+.assignment form input,
+.assignment form output {
+  display: inline-block;
+}
+
+.assignment .form-group {
+  margin-top: 6px;
+  margin-bottom: 6px;
+}
