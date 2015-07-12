@@ -19,6 +19,8 @@
 .assignment section {
   padding-top: 20px;
   padding-bottom: 10px;
+  background: rgba(81, 78, 78, 1);
+  color: #fff;
 }
 
 .assignment section h1 {
