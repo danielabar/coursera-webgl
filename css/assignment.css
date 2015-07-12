@@ -142,15 +142,12 @@ input[type=button] {
   outline: none;
   border: solid 1px #ccc;
   padding: 5px 10px;
-  margin: 0 0 20px;
-  font-family: "Open Sans";
+  letter-spacing: 1px;
   font-size: 1em;
-  text-transform: uppercase;
-  font-weight: bold;
+  text-transform: lowercase;
   color: #474747;
   cursor: pointer;
-  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.5), 0px 1px 2px rgba(0, 0, 0, 0.2);
   border-radius: 3px;
-  background-image: -webkit-linear-gradient(top, #ddd, #aaa);
-  background-image: linear-gradient(top, #ddd, #aaa);
+  background-image: -webkit-linear-gradient(top, #ddd, #CECCCC);
+  background-image: linear-gradient(top, #ddd, #CECCCC);
 }

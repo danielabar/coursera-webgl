@@ -12,6 +12,7 @@ html {
 body {
   font-family: 'Nixie One', sans-serif;
   font-weight: 300;
+  color: #4D4946;
 }
 
 body.home {
@@ -84,7 +85,7 @@ nav a {
   display: inline-block;
   text-transform: uppercase;
   text-decoration: none;
-  color: #000;
+  color: #4D4946;
 }
 
 nav a:hover {
@@ -100,11 +101,10 @@ nav a:hover {
 
 .assignments {
   background: #fff;
-  color: #000;
 }
 
 .assignments a {
-  color: #000;
+  color: #4D4946;
 }
 
 /* ---------------------------------- */
