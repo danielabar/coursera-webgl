@@ -61,12 +61,13 @@ section.drawing {
   width: 7%;
 }
 
+/* http://brennaobrien.com/blog/2014/05/style-input-type-range-in-every-browser.html */
 input[type=range] {
   /*removes default webkit styles*/
   -webkit-appearance: none;
 
   /*fix for FF unable to apply focus style bug */
-  border: 1px solid white;
+  border: 1px solid rgba(81, 78, 78, 1);
 
   /*required for proper track sizing in FF*/
   width: 220px;
@@ -84,7 +85,7 @@ input[type=range]::-webkit-slider-thumb {
   height: 16px;
   width: 16px;
   border-radius: 50%;
-  background: #9D6381;
+  background: rgba(71, 82, 214, 1);
   margin-top: -4px;
 }
 input[type=range]:focus {
@@ -106,12 +107,12 @@ input[type=range]::-moz-range-thumb {
   height: 16px;
   width: 16px;
   border-radius: 50%;
-  background: #9D6381;
+  background: rgba(71, 82, 214, 1);
 }
 
 /*hide the outline behind the border*/
 input[type=range]:-moz-focusring{
-  outline: 1px solid white;
+  outline: 1px solid rgba(81, 78, 78, 1);
   outline-offset: -1px;
 }
 
@@ -142,7 +143,7 @@ input[type=range]::-ms-thumb {
   height: 16px;
   width: 16px;
   border-radius: 50%;
-  background: #9D6381;
+  background: rgba(71, 82, 214, 1);
 }
 input[type=range]:focus::-ms-fill-lower {
   background: #888;
