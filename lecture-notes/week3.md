@@ -72,7 +72,7 @@ This is preferable for longer shader programs.
 ### Qualifiers
 
 * Some of same qualifiers as C/C++ such as `const`
-* Also need others, variables chan change
+* Also need others, variables can change
   * Once per primitive (uniform qualified)
   * Once per vertex (attribute qualified)
   * Once per fragment (varying qualified)
@@ -213,3 +213,100 @@ void main() {
   a.yz = vec2(1.0, 2.0, 3.0, 4.0);
   b = a.yxzw;   // swaps x and y axes
   ```
+
+## Color
+
+### Attributes
+
+* Attributes determine appearance of objects
+  - color (points, lines, polygons)
+  - size and width (points, lines)
+  - stipple pattern such as dashed, dotted, etc. (lines, polygons)
+  - polygone mode
+    - display as filled: solid color or stripple pattern
+    - display edges
+    - display verticies
+* Only a few (gl_PointSize) are supported by WebGL functions
+
+### RGB Color
+
+* Additive
+* EAch color component is stored separately in the frame buffer
+* Usually 8 bits per component in buffer
+* Color values can range from 0.0 (none) to 1.0 (all) using floats
+or over the range from 0 to 255 using unsigned bytes
+
+### Setting Colors
+
+* Colors are ultimately set in the fragment shader, but can be determined in either shader or in the application
+* Application color: pass to vertex shader as a uniform variable or as a vertex attribute
+* Vertex shader color: pass to fragment shader as varying variable
+* Fragment color: can alter via shader code
+
+### Smooth Color
+
+Rasterizer takes information passed in on vertex by vertex basis and interpolates that across the entity.
+
+* Default is _smooth_ shading: Raserizer interpolates vector colors across visible polygons
+* Alternative is _flat shading_: Color of first vertex determines fill color, handle in shader
+
+Application to draw a multi colored triangle (Maxwell Triangle), gradient from red, green, blue
+
+```javascript
+var colors = [1, 0, 0, 0, 1, 0, 0, 0, 1];   // red: 1, 0, 0   green: 0, 1, 0    blue: 0, 0, 1
+var cbufferId = gl.createBuffer();
+gl.bindBuffer( gl.ARRAY_BUFFER, cbufferId );
+gl.bufferData (gl.ARRAY_BUFFER, flatten(colors), gl.STATIC_DRAW );
+
+var vColor = gl.getAttribLocation( program, 'vColor' );   // vColor is an attribute in the vertex shader
+gl.vertexAttribPointer( vColor, 3, gl.FLOAT, false, 0, 0 );
+gl.enableVertexAttribArray( vColor );
+```
+
+Vertex Shader
+
+```
+attribute vec4 vPosition;
+attribute vec4 vColor;
+varying vec4 fColor;    // to pass vColor through to rasterizer
+
+void main() {
+  gl_Position = vPosition;
+  fColor = vColor;
+}
+```
+
+Fragment Shader
+
+What comes in to fragment shader is NOT the `varying fColor`, it's the _interpolated_ values of the color sent out from the vertex shader.
+
+Vertex shader is executed 3 times, fragment shader is executed many times.
+
+```
+precision mediump float;
+varying vec4 fColor;
+
+void main() {
+  gl_FragColor = fColor;
+}
+```
+
+### Sending a Uniform Variable
+
+Application to draw in a solid color
+
+```javascript
+var color = vec4(1.0, 0.0, 0.0, 1.0);
+var colorLoc = gl.getUniformLocation( program, 'color');
+gl.uniform4f( colorLoc, color);
+```
+
+Fragment Shader
+
+```
+uniform vec4 color;
+
+void main() {
+  gl_FragColor = color;
+}
+```
