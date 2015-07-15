@@ -5,12 +5,9 @@
 
   <script id="vertex-shader" type="x-shader/x-vertex">
   attribute vec4 vPosition;
-  attribute vec4 vColor;
-  varying vec4 fColor;    // to pass vColor through to rasterizer
 
   void main() {
     gl_Position = vPosition;
-    fColor = vColor;
   }
   </script>
 
