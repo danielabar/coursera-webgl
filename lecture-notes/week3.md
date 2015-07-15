@@ -310,3 +310,88 @@ void main() {
   gl_FragColor = color;
 }
 ```
+
+## Animation
+
+### Callbacks
+
+Programming interface for event driven inpput uses _callback functions_ or _event handlers_.
+
+* Define a callback for each event the graphics system recognizes
+* Browser enters the _event loop_, and responds to those events for which it has callbacks registered
+* Callback function is executed when event occurs
+
+Consider 4 points of a rotating square in a circle, with circle centered at origin:
+
+* Top right (-sin &theta;, cos &theta;)
+* Top left (cos &theta;, sin &theta;)
+* Bottom left (-cos &theta;, -sin &theta;)
+* Bottom right (sin &theta;, -cos &theta;)
+
+Animate display by re-rendering for different values of &theta;
+
+How to change the verteces to effect a rotation?
+
+### Simple but slow
+
+Constantly sending data to the GPU.
+
+```javascript
+for (var theta = 0.0; theta < thetaMax; theta += dTheta) {
+  verteces[0] = vec2(Math.sin(theta), Math.cos(theta));
+  verteces[1] = vec2(Math.sin(theta), -Math.cos(theta));
+  verteces[2] = vec2(-Math.sin(theta), -Math.cos(theta));
+  verteces[3] = vec2(-Math.sin(theta), Math.cos(theta));
+
+  gl.bufferSubData(...)
+  render();
+}
+```
+
+`gl.bufferSubData` does the same thing that `gl.bufferData` does but it assumes the buffer already exists and replaces the data that's in there.
+
+### Complex but faster
+
+* Send original verteces to vertex shader
+* Send &theta; to shader as a uniform variabe
+* Compute verteces in vertex shader (using trigonometry functions built into GLSL)
+* Render recursively (i.e. have the render function call itself)
+
+```javascript
+// vertex shader has uniform variable named theta
+var thetaLoc = gl.getUniformLocation(program, 'theta');
+
+var render = function() {
+
+  // clear the frame buffer
+  gl.clear(gl.COLOR_BUFFER_BIT);
+
+  // increment theta
+  theta += 0.1;
+
+  // send new value of theta over to theta location as a uniform variable
+  gl.uniform1f(thetaLoc, theta);
+
+  gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+
+  // infinite recursion
+  render();
+};
+```
+
+Vertex shader calculates the rotation
+
+```
+// input passed in from application
+attribute vec4 vPosition;
+uniform float theta;
+
+void main() {
+  gl_Position.x = -sin(theta) * vPosition.x + cos(theta) * vPosition.x;
+  gl_Position.y = = sin(theta) * vPosition.y + cos(theta) * vPosition.y;
+  gl_Position.z = 0.0;
+  gl_Position.w = 1.0;
+}
+```
+
+11:39 Video Input 2, Week 3
