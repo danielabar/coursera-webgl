@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Experiments | Maxwell Triangle 4</title>
+
+  <script id="vertex-shader" type="x-shader/x-vertex">
+  attribute vec4 vPosition;
+  // varying vec4 fUserOption;    // to pass fUserOption through to rasterizer
+
+  void main() {
+    gl_Position = vPosition;
+  }
+  </script>
+
+  <script id="fragment-shader" type="x-shader/x-fragment">
+  precision mediump float;
+
+  uniform float fUserOption;
+
+  void main() {
+    float red = gl_FragCoord.x / 511.0;
+    float green = gl_FragCoord.y / 511.0;
+    float blue = 1.0 - red - green;
+
+    // brightness
+    if (fUserOption == 1.0) {
+      float maxrg = max(red, green);
+      float maxrgb = max(maxrg, blue);
+
+      float brightScale = 1.0 / maxrgb;
+
+    	gl_FragColor.r = red * brightScale;
+    	gl_FragColor.g = green * brightScale;
+    	gl_FragColor.b = blue * brightScale;
+    	gl_FragColor.a = 1.0;
+    }
+
+    // luminance
+    if (fUserOption == 2.0) {
+    	gl_FragColor.r = red * 0.299;
+    	gl_FragColor.g = green * 0.587;
+    	gl_FragColor.b = blue * 0.114;
+    	gl_FragColor.a = 1.0;
+    }
+
+  }
+  </script>
+
+  <script type="text/javascript" src="../../Common/webgl-utils.js"></script>
+  <script type="text/javascript" src="../../Common/initShaders.js"></script>
+  <script type="text/javascript" src="../../Common/flatten.js"></script>
+  <script type="text/javascript" src="maxwell-interactive.js"></script>
+</head>
+
+<body>
+
+  <header>
+    <h1>Maxwell Triangle 4</h1>
+  </header>
+
+  <section id="settings" class="settings">
+    <div class="form-group">
+      <label for="fill">Color</label>
+      <input type="radio" id="fillBright" name="fill" value="1.0" checked>Bright
+      <input type="radio" id="fillLuminance" name="fill" value="2.0">Luminance
+    </div>
+  </section>
+
+  <section>
+    <canvas id="gl-canvas" width="512" height="512">
+      Oops ... your browser doesn't support the HTML5 canvas element
+    </canvas>
+  </section>
+</body>
+</html>
