@@ -27,17 +27,18 @@
 (function(window) {
   'use strict';
 
+  var DEFAULT_FILL_OPT = 1.0;
+
   var gl;
   var _program;
-  var _fill;
+  var _fill = DEFAULT_FILL_OPT;
 
   var render = function() {
     gl.clear( gl.COLOR_BUFFER_BIT );
     gl.drawArrays( gl.TRIANGLES, 0, 3 );
   };
 
-  var updateTriangle = function(evt) {
-    evt.preventDefault();
+  var updateTriangle = function() {
     _fill = window.DomUtils.getCheckedValue('fill');
 
     var userOptionLoc = gl.getUniformLocation(_program, 'fUserOption');
@@ -58,11 +59,11 @@
       // Setup data
       var vertices = [-1, -1, 0, 1, 1, -1];
 
-      //  Configure WebGL
+      // Configure WebGL
       gl.viewport( 0, 0, canvas.width, canvas.height );
       gl.clearColor( 1.0, 1.0, 1.0, 1.0 );
 
-      //  Load shaders and initialize attribute buffers
+      // Load shaders
       _program = initShaders( gl, 'vertex-shader', 'fragment-shader' );
       gl.useProgram( _program );
 
@@ -76,7 +77,18 @@
       gl.vertexAttribPointer( vPosition, 2, gl.FLOAT, false, 0, 0 );
       gl.enableVertexAttribArray( vPosition );
 
-      render();
+      // Load color data into the GPU
+      var colors = [1, 0, 0, 0, 1, 0, 0, 0, 1];
+      var cbufferId = gl.createBuffer();
+      gl.bindBuffer( gl.ARRAY_BUFFER, cbufferId );
+      gl.bufferData (gl.ARRAY_BUFFER, flatten(colors), gl.STATIC_DRAW );
+
+      // Associate shader variables with color data buffer
+      var vColor = gl.getAttribLocation( _program, 'vColor' );
+      gl.vertexAttribPointer( vColor, 3, gl.FLOAT, false, 0, 0 );
+      gl.enableVertexAttribArray( vColor );
+
+      updateTriangle();
     }
 
   };

@@ -5,10 +5,12 @@
 
   <script id="vertex-shader" type="x-shader/x-vertex">
   attribute vec4 vPosition;
-  // varying vec4 fUserOption;    // to pass fUserOption through to rasterizer
+  attribute vec4 vColor;
+  varying vec4 fColor;    // to pass vColor through to rasterizer
 
   void main() {
     gl_Position = vPosition;
+    fColor = vColor;
   }
   </script>
 
@@ -16,14 +18,29 @@
   precision mediump float;
 
   uniform float fUserOption;
+  varying vec4 fColor;
 
   void main() {
+
     float red = gl_FragCoord.x / 511.0;
     float green = gl_FragCoord.y / 511.0;
     float blue = 1.0 - red - green;
 
-    // brightness
+    // interpolated
     if (fUserOption == 1.0) {
+      gl_FragColor = fColor;
+    }
+
+    // manual
+    if (fUserOption == 2.0) {
+      gl_FragColor.r = red ;
+    	gl_FragColor.g = green;
+    	gl_FragColor.b = blue;
+    	gl_FragColor.a = 1.0;
+    }
+
+    // brightScale
+    if (fUserOption == 3.0) {
       float maxrg = max(red, green);
       float maxrgb = max(maxrg, blue);
 
@@ -36,7 +53,7 @@
     }
 
     // luminance
-    if (fUserOption == 2.0) {
+    if (fUserOption == 4.0) {
     	gl_FragColor.r = red * 0.299;
     	gl_FragColor.g = green * 0.587;
     	gl_FragColor.b = blue * 0.114;
@@ -61,8 +78,10 @@
   <section id="settings" class="settings">
     <div class="form-group">
       <label for="fill">Color</label>
-      <input type="radio" id="fillBright" name="fill" value="1.0" checked>Bright
-      <input type="radio" id="fillLuminance" name="fill" value="2.0">Luminance
+      <input type="radio" id="fillInterpolated" name="fill" value="1.0" checked>Interpolated
+      <input type="radio" id="fillManual" name="fill" value="2.0">Manual
+      <input type="radio" id="fillBright" name="fill" value="3.0">Bright
+      <input type="radio" id="fillLuminance" name="fill" value="4.0">Luminance
     </div>
   </section>
 
