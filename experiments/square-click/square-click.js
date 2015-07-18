@@ -78,6 +78,7 @@
   var gl,
     _program,
     _vBuffer,
+    _cBuffer,
     _canvas,
     _numDrawn = 0,
     _sizePx = 10;
@@ -120,6 +121,18 @@
     gl.bindBuffer(gl.ARRAY_BUFFER, _vBuffer);
     gl.bufferSubData(gl.ARRAY_BUFFER, offset, flatten(verteces));
 
+    var colors = [
+      1, 0, 0,
+      0, 1, 0,
+      0, 0, 1,
+      1, 0, 0,
+      0, 1, 0,
+      0, 0, 1
+    ];
+    var colorOffset = sizeof.vec3 * 6 * _numDrawn;
+    gl.bindBuffer(gl.ARRAY_BUFFER, _cBuffer);
+    gl.bufferSubData(gl.ARRAY_BUFFER, colorOffset, flatten(colors));
+
     render();
     _numDrawn++;
   };
@@ -151,7 +164,7 @@
       _program = initShaders( gl, 'vertex-shader', 'fragment-shader' );
       gl.useProgram( _program );
 
-      // Load an empty buffer onto the GPU
+      // Load an empty vertex buffer onto the GPU
       _vBuffer = gl.createBuffer();
       gl.bindBuffer( gl.ARRAY_BUFFER, _vBuffer );
       gl.bufferData( gl.ARRAY_BUFFER, 8*Math.pow(3, 6), gl.STATIC_DRAW );
@@ -160,6 +173,16 @@
       var vPosition = gl.getAttribLocation( _program, 'vPosition' );
       gl.vertexAttribPointer( vPosition, 2, gl.FLOAT, false, 0, 0 );
       gl.enableVertexAttribArray( vPosition );
+
+      // Load an empty color buffer onto the GPU
+      _cBuffer = gl.createBuffer();
+      gl.bindBuffer( gl.ARRAY_BUFFER, _cBuffer );
+      gl.bufferData( gl.ARRAY_BUFFER, 8*Math.pow(3, 6), gl.STATIC_DRAW );
+
+      // Associate shader variables with color data buffer
+      var vColor = gl.getAttribLocation( _program, 'vColor' );
+      gl.vertexAttribPointer( vColor, 3, gl.FLOAT, false, 0, 0 );
+      gl.enableVertexAttribArray( vColor );
 
       render();
     }

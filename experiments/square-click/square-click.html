@@ -10,14 +10,18 @@
 
   void main() {
     gl_Position = vPosition;
+    fColor = vColor;
   }
   </script>
 
   <script id="fragment-shader" type="x-shader/x-fragment">
   precision mediump float;
 
+  varying vec4 fColor;
+
   void main() {
-    gl_FragColor = vec4(0.28, 0.32, 0.84, 1);
+    gl_FragColor = fColor;
+    // gl_FragColor = vec4(0.28, 0.32, 0.84, 1);
   }
   </script>
 
