@@ -53,7 +53,6 @@
     _canvas,
     _numDrawn = 0;
 
-  // FIXME Only renders every other click, for where mouse position was before
   var addSquare = function(evt) {
     evt.preventDefault();
 
@@ -94,6 +93,7 @@
   var render = function() {
     gl.clear( gl.COLOR_BUFFER_BIT );
     gl.drawArrays( gl.TRIANGLES, 0, _numDrawn * 6 );
+    window.requestAnimationFrame(render);
   };
 
   var App = {
