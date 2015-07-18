@@ -1,6 +1,32 @@
 (function(window) {
   'use strict';
 
+  var DomUtils = {
+
+    getCheckedValue: function(id) {
+      var checkedVal,
+        values = document.getElementsByName(id);
+
+      for (var i = 0; i < values.length; i++) {
+        if (values[i].checked) {
+            checkedVal = values[i].value;
+            break;
+        }
+      }
+
+      return checkedVal;
+    }
+
+  };
+
+  window.DomUtils = DomUtils;
+
+})(window);
+
+
+(function(window) {
+  'use strict';
+
   var gl;
   var _program;
   var _fill;
@@ -12,15 +38,11 @@
 
   var updateTriangle = function(evt) {
     evt.preventDefault();
-    var fills = document.getElementsByName('fill');
-    for (var i = 0; i < fills.length; i++) {
-      if (fills[i].checked) {
-          _fill = fills[i].value;
-          break;
-      }
-    }
+    _fill = window.DomUtils.getCheckedValue('fill');
+
     var userOptionLoc = gl.getUniformLocation(_program, 'fUserOption');
     gl.uniform1f(userOptionLoc, _fill);
+
     render();
   };
 
