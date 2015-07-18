@@ -394,4 +394,63 @@ void main() {
 }
 ```
 
-11:39 Video Input 2, Week 3
+### Double Buffering
+
+What is the relationship between when things are displayed on the display and when changes are being made to the frame buffer?
+These two things are _decoupled_.
+
+Things can be changing very quickly in frame buffer, but display process that takes the data from frame buffer and puts it on the display happens at a fixed rate. Typically in a browser this latter process happens 60 x / sec.
+
+To avoid seeing a partially rendered display, _double buffering_ is used. Browser maintains two buffers:
+
+* Front buffer: This is what's displayed
+* Back buffer: The application draws into here
+
+When we finish drawing into the back buffer, a _buffer swap_ can be performed.
+The new data in back buffer moves to the front buffer to be displayed, and back buffer is cleared to make room for new data.
+
+This process happens automatically.
+
+### Triggering a Buffer Swap
+
+* Browsers refresh display at ~60 Hz (this is a redisplay of the front buffer, NOT a buffer swap)
+* Trigger a buffer swap through an event, options:
+  * Interval timer
+  * requestAnimFrame
+
+Interval timer executes a function after a specified number of milliseconds. Also generates a buffer swap.
+
+```javascript
+setInterval(render, interval)
+```
+
+Interval of `0` generates buffer swaps as fast as possible.
+
+#### Request Animation Frame
+
+`requestAnimFrame` requests the browser to execute a function as soon as possible,
+at the next time its going to update the display.
+
+```javascript
+var render = function() {
+  gl.clear(gl.COLOR_BUFFER_BIT);
+  theta += 1;
+  gl.uniform1f(thetaLoc, theta);
+  gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+  requestAnimFrame(render);
+};
+```
+
+#### Interval and RequestAnimFrame
+
+```javascript
+var render = function() {
+  setTimeout(function() {
+    requestAnimFrame(render);
+    gl.clear(gl.COLOR_BUFFER_BIT);
+    theta += 1;
+    gl.uniform1f(thetaLoc, theta);
+    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+  }, 100);
+}
+```
