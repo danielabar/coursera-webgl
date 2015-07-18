@@ -18,6 +18,15 @@
 
   var Transformer = {
 
+    // http://stackoverflow.com/questions/55677/how-do-i-get-the-coordinates-of-a-mouse-click-on-a-canvas-element
+    getRelativeCoords: function(event) {
+      if (event.offsetX !== undefined && event.offsetY !== undefined) {
+        return { x: event.offsetX, y: event.offsetY };
+      } else {
+        return { x: event.layerX, y: event.layerY };
+      }
+    },
+
     windowToClip: function(clientX, clientY, width, height) {
       var clipX = windowToClipX(clientX, width);
       var clipY = windowToClipY(clientY, height);
@@ -44,21 +53,23 @@
     _canvas,
     _numDrawn = 0;
 
-  // FIXME First click is not drawing a square
+  // FIXME Only renders every other click, for where mouse position was before
   var addSquare = function(evt) {
     evt.preventDefault();
 
-    var bottomLeftX = evt.clientX;
-    var bottomLeftY = evt.clientY + SIZE_PX;
+    var canvasPoint = Transformer.getRelativeCoords(evt);
 
-    var bottomRightX = evt.clientX + SIZE_PX;
-    var bottomRightY = evt.clientY + SIZE_PX;
+    var bottomLeftX = canvasPoint.x;
+    var bottomLeftY = canvasPoint.y + SIZE_PX;
 
-    var topRightX = evt.clientX + SIZE_PX;
-    var topRightY = evt.clientY;
+    var bottomRightX = canvasPoint.x + SIZE_PX;
+    var bottomRightY = canvasPoint.y + SIZE_PX;
 
-    var topLeftX = evt.clientX;
-    var topLeftY = evt.clientY;
+    var topRightX = canvasPoint.x + SIZE_PX;
+    var topRightY = canvasPoint.y;
+
+    var topLeftX = canvasPoint.x;
+    var topLeftY = canvasPoint.y;
 
     // 6 vertexes -> 2 triangles -> 1 square!
     var verteces = [
@@ -77,7 +88,7 @@
     gl.bufferSubData(gl.ARRAY_BUFFER, offset, flatten(verteces));
 
     render();
-    _numDrawn += 1;
+    _numDrawn++;
   };
 
   var render = function() {
