@@ -1,4 +1,33 @@
 /**
+ * DomUtils
+ */
+(function(window) {
+  'use strict';
+
+  var DomUtils = {
+
+    getCheckedValue: function(id) {
+      var checkedVal,
+        values = document.getElementsByName(id);
+
+      for (var i = 0; i < values.length; i++) {
+        if (values[i].checked) {
+            checkedVal = values[i].value;
+            break;
+        }
+      }
+
+      return checkedVal;
+    }
+
+  };
+
+  window.DomUtils = DomUtils;
+
+})(window);
+
+
+/**
  * Transformer
  */
 (function(window) {
@@ -39,19 +68,24 @@
 
 })(window);
 
+
 /**
  * App
  */
-(function(window, Transformer) {
+(function(window, Transformer, DomUtils) {
   'use strict';
-
-  var SIZE_PX = 10;
 
   var gl,
     _program,
     _vBuffer,
     _canvas,
-    _numDrawn = 0;
+    _numDrawn = 0,
+    _sizePx = 10;
+
+  var updateSettings = function(evt) {
+    evt.preventDefault();
+    _sizePx = parseInt(DomUtils.getCheckedValue('squareSize'), 10);
+  };
 
   var addSquare = function(evt) {
     evt.preventDefault();
@@ -59,12 +93,12 @@
     var canvasPoint = Transformer.getRelativeCoords(evt);
 
     var bottomLeftX = canvasPoint.x;
-    var bottomLeftY = canvasPoint.y + SIZE_PX;
+    var bottomLeftY = canvasPoint.y + _sizePx;
 
-    var bottomRightX = canvasPoint.x + SIZE_PX;
-    var bottomRightY = canvasPoint.y + SIZE_PX;
+    var bottomRightX = canvasPoint.x + _sizePx;
+    var bottomRightY = canvasPoint.y + _sizePx;
 
-    var topRightX = canvasPoint.x + SIZE_PX;
+    var topRightX = canvasPoint.x + _sizePx;
     var topRightY = canvasPoint.y;
 
     var topLeftX = canvasPoint.x;
@@ -106,6 +140,9 @@
       if ( !gl ) { alert( 'WebGL isn\'t available' ); }
       _canvas.addEventListener('click', addSquare);
 
+      // Register settings handler
+      document.getElementById('settings').addEventListener('change', updateSettings);
+
       // Configure WebGL
       gl.viewport( 0, 0, _canvas.width, _canvas.height );
       gl.clearColor(0.0, 0.0, 0.0, 1.0);
@@ -131,7 +168,9 @@
 
   window.App = App;
 
-}(window, window.Transformer || (window.Transformer = {})));
+// }(window, window.Transformer, window.DomUtils || (window.DomUtils = {})));
+}(window, window.Transformer, window.DomUtils));
+
 
 /**
  * App Init
