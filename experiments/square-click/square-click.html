@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Experiments | Square Click</title>
+
+  <script id="vertex-shader" type="x-shader/x-vertex">
+  attribute vec4 vPosition; // specified by application
+  attribute vec4 vColor;    // specified by application
+  varying vec4 fColor;      // to pass vColor through to rasterizer
+
+  void main() {
+    gl_Position = vPosition;
+  }
+  </script>
+
+  <script id="fragment-shader" type="x-shader/x-fragment">
+  precision mediump float;
+
+  void main() {
+    gl_FragColor = vec4(0.28, 0.32, 0.84, 1);
+  }
+  </script>
+
+  <script type="text/javascript" src="../../Common/webgl-utils.js"></script>
+  <script type="text/javascript" src="../../Common/initShaders.js"></script>
+  <script type="text/javascript" src="../../Common/flatten.js"></script>
+  <script type="text/javascript" src="../../Common/MV.js"></script>
+  <script type="text/javascript" src="square-click.js"></script>
+</head>
+
+<body>
+
+  <header>
+    <h1>Square Click</h1>
+  </header>
+
+  <section>
+    <canvas id="gl-canvas" width="512" height="512">
+      Oops ... your browser doesn't support the HTML5 canvas element
+    </canvas>
+  </section>
+</body>
+</html>
