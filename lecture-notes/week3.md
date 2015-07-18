@@ -454,3 +454,64 @@ var render = function() {
   }, 100);
 }
 ```
+
+## Keyboard and Sliders
+
+### Using keydown Event
+
+`event.keyCode` returns unicode character representing key pressed.
+
+```javascript
+window.addEventListener('keydown', function() {
+  switch (event.keyCode) {
+    case 49:                    // '1' key
+      direction = !direction;
+      break;
+    case 50:                    // '2' key
+      delay /= 2.0;
+      break;
+    case 51:                    // '3' key
+      delay *= 2.0;
+      break;
+  }
+});
+```
+
+Above version requires that you know the unicode values, otherwise can do this instead:
+
+```javascript
+window.onkeydown = function(event) {
+  var key = String.fromCharCode(event.keyCode);
+  switch (key) {
+    case '1':
+      direction = !direction;
+      break;
+    case '2':
+      delay /= 2.0;
+      break;
+    case '3':
+      delay *= 2.0;
+      break;
+  }
+}
+```
+
+### Slider Element
+
+Puts slider on page. Give it an identifier, min/max values, step size to generate an event, and initial value.
+
+```html
+<div>
+  speed 0
+  <input id="slide" type="range" min="0" max="100" step="10" value="50" />
+  100
+</div>
+```
+
+Listen for slider change
+
+```javascript
+document.getElementById('slide').onchange = function() {
+  delay = event.srcElement.value;
+};
+```

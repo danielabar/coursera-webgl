@@ -133,12 +133,18 @@ var calculateRotation = function(vec2Point, theta) {
 var doRotate = function(theta) {
     var radians = (Math.PI / 180) * theta;
 
+    console.time('rotatePoints');
     var rotatedPoints = points.map(function(vertex) {
       return calculateRotation(vertex, radians);
     });
+    console.timeEnd('rotatePoints');
 
+    console.time('loadBuffer');
     loadBuffer(rotatedPoints);
+    console.timeEnd('loadBuffer');
+    console.time('render');
     render();
+    console.timeEnd('render');
 };
 
 var doDivide = function(numDivisions) {
