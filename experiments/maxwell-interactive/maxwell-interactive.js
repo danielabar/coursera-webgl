@@ -1,3 +1,6 @@
+/**
+ * DomUtils
+ */
 (function(window) {
   'use strict';
 
@@ -23,8 +26,10 @@
 
 })(window);
 
-
-(function(window) {
+/**
+ * Maxwell
+ */
+(function(window, DomUtils) {
   'use strict';
 
   var DEFAULT_FILL_OPT = 1.0;
@@ -39,7 +44,7 @@
   };
 
   var updateTriangle = function() {
-    _fill = window.DomUtils.getCheckedValue('fill');
+    _fill = DomUtils.getCheckedValue('fill');
 
     var userOptionLoc = gl.getUniformLocation(_program, 'fUserOption');
     gl.uniform1f(userOptionLoc, _fill);
@@ -95,13 +100,16 @@
 
   window.Maxwell = Maxwell;
 
-})(window);
+}(window, window.DomUtils || (window.DomUtils = {})));
 
-(function() {
+/**
+ * App Init
+ */
+(function(Maxwell) {
   'use strict';
 
   document.addEventListener('DOMContentLoaded', function() {
-    window.Maxwell.init();
+    Maxwell.init();
   });
 
-})();
+}(window.Maxwell || (window.Maxwell = {})));
