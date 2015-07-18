@@ -117,17 +117,20 @@
     ];
 
     var offset = sizeof.vec2 * 6 * _numDrawn;
-
     gl.bindBuffer(gl.ARRAY_BUFFER, _vBuffer);
     gl.bufferSubData(gl.ARRAY_BUFFER, offset, flatten(verteces));
 
+    // Colors
+    var r1 = Math.random();
+    var g1 = Math.random();
+    var b1 = Math.random();
     var colors = [
-      1, 0, 0,
-      0, 1, 0,
-      0, 0, 1,
-      1, 0, 0,
-      0, 1, 0,
-      0, 0, 1
+      r1, g1, b1,
+      r1, g1, b1,
+      r1, g1, b1,
+      r1, g1, b1,
+      r1, g1, b1,
+      r1, g1, b1,
     ];
     var colorOffset = sizeof.vec3 * 6 * _numDrawn;
     gl.bindBuffer(gl.ARRAY_BUFFER, _cBuffer);
