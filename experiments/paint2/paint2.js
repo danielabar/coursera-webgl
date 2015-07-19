@@ -1,4 +1,37 @@
 /**
+ * DomUtils
+ */
+(function(window) {
+  'use strict';
+
+  var DomUtils = {
+
+    getCheckedValue: function(elementName) {
+      var checkedVal,
+        values = document.getElementsByName(elementName);
+
+      for (var i = 0; i < values.length; i++) {
+        if (values[i].checked) {
+            checkedVal = values[i].value;
+            break;
+        }
+      }
+
+      return checkedVal;
+    },
+
+    getCheckedNumber: function(elementName) {
+      var val = this.getCheckedValue(elementName);
+      return val ? parseInt(val, 10) : null;
+    }
+
+  };
+
+  window.DomUtils = DomUtils;
+
+})(window);
+
+/**
  * ColorUtils
  */
 (function(window) {
@@ -80,7 +113,7 @@
 /**
  * App
  */
-(function(window, CoordUtils, ColorUtils) {
+(function(window, CoordUtils, ColorUtils, DomUtils) {
   'use strict';
 
   var MAX_SHAPES = 10000;
@@ -92,11 +125,13 @@
     _canvas,
     _numDrawn = 0,
     _dragStartPoint,
-    _rgbColor = {r: 1.0, g: 0.0, b: 0.0};
+    _rgbColor = {r: 1.0, g: 0.0, b: 0.0},
+    _lineWidth = 1;
 
   var updateSettings = function(evt) {
     evt.preventDefault();
     _rgbColor = ColorUtils.hexToGL(document.getElementById('squareColor').value);
+    _lineWidth = DomUtils.getCheckedNumber('lineWidth');
   };
 
   var addColor = function() {
@@ -109,17 +144,20 @@
     _gl.bufferSubData(_gl.ARRAY_BUFFER, colorOffset, flatten(colors));
   };
 
-  var drawLine = function(canvasPoint) {
-    var startX = canvasPoint.x,
-      startY = canvasPoint.y,
-      endX = canvasPoint.x + 1,
-      endY = canvasPoint.y + 1;
+  var drawLine = function(canvasPoint1, canvasPoint2) {
+    var startX = canvasPoint1.x,
+      startY = canvasPoint1.y,
+      endX = canvasPoint2.x,
+      endY = canvasPoint2.y;
 
     // 2 verteces -> 1 line
     var verteces = [
       CoordUtils.windowToClip(startX, startY, _canvas.width, _canvas.height),
       CoordUtils.windowToClip(endX, endY, _canvas.width, _canvas.height)
     ];
+
+    // Changes all existing lines and may not work on Windows :(
+    _gl.lineWidth(_lineWidth);
 
     var offset = sizeof.vec2 * 2 * _numDrawn;
     _gl.bindBuffer(_gl.ARRAY_BUFFER, _vBuffer);
@@ -141,11 +179,13 @@
     _dragStartPoint = CoordUtils.getRelativeCoords(evt);
   };
 
+  // Debounce?
   var dragging = function(evt) {
     var currentPoint;
     if (_dragStartPoint) {
       currentPoint = CoordUtils.getRelativeCoords(evt);
-      drawLine(currentPoint);
+      drawLine(_dragStartPoint, currentPoint);
+      _dragStartPoint = currentPoint;
     }
   };
 
@@ -168,7 +208,7 @@
       _gl = WebGLUtils.setupWebGL( _canvas );
       if ( !_gl ) { alert( 'WebGL isn\'t available' ); }
 
-      // Register settings handler
+      // Register settings event handler
       document.getElementById('settings').addEventListener('change', updateSettings);
 
       // Register canvas event handlers
@@ -179,6 +219,7 @@
       // Configure WebGL
       _gl.viewport( 0, 0, _canvas.width, _canvas.height );
       _gl.clearColor(0.0, 0.0, 0.0, 1.0);
+      _gl.lineWidth(_lineWidth);
 
       // Load shaders
       _program = initShaders( _gl, 'vertex-shader', 'fragment-shader' );
@@ -205,14 +246,13 @@
       _gl.enableVertexAttribArray( vColor );
 
       render();
-
     }
 
   };
 
   window.App = App;
 
-}(window, window.CoordUtils, window.ColorUtils));
+}(window, window.CoordUtils, window.ColorUtils, window.DomUtils));
 
 
 /**
