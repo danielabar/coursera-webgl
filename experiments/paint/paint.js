@@ -114,6 +114,8 @@
 (function(window, Transformer, DomUtils, ColorUtils) {
   'use strict';
 
+  var MAX_SHAPES = 1000;
+
   var gl,
     _program,
     _vBuffer,
@@ -217,6 +219,20 @@
     }
   };
 
+  var initPositionBufferSize = function() {
+    var sizeOfVertex = sizeof.vec2;
+    var sizeOfTriangle = sizeOfVertex * 3;
+    var sizeOfSquare = sizeOfTriangle * 2;
+    return sizeOfSquare * MAX_SHAPES;
+  };
+
+  var initColorBufferSize = function() {
+    var sizeOfVertex = sizeof.vec3;
+    var sizeOfTriangle = sizeOfVertex * 3;
+    var sizeOfSquare = sizeOfTriangle * 2;
+    return sizeOfSquare * MAX_SHAPES;
+  };
+
   var App = {
 
     init: function() {
@@ -246,7 +262,7 @@
       // Load an empty vertex buffer onto the GPU
       _vBuffer = gl.createBuffer();
       gl.bindBuffer( gl.ARRAY_BUFFER, _vBuffer );
-      gl.bufferData( gl.ARRAY_BUFFER, 8*Math.pow(3, 6), gl.STATIC_DRAW );
+      gl.bufferData( gl.ARRAY_BUFFER, initPositionBufferSize(), gl.STATIC_DRAW );
 
       // Associate shader variables with vertex data buffer
       var vPosition = gl.getAttribLocation( _program, 'vPosition' );
@@ -256,7 +272,7 @@
       // Load an empty color buffer onto the GPU
       _cBuffer = gl.createBuffer();
       gl.bindBuffer( gl.ARRAY_BUFFER, _cBuffer );
-      gl.bufferData( gl.ARRAY_BUFFER, 8*Math.pow(3, 6), gl.STATIC_DRAW );
+      gl.bufferData( gl.ARRAY_BUFFER, initColorBufferSize(), gl.STATIC_DRAW );
 
       // Associate shader variables with color data buffer
       var vColor = gl.getAttribLocation( _program, 'vColor' );
