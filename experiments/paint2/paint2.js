@@ -109,17 +109,20 @@
     _gl.bufferSubData(_gl.ARRAY_BUFFER, colorOffset, flatten(colors));
   };
 
-  var drawLine = function(canvasPoint) {
-    var startX = canvasPoint.x,
-      startY = canvasPoint.y,
-      endX = canvasPoint.x + 1,
-      endY = canvasPoint.y + 1;
+  var drawLine = function(canvasPoint1, canvasPoint2) {
+    var startX = canvasPoint1.x,
+      startY = canvasPoint1.y,
+      endX = canvasPoint2.x,
+      endY = canvasPoint2.y;
 
     // 2 verteces -> 1 line
     var verteces = [
       CoordUtils.windowToClip(startX, startY, _canvas.width, _canvas.height),
       CoordUtils.windowToClip(endX, endY, _canvas.width, _canvas.height)
     ];
+
+    // TODO: allow user to set this or figure out a better way such as triangles or small squares as brush head
+    _gl.lineWidth(5);
 
     var offset = sizeof.vec2 * 2 * _numDrawn;
     _gl.bindBuffer(_gl.ARRAY_BUFFER, _vBuffer);
@@ -141,11 +144,13 @@
     _dragStartPoint = CoordUtils.getRelativeCoords(evt);
   };
 
+  // Debounce?
   var dragging = function(evt) {
     var currentPoint;
     if (_dragStartPoint) {
       currentPoint = CoordUtils.getRelativeCoords(evt);
-      drawLine(currentPoint);
+      drawLine(_dragStartPoint, currentPoint);
+      _dragStartPoint = currentPoint;
     }
   };
 
@@ -168,7 +173,7 @@
       _gl = WebGLUtils.setupWebGL( _canvas );
       if ( !_gl ) { alert( 'WebGL isn\'t available' ); }
 
-      // Register settings handler
+      // Register settings event handler
       document.getElementById('settings').addEventListener('change', updateSettings);
 
       // Register canvas event handlers
@@ -205,7 +210,6 @@
       _gl.enableVertexAttribArray( vColor );
 
       render();
-
     }
 
   };
