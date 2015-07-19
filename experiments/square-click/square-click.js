@@ -6,9 +6,9 @@
 
   var DomUtils = {
 
-    getCheckedValue: function(id) {
+    getCheckedValue: function(elementName) {
       var checkedVal,
-        values = document.getElementsByName(id);
+        values = document.getElementsByName(elementName);
 
       for (var i = 0; i < values.length; i++) {
         if (values[i].checked) {
@@ -23,6 +23,45 @@
   };
 
   window.DomUtils = DomUtils;
+
+})(window);
+
+
+/**
+ * ColorUtils
+ */
+(function(window) {
+  'use strict';
+
+  var ColorUtils = {
+
+    // http://stackoverflow.com/questions/5623838/rgb-to-hex-and-hex-to-rgb
+    hexToRgb: function(hex) {
+      var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+      return result ? {
+          r: parseInt(result[1], 16),
+          g: parseInt(result[2], 16),
+          b: parseInt(result[3], 16)
+      } : null;
+    },
+
+    rgbToGL: function(rgb) {
+      return rgb ? {
+        r: rgb.r / 255,
+        g: rgb.g / 255,
+        b: rgb.b / 255
+      } : null;
+    },
+
+    hexToGL: function(hex) {
+      return this.rgbToGL(
+        this.hexToRgb(hex)
+      );
+    }
+
+  };
+
+  window.ColorUtils = ColorUtils;
 
 })(window);
 
@@ -72,7 +111,7 @@
 /**
  * App
  */
-(function(window, Transformer, DomUtils) {
+(function(window, Transformer, DomUtils, ColorUtils) {
   'use strict';
 
   var gl,
@@ -81,11 +120,13 @@
     _cBuffer,
     _canvas,
     _numDrawn = 0,
-    _sizePx = 10;
+    _sizePx = 10,
+    _rgbColor = {r: 1.0, g: 0.0, b: 0.0};
 
   var updateSettings = function(evt) {
     evt.preventDefault();
     _sizePx = parseInt(DomUtils.getCheckedValue('squareSize'), 10);
+    _rgbColor = ColorUtils.hexToGL(document.getElementById('squareColor').value);
   };
 
   var addSquare = function(evt) {
@@ -105,7 +146,7 @@
     var topLeftX = canvasPoint.x;
     var topLeftY = canvasPoint.y;
 
-    // 6 vertexes -> 2 triangles -> 1 square!
+    // 6 verteces -> 2 triangles -> 1 square!
     var verteces = [
       Transformer.windowToClip(bottomLeftX, bottomLeftY, _canvas.width, _canvas.height),
       Transformer.windowToClip(bottomRightX, bottomRightY, _canvas.width, _canvas.height),
@@ -121,16 +162,16 @@
     gl.bufferSubData(gl.ARRAY_BUFFER, offset, flatten(verteces));
 
     // Colors
-    var r1 = Math.random();
-    var g1 = Math.random();
-    var b1 = Math.random();
+    // var r1 = Math.random();
+    // var g1 = Math.random();
+    // var b1 = Math.random();
     var colors = [
-      r1, g1, b1,
-      r1, g1, b1,
-      r1, g1, b1,
-      r1, g1, b1,
-      r1, g1, b1,
-      r1, g1, b1,
+      _rgbColor.r, _rgbColor.g, _rgbColor.b,
+      _rgbColor.r, _rgbColor.g, _rgbColor.b,
+      _rgbColor.r, _rgbColor.g, _rgbColor.b,
+      _rgbColor.r, _rgbColor.g, _rgbColor.b,
+      _rgbColor.r, _rgbColor.g, _rgbColor.b,
+      _rgbColor.r, _rgbColor.g, _rgbColor.b,
     ];
     var colorOffset = sizeof.vec3 * 6 * _numDrawn;
     gl.bindBuffer(gl.ARRAY_BUFFER, _cBuffer);
@@ -194,8 +235,7 @@
 
   window.App = App;
 
-// }(window, window.Transformer, window.DomUtils || (window.DomUtils = {})));
-}(window, window.Transformer, window.DomUtils));
+}(window, window.Transformer, window.DomUtils, window.ColorUtils));
 
 
 /**
