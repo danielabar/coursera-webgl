@@ -160,13 +160,19 @@
       bottomRightY = canvasPoint1.y + _sizePx;
     }
 
-    // TODO: calc should depend on canvasPoint2
     bottomLeftX = canvasPoint1.x;
-    bottomLeftY = canvasPoint1.y + _sizePx;
+    if (canvasPoint2) {
+      bottomLeftY = canvasPoint1.y + (canvasPoint2.y > canvasPoint1.y ? canvasPoint2.y - canvasPoint1.y : canvasPoint1.y - canvasPoint2.y);
+    } else {
+      bottomLeftY = canvasPoint1.y + _sizePx;
+    }
 
-    // TODO: calc should depend on canvasPoint2
-    topRightX = canvasPoint1.x + _sizePx;
     topRightY = canvasPoint1.y;
+    if (canvasPoint2) {
+      topRightX = canvasPoint1.x + (canvasPoint2.x > canvasPoint1.x ? canvasPoint2.x - canvasPoint1.x : canvasPoint1.x - canvasPoint2.x);
+    } else {
+      topRightX = canvasPoint1.x + _sizePx;
+    }
 
     // 6 verteces -> 2 triangles -> 1 square!
     var verteces = [
@@ -206,13 +212,10 @@
 
   var dragStart = function(evt) {
     _dragStartPoint = Transformer.getRelativeCoords(evt);
-    // _dragStartPoint = Transformer.windowToClip(canvasPoint.x, canvasPoint.y, _canvas.width, _canvas.height);
-    // console.dir(_dragStartPoint);
   };
 
   var dragEnd = function(evt) {
     var dragEndPoint = Transformer.getRelativeCoords(evt);
-    // var dragEndPoint = Transformer.windowToClip(canvasPoint.x, canvasPoint.y, _canvas.width, _canvas.height);
     if (_dragStartPoint && _drawMode === 'drag') {
       drawSquare(_dragStartPoint, dragEndPoint);
     }
