@@ -1,4 +1,37 @@
 /**
+ * DomUtils
+ */
+(function(window) {
+  'use strict';
+
+  var DomUtils = {
+
+    getCheckedValue: function(elementName) {
+      var checkedVal,
+        values = document.getElementsByName(elementName);
+
+      for (var i = 0; i < values.length; i++) {
+        if (values[i].checked) {
+            checkedVal = values[i].value;
+            break;
+        }
+      }
+
+      return checkedVal;
+    },
+
+    getCheckedNumber: function(elementName) {
+      var val = this.getCheckedValue(elementName);
+      return val ? parseInt(val, 10) : null;
+    }
+
+  };
+
+  window.DomUtils = DomUtils;
+
+})(window);
+
+/**
  * ColorUtils
  */
 (function(window) {
@@ -80,7 +113,7 @@
 /**
  * App
  */
-(function(window, CoordUtils, ColorUtils) {
+(function(window, CoordUtils, ColorUtils, DomUtils) {
   'use strict';
 
   var MAX_SHAPES = 10000;
@@ -92,11 +125,13 @@
     _canvas,
     _numDrawn = 0,
     _dragStartPoint,
-    _rgbColor = {r: 1.0, g: 0.0, b: 0.0};
+    _rgbColor = {r: 1.0, g: 0.0, b: 0.0},
+    _lineWidth = 1;
 
   var updateSettings = function(evt) {
     evt.preventDefault();
     _rgbColor = ColorUtils.hexToGL(document.getElementById('squareColor').value);
+    _lineWidth = DomUtils.getCheckedNumber('lineWidth');
   };
 
   var addColor = function() {
@@ -121,8 +156,8 @@
       CoordUtils.windowToClip(endX, endY, _canvas.width, _canvas.height)
     ];
 
-    // TODO: allow user to set this or figure out a better way such as triangles or small squares as brush head
-    _gl.lineWidth(5);
+    // Changes all existing lines and may not work on Windows :(
+    _gl.lineWidth(_lineWidth);
 
     var offset = sizeof.vec2 * 2 * _numDrawn;
     _gl.bindBuffer(_gl.ARRAY_BUFFER, _vBuffer);
@@ -184,6 +219,7 @@
       // Configure WebGL
       _gl.viewport( 0, 0, _canvas.width, _canvas.height );
       _gl.clearColor(0.0, 0.0, 0.0, 1.0);
+      _gl.lineWidth(_lineWidth);
 
       // Load shaders
       _program = initShaders( _gl, 'vertex-shader', 'fragment-shader' );
@@ -216,7 +252,7 @@
 
   window.App = App;
 
-}(window, window.CoordUtils, window.ColorUtils));
+}(window, window.CoordUtils, window.ColorUtils, window.DomUtils));
 
 
 /**
