@@ -1,38 +1,37 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Experiments | Tetrahedron</title>
+  <title>Experiments | Maxwell Triangle 2</title>
 
   <script id="vertex-shader" type="x-shader/x-vertex">
-  attribute vec2 vPosition;
+  attribute vec4 vPosition;
 
-  void
-  main()
-  {
-      gl_Position = vec4(vPosition, 0.0, 1.0);
+  void main() {
+    gl_Position = vPosition;
   }
   </script>
 
   <script id="fragment-shader" type="x-shader/x-fragment">
   precision mediump float;
 
-  void
-  main()
-  {
-      gl_FragColor = vec4(0.28, 0.32, 0.84, 1);
+  void main() {
+  	gl_FragColor.r = gl_FragCoord.x / 511.0;
+  	gl_FragColor.g = gl_FragCoord.y / 511.0;
+  	gl_FragColor.b = 1.0 - gl_FragColor.r - gl_FragColor.g;
+  	gl_FragColor.a = 1.0;
   }
   </script>
 
   <script type="text/javascript" src="../../Common/webgl-utils.js"></script>
   <script type="text/javascript" src="../../Common/initShaders.js"></script>
   <script type="text/javascript" src="../../Common/flatten.js"></script>
-  <script type="text/javascript" src="tetrahedron.js"></script>
+  <script type="text/javascript" src="maxwell2.js"></script>
 </head>
 
 <body>
 
   <header>
-    <h1>Tetrahedron</h1>
+    <h1>Maxwell Triangle 2</h1>
   </header>
 
   <section>
