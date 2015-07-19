@@ -194,9 +194,11 @@
   };
 
   var render = function() {
-    gl.clear( gl.COLOR_BUFFER_BIT );
-    gl.drawArrays( gl.TRIANGLES, 0, _numDrawn * 6 );
-    window.requestAnimationFrame(render);
+    setTimeout(function() {
+      window.requestAnimationFrame(render);
+      gl.clear( gl.COLOR_BUFFER_BIT );
+      gl.drawArrays( gl.TRIANGLES, 0, _numDrawn * 6 );
+    }, 100);
   };
 
   var dragStart = function(evt) {

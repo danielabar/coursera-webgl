@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Experiments | Paint 2</title>
+
+  <script id="vertex-shader" type="x-shader/x-vertex">
+  attribute vec4 vPosition; // specified by application
+  attribute vec4 vColor;    // specified by application
+  varying vec4 fColor;      // to pass vColor through to rasterizer
+
+  void main() {
+    gl_Position = vPosition;
+    fColor = vColor;
+  }
+  </script>
+
+  <script id="fragment-shader" type="x-shader/x-fragment">
+  precision mediump float;
+
+  varying vec4 fColor;
+
+  void main() {
+    gl_FragColor = fColor;
+  }
+  </script>
+
+  <script type="text/javascript" src="../../Common/webgl-utils.js"></script>
+  <script type="text/javascript" src="../../Common/initShaders.js"></script>
+  <script type="text/javascript" src="../../Common/flatten.js"></script>
+  <script type="text/javascript" src="../../Common/MV.js"></script>
+  <script type="text/javascript" src="paint2.js"></script>
+</head>
+
+<body>
+
+  <header>
+    <h1>Paint 2</h1>
+  </header>
+
+  <section id="settings" class="settings">
+    <div class="form-group">
+      <label for="squareColor" accesskey="c">Choose color</label>
+      <input type="color" name="squareColor" id="squareColor" value="#ff0000">
+    </div>
+  </section>
+
+  <section>
+    <canvas id="gl-canvas" width="900" height="600">
+      Oops ... your browser doesn't support the HTML5 canvas element
+    </canvas>
+  </section>
+</body>
+</html>
