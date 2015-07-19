@@ -39,7 +39,7 @@
 
   <section id="settings" class="settings">
     <div class="form-group">
-      <label for="squareColor" accesskey="c" >Color</label>
+      <label for="squareColor" accesskey="c">Color</label>
       <input type="color" name="squareColor" id="squareColor" value="#ff0000">
     </div>
     <div class="form-group">
@@ -48,10 +48,15 @@
       <input type="radio" id="sizeMedium" name="squareSize" value="20">Medium
       <input type="radio" id="sizeLarge" name="squareSize" value="30">Large
     </div>
+    <div class="form-group">
+      <label for="drawMode"></label>
+      <input type="radio" id="modeClick" name="drawMode" value="click" checked>Click
+      <input type="radio" id="modeDrag" name="drawMode" value="drag">Drag
+    </div>
   </section>
 
   <section>
-    <canvas id="gl-canvas" width="512" height="512">
+    <canvas id="gl-canvas" width="900" height="600">
       Oops ... your browser doesn't support the HTML5 canvas element
     </canvas>
   </section>

@@ -121,30 +121,52 @@
     _canvas,
     _numDrawn = 0,
     _sizePx = 10,
-    _rgbColor = {r: 1.0, g: 0.0, b: 0.0};
+    _dragStartPoint,
+    _rgbColor = {r: 1.0, g: 0.0, b: 0.0},
+    _drawMode = 'click';
 
   var updateSettings = function(evt) {
     evt.preventDefault();
     _sizePx = parseInt(DomUtils.getCheckedValue('squareSize'), 10);
     _rgbColor = ColorUtils.hexToGL(document.getElementById('squareColor').value);
+    _drawMode = DomUtils.getCheckedValue('drawMode');
   };
 
-  var addSquare = function(evt) {
-    evt.preventDefault();
+  var addColorForSquare = function() {
+    var colors = [
+      _rgbColor.r, _rgbColor.g, _rgbColor.b,
+      _rgbColor.r, _rgbColor.g, _rgbColor.b,
+      _rgbColor.r, _rgbColor.g, _rgbColor.b,
+      _rgbColor.r, _rgbColor.g, _rgbColor.b,
+      _rgbColor.r, _rgbColor.g, _rgbColor.b,
+      _rgbColor.r, _rgbColor.g, _rgbColor.b,
+    ];
+    var colorOffset = sizeof.vec3 * 6 * _numDrawn;
+    gl.bindBuffer(gl.ARRAY_BUFFER, _cBuffer);
+    gl.bufferSubData(gl.ARRAY_BUFFER, colorOffset, flatten(colors));
+  };
 
-    var canvasPoint = Transformer.getRelativeCoords(evt);
+  var drawSquare = function(canvasPoint1, canvasPoint2) {
+    var topLeftX, topLeftY, topRightX, topRightY, bottomLeftX, bottomLeftY, bottomRightX, bottomRightY;
 
-    var bottomLeftX = canvasPoint.x;
-    var bottomLeftY = canvasPoint.y + _sizePx;
+    topLeftX = canvasPoint1.x;
+    topLeftY = canvasPoint1.y;
 
-    var bottomRightX = canvasPoint.x + _sizePx;
-    var bottomRightY = canvasPoint.y + _sizePx;
+    if (canvasPoint2) {
+        bottomRightX = canvasPoint2.x;
+        bottomRightY = canvasPoint2.y;
+    } else {
+      bottomRightX = canvasPoint1.x + _sizePx;
+      bottomRightY = canvasPoint1.y + _sizePx;
+    }
 
-    var topRightX = canvasPoint.x + _sizePx;
-    var topRightY = canvasPoint.y;
+    // TODO: calc should depend on canvasPoint2
+    bottomLeftX = canvasPoint1.x;
+    bottomLeftY = canvasPoint1.y + _sizePx;
 
-    var topLeftX = canvasPoint.x;
-    var topLeftY = canvasPoint.y;
+    // TODO: calc should depend on canvasPoint2
+    topRightX = canvasPoint1.x + _sizePx;
+    topRightY = canvasPoint1.y;
 
     // 6 verteces -> 2 triangles -> 1 square!
     var verteces = [
@@ -161,30 +183,39 @@
     gl.bindBuffer(gl.ARRAY_BUFFER, _vBuffer);
     gl.bufferSubData(gl.ARRAY_BUFFER, offset, flatten(verteces));
 
-    // Colors
-    // var r1 = Math.random();
-    // var g1 = Math.random();
-    // var b1 = Math.random();
-    var colors = [
-      _rgbColor.r, _rgbColor.g, _rgbColor.b,
-      _rgbColor.r, _rgbColor.g, _rgbColor.b,
-      _rgbColor.r, _rgbColor.g, _rgbColor.b,
-      _rgbColor.r, _rgbColor.g, _rgbColor.b,
-      _rgbColor.r, _rgbColor.g, _rgbColor.b,
-      _rgbColor.r, _rgbColor.g, _rgbColor.b,
-    ];
-    var colorOffset = sizeof.vec3 * 6 * _numDrawn;
-    gl.bindBuffer(gl.ARRAY_BUFFER, _cBuffer);
-    gl.bufferSubData(gl.ARRAY_BUFFER, colorOffset, flatten(colors));
+    addColorForSquare();
 
     render();
     _numDrawn++;
+  };
+
+  var addSquare = function(evt) {
+    var canvasPoint;
+
+    if (_drawMode === 'click') {
+      canvasPoint = Transformer.getRelativeCoords(evt);
+      drawSquare(canvasPoint);
+    }
   };
 
   var render = function() {
     gl.clear( gl.COLOR_BUFFER_BIT );
     gl.drawArrays( gl.TRIANGLES, 0, _numDrawn * 6 );
     window.requestAnimationFrame(render);
+  };
+
+  var dragStart = function(evt) {
+    _dragStartPoint = Transformer.getRelativeCoords(evt);
+    // _dragStartPoint = Transformer.windowToClip(canvasPoint.x, canvasPoint.y, _canvas.width, _canvas.height);
+    // console.dir(_dragStartPoint);
+  };
+
+  var dragEnd = function(evt) {
+    var dragEndPoint = Transformer.getRelativeCoords(evt);
+    // var dragEndPoint = Transformer.windowToClip(canvasPoint.x, canvasPoint.y, _canvas.width, _canvas.height);
+    if (_dragStartPoint && _drawMode === 'drag') {
+      drawSquare(_dragStartPoint, dragEndPoint);
+    }
   };
 
   var App = {
@@ -196,6 +227,8 @@
       gl = WebGLUtils.setupWebGL( _canvas );
       if ( !gl ) { alert( 'WebGL isn\'t available' ); }
       _canvas.addEventListener('click', addSquare);
+      _canvas.addEventListener('mousedown', dragStart);
+      _canvas.addEventListener('mouseup', dragEnd);
 
       // Register settings handler
       document.getElementById('settings').addEventListener('change', updateSettings);
