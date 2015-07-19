@@ -28,28 +28,28 @@
   <script type="text/javascript" src="../../Common/initShaders.js"></script>
   <script type="text/javascript" src="../../Common/flatten.js"></script>
   <script type="text/javascript" src="../../Common/MV.js"></script>
-  <script type="text/javascript" src="square-click.js"></script>
+  <script type="text/javascript" src="paint.js"></script>
 </head>
 
 <body>
 
   <header>
-    <h1>Square Click</h1>
+    <h1>Paint</h1>
   </header>
 
   <section id="settings" class="settings">
     <div class="form-group">
-      <label for="squareColor" accesskey="c">Color</label>
+      <label for="squareColor" accesskey="c">Choose color</label>
       <input type="color" name="squareColor" id="squareColor" value="#ff0000">
     </div>
     <div class="form-group">
-      <label for="squareSize">Size</label>
+      <label for="squareSize">Brush size</label>
       <input type="radio" id="sizeSmall" name="squareSize" value="10" checked>Small
       <input type="radio" id="sizeMedium" name="squareSize" value="20">Medium
       <input type="radio" id="sizeLarge" name="squareSize" value="30">Large
     </div>
     <div class="form-group">
-      <label for="drawMode"></label>
+      <label for="drawMode">Draw mode</label>
       <input type="radio" id="modeClick" name="drawMode" value="click" checked>Click
       <input type="radio" id="modeDrag" name="drawMode" value="drag">Drag
     </div>

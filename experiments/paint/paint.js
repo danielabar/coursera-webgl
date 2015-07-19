@@ -146,33 +146,20 @@
     gl.bufferSubData(gl.ARRAY_BUFFER, colorOffset, flatten(colors));
   };
 
-  var drawSquare = function(canvasPoint1, canvasPoint2) {
+  var drawSquare = function(canvasPoint1) {
     var topLeftX, topLeftY, topRightX, topRightY, bottomLeftX, bottomLeftY, bottomRightX, bottomRightY;
 
     topLeftX = canvasPoint1.x;
     topLeftY = canvasPoint1.y;
 
-    if (canvasPoint2) {
-        bottomRightX = canvasPoint2.x;
-        bottomRightY = canvasPoint2.y;
-    } else {
-      bottomRightX = canvasPoint1.x + _sizePx;
-      bottomRightY = canvasPoint1.y + _sizePx;
-    }
+    bottomRightX = canvasPoint1.x + _sizePx;
+    bottomRightY = canvasPoint1.y + _sizePx;
 
     bottomLeftX = canvasPoint1.x;
-    if (canvasPoint2) {
-      bottomLeftY = canvasPoint1.y + (canvasPoint2.y > canvasPoint1.y ? canvasPoint2.y - canvasPoint1.y : canvasPoint1.y - canvasPoint2.y);
-    } else {
-      bottomLeftY = canvasPoint1.y + _sizePx;
-    }
+    bottomLeftY = canvasPoint1.y + _sizePx;
 
     topRightY = canvasPoint1.y;
-    if (canvasPoint2) {
-      topRightX = canvasPoint1.x + (canvasPoint2.x > canvasPoint1.x ? canvasPoint2.x - canvasPoint1.x : canvasPoint1.x - canvasPoint2.x);
-    } else {
-      topRightX = canvasPoint1.x + _sizePx;
-    }
+    topRightX = canvasPoint1.x + _sizePx;
 
     // 6 verteces -> 2 triangles -> 1 square!
     var verteces = [
@@ -211,13 +198,22 @@
   };
 
   var dragStart = function(evt) {
-    _dragStartPoint = Transformer.getRelativeCoords(evt);
+    if (_drawMode === 'drag') {
+      _dragStartPoint = Transformer.getRelativeCoords(evt);
+    }
   };
 
-  var dragEnd = function(evt) {
-    var dragEndPoint = Transformer.getRelativeCoords(evt);
-    if (_dragStartPoint && _drawMode === 'drag') {
-      drawSquare(_dragStartPoint, dragEndPoint);
+  var dragging = function(evt) {
+    var currentPoint;
+    if (_drawMode === 'drag' && _dragStartPoint) {
+      currentPoint = Transformer.getRelativeCoords(evt);
+      drawSquare(currentPoint);
+    }
+  };
+
+  var dragEnd = function() {
+    if (_drawMode === 'drag') {
+      _dragStartPoint = null;
     }
   };
 
@@ -229,12 +225,15 @@
       _canvas = document.getElementById('gl-canvas');
       gl = WebGLUtils.setupWebGL( _canvas );
       if ( !gl ) { alert( 'WebGL isn\'t available' ); }
-      _canvas.addEventListener('click', addSquare);
-      _canvas.addEventListener('mousedown', dragStart);
-      _canvas.addEventListener('mouseup', dragEnd);
 
       // Register settings handler
       document.getElementById('settings').addEventListener('change', updateSettings);
+
+      // Register canvas event handlers
+      _canvas.addEventListener('click', addSquare);
+      _canvas.addEventListener('mousedown', dragStart);
+      _canvas.addEventListener('mousemove', dragging);
+      _canvas.addEventListener('mouseup', dragEnd);
 
       // Configure WebGL
       gl.viewport( 0, 0, _canvas.width, _canvas.height );
