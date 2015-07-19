@@ -138,55 +138,28 @@
     var colors = [
       _rgbColor.r, _rgbColor.g, _rgbColor.b,
       _rgbColor.r, _rgbColor.g, _rgbColor.b,
-      _rgbColor.r, _rgbColor.g, _rgbColor.b,
-      _rgbColor.r, _rgbColor.g, _rgbColor.b,
-      _rgbColor.r, _rgbColor.g, _rgbColor.b,
-      _rgbColor.r, _rgbColor.g, _rgbColor.b
     ];
-    var colorOffset = sizeof.vec3 * 6 * _numDrawn;
+    var colorOffset = sizeof.vec3 * 2 * _numDrawn;
     _gl.bindBuffer(_gl.ARRAY_BUFFER, _cBuffer);
     _gl.bufferSubData(_gl.ARRAY_BUFFER, colorOffset, flatten(colors));
   };
 
   var drawLine = function(canvasPoint1, canvasPoint2) {
-    // var startX = canvasPoint1.x,
-    //   startY = canvasPoint1.y,
-    //   endX = canvasPoint2.x,
-    //   endY = canvasPoint2.y;
-
-    var bottomLeftX = canvasPoint2.x - _lineWidth;
-    var bottomLeftY = canvasPoint2.y;
-
-    var bottomRightX = canvasPoint2.x;
-    var bottomRightY = canvasPoint2.y;
-
-    var topRightX = canvasPoint1.x + _lineWidth;
-    var topRightY = canvasPoint1.y;
-
-    var topLeftX = canvasPoint1.x;
-    var topLeftY = canvasPoint1.y;
-
-    // 6 verteces -> 2 triangles -> 1 square!
-    var verteces = [
-      CoordUtils.windowToClip(bottomLeftX, bottomLeftY, _canvas.width, _canvas.height),
-      CoordUtils.windowToClip(bottomRightX, bottomRightY, _canvas.width, _canvas.height),
-      CoordUtils.windowToClip(topRightX, topRightY, _canvas.width, _canvas.height),
-
-      CoordUtils.windowToClip(topRightX, topRightY, _canvas.width, _canvas.height),
-      CoordUtils.windowToClip(topLeftX, topLeftY, _canvas.width, _canvas.height),
-      CoordUtils.windowToClip(bottomLeftX, bottomLeftY, _canvas.width, _canvas.height)
-    ];
+    var startX = canvasPoint1.x,
+      startY = canvasPoint1.y,
+      endX = canvasPoint2.x,
+      endY = canvasPoint2.y;
 
     // 2 verteces -> 1 line
-    // var verteces = [
-    //   CoordUtils.windowToClip(startX, startY, _canvas.width, _canvas.height),
-    //   CoordUtils.windowToClip(endX, endY, _canvas.width, _canvas.height)
-    // ];
+    var verteces = [
+      CoordUtils.windowToClip(startX, startY, _canvas.width, _canvas.height),
+      CoordUtils.windowToClip(endX, endY, _canvas.width, _canvas.height)
+    ];
 
     // Changes all existing lines and may not work on Windows :(
-    // _gl.lineWidth(_lineWidth);
+    _gl.lineWidth(_lineWidth);
 
-    var offset = sizeof.vec2 * 6 * _numDrawn;
+    var offset = sizeof.vec2 * 2 * _numDrawn;
     _gl.bindBuffer(_gl.ARRAY_BUFFER, _vBuffer);
     _gl.bufferSubData(_gl.ARRAY_BUFFER, offset, flatten(verteces));
 
@@ -199,8 +172,7 @@
 
   var render = function() {
     _gl.clear( _gl.COLOR_BUFFER_BIT );
-    // _gl.drawArrays( _gl.LINES, 0, _numDrawn * 2 );
-    _gl.drawArrays( _gl.TRIANGLES, 0, _numDrawn * 6 );
+    _gl.drawArrays( _gl.LINES, 0, _numDrawn * 2 );
   };
 
   var dragStart = function(evt) {
