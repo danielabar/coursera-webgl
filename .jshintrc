@@ -28,6 +28,10 @@
     "vec2": false,
     "vec3": false,
     "mix": false,
-    "sizeof": false
+    "sizeof": false,
+    "subtract": false,
+    "normalize": false,
+    "cross": false,
+    "add": false
   }
 }
