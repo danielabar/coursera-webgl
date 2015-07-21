@@ -117,6 +117,7 @@
   'use strict';
 
   var MAX_SHAPES = 10000;
+  var VERTEX_PER_SHAPE = 4;
 
   var _gl,
     _program,
@@ -135,13 +136,11 @@
   };
 
   var addColor = function() {
-    var colors = [
-      _rgbColor.r, _rgbColor.g, _rgbColor.b,
-      _rgbColor.r, _rgbColor.g, _rgbColor.b,
-      _rgbColor.r, _rgbColor.g, _rgbColor.b,
-      _rgbColor.r, _rgbColor.g, _rgbColor.b
-    ];
-    var colorOffset = sizeof.vec3 * 4 * _numDrawn;
+    var colors = [];
+    for (var i=0; i<VERTEX_PER_SHAPE; i++) {
+      colors.push(_rgbColor.r, _rgbColor.g, _rgbColor.b);
+    }
+    var colorOffset = sizeof.vec3 * VERTEX_PER_SHAPE * _numDrawn;
     _gl.bindBuffer(_gl.ARRAY_BUFFER, _cBuffer);
     _gl.bufferSubData(_gl.ARRAY_BUFFER, colorOffset, flatten(colors));
   };
@@ -165,7 +164,7 @@
       CoordUtils.windowToClip(canvasPoint2.x + normalX, canvasPoint2.y + normalY, _canvas.width, _canvas.height)
     ];
 
-    var offset = sizeof.vec2 * 4 * _numDrawn;
+    var offset = sizeof.vec2 * VERTEX_PER_SHAPE * _numDrawn;
     _gl.bindBuffer(_gl.ARRAY_BUFFER, _vBuffer);
     _gl.bufferSubData(_gl.ARRAY_BUFFER, offset, flatten(verteces));
 
@@ -178,7 +177,7 @@
 
   var render = function() {
     _gl.clear( _gl.COLOR_BUFFER_BIT );
-    _gl.drawArrays( _gl.TRIANGLE_STRIP, 0, _numDrawn * 4 );
+    _gl.drawArrays( _gl.TRIANGLE_STRIP, 0, _numDrawn * VERTEX_PER_SHAPE );
   };
 
   var dragStart = function(evt) {
