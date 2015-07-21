@@ -138,6 +138,8 @@
     var colors = [
       _rgbColor.r, _rgbColor.g, _rgbColor.b,
       _rgbColor.r, _rgbColor.g, _rgbColor.b,
+      _rgbColor.r, _rgbColor.g, _rgbColor.b,
+      _rgbColor.r, _rgbColor.g, _rgbColor.b
     ];
     var colorOffset = sizeof.vec3 * 4 * _numDrawn;
     _gl.bindBuffer(_gl.ARRAY_BUFFER, _cBuffer);
@@ -151,7 +153,11 @@
       normalX = t * -dy,
       normalY = t * dx;
 
-    // 4 verteces -> 1 rectangle via gl.TRIANGLE_STRIP
+    // var a = CoordUtils.windowToClip(canvasPoint1.x - normalX, canvasPoint1.y - normalY, _canvas.width, _canvas.height);
+    // var b = CoordUtils.windowToClip(canvasPoint1.x + normalX, canvasPoint1.y + normalY, _canvas.width, _canvas.height);
+    // var c = CoordUtils.windowToClip(canvasPoint2.x - normalX, canvasPoint2.y - normalY, _canvas.width, _canvas.height);
+    // var d = CoordUtils.windowToClip(canvasPoint2.x + normalX, canvasPoint2.y + normalY, _canvas.width, _canvas.height)
+
     var verteces = [
       CoordUtils.windowToClip(canvasPoint1.x - normalX, canvasPoint1.y - normalY, _canvas.width, _canvas.height),
       CoordUtils.windowToClip(canvasPoint1.x + normalX, canvasPoint1.y + normalY, _canvas.width, _canvas.height),
