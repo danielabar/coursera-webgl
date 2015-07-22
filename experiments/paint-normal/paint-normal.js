@@ -117,7 +117,7 @@
   'use strict';
 
   var MAX_SHAPES = 10000;
-  var VERTEX_PER_SHAPE = 4;
+  var VERTEX_PER_SHAPE = 6;   // 4 for the rectangle representing two triangles + dupe at each end to simulate a line break
 
   var _gl,
     _program,
@@ -152,17 +152,12 @@
       normalX = t * -dy,
       normalY = t * dx;
 
-    // var a = CoordUtils.windowToClip(canvasPoint1.x - normalX, canvasPoint1.y - normalY, _canvas.width, _canvas.height);
-    // var b = CoordUtils.windowToClip(canvasPoint1.x + normalX, canvasPoint1.y + normalY, _canvas.width, _canvas.height);
-    // var c = CoordUtils.windowToClip(canvasPoint2.x - normalX, canvasPoint2.y - normalY, _canvas.width, _canvas.height);
-    // var d = CoordUtils.windowToClip(canvasPoint2.x + normalX, canvasPoint2.y + normalY, _canvas.width, _canvas.height)
+    var a = CoordUtils.windowToClip(canvasPoint1.x - normalX, canvasPoint1.y - normalY, _canvas.width, _canvas.height);
+    var b = CoordUtils.windowToClip(canvasPoint1.x + normalX, canvasPoint1.y + normalY, _canvas.width, _canvas.height);
+    var c = CoordUtils.windowToClip(canvasPoint2.x - normalX, canvasPoint2.y - normalY, _canvas.width, _canvas.height);
+    var d = CoordUtils.windowToClip(canvasPoint2.x + normalX, canvasPoint2.y + normalY, _canvas.width, _canvas.height);
 
-    var verteces = [
-      CoordUtils.windowToClip(canvasPoint1.x - normalX, canvasPoint1.y - normalY, _canvas.width, _canvas.height),
-      CoordUtils.windowToClip(canvasPoint1.x + normalX, canvasPoint1.y + normalY, _canvas.width, _canvas.height),
-      CoordUtils.windowToClip(canvasPoint2.x - normalX, canvasPoint2.y - normalY, _canvas.width, _canvas.height),
-      CoordUtils.windowToClip(canvasPoint2.x + normalX, canvasPoint2.y + normalY, _canvas.width, _canvas.height)
-    ];
+    var verteces = [ a, a, b, c, d, d ];
 
     var offset = sizeof.vec2 * VERTEX_PER_SHAPE * _numDrawn;
     _gl.bindBuffer(_gl.ARRAY_BUFFER, _vBuffer);
