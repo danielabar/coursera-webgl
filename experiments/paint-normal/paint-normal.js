@@ -195,7 +195,6 @@
 
     var verteces = [ a, b, c, d ];
 
-    // var offset = (sizeof.vec2 * VERTEX_PER_SHAPE * _numDrawn) + (sizeof.vec2 * VERTEX_PER_END_SHAPE * _numEndDrawn) ;
     var offset = (sizeof.vec2 * VERTEX_PER_SHAPE * _numDrawn) + (sizeof.vec2 * VERTEX_PER_END_SHAPE * _numEndDrawn) ;
     _gl.bindBuffer(_gl.ARRAY_BUFFER, _vBuffer);
     _gl.bufferSubData(_gl.ARRAY_BUFFER, offset, flatten(verteces));
@@ -237,6 +236,33 @@
     return sizeOfLine * MAX_SHAPES;
   };
 
+  var clearBuffer = function() {
+    _numDrawn = 0;
+    _numEndDrawn = 0;
+    
+    // Load an empty vertex buffer onto the GPU
+    _vBuffer = _gl.createBuffer();
+    _gl.bindBuffer( _gl.ARRAY_BUFFER, _vBuffer );
+    _gl.bufferData( _gl.ARRAY_BUFFER, initBufferSize(), _gl.STATIC_DRAW );
+
+    // Associate shader variables with vertex data buffer
+    var vPosition = _gl.getAttribLocation( _program, 'vPosition' );
+    _gl.vertexAttribPointer( vPosition, 2, _gl.FLOAT, false, 0, 0 );
+    _gl.enableVertexAttribArray( vPosition );
+
+    // Load an empty color buffer onto the GPU
+    _cBuffer = _gl.createBuffer();
+    _gl.bindBuffer( _gl.ARRAY_BUFFER, _cBuffer );
+    _gl.bufferData( _gl.ARRAY_BUFFER, initBufferSize(), _gl.STATIC_DRAW );
+
+    // Associate shader variables with color data buffer
+    var vColor = _gl.getAttribLocation( _program, 'vColor' );
+    _gl.vertexAttribPointer( vColor, 3, _gl.FLOAT, false, 0, 0 );
+    _gl.enableVertexAttribArray( vColor );
+
+    render();
+  };
+
   var App = {
 
     init: function() {
@@ -246,8 +272,9 @@
       _gl = WebGLUtils.setupWebGL( _canvas );
       if ( !_gl ) { alert( 'WebGL isn\'t available' ); }
 
-      // Register settings event handler
+      // Register settings event handlers
       document.getElementById('settings').addEventListener('change', updateSettings);
+      document.getElementById('clear').addEventListener('click', clearBuffer);
 
       // Register canvas event handlers
       _canvas.addEventListener('mousedown', dragStart);
