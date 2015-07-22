@@ -117,7 +117,8 @@
   'use strict';
 
   var MAX_SHAPES = 10000;
-  var VERTEX_PER_SHAPE = 6;   // 4 for the rectangle representing two triangles + dupe at each end to simulate a line break
+  var VERTEX_PER_SHAPE = 4;       // 4 for the rectangle representing two triangles
+  var VERTEX_PER_END_SHAPE = 6;   // 4 for the rectangle representing two triangles + dupe at each end to simulate a line break
 
   var _gl,
     _program,
@@ -125,6 +126,7 @@
     _cBuffer,
     _canvas,
     _numDrawn = 0,
+    _numEndDrawn = 0,
     _dragStartPoint,
     _rgbColor = {r: 1.0, g: 0.0, b: 0.0},
     _lineWidth = 1;
@@ -140,9 +142,43 @@
     for (var i=0; i<VERTEX_PER_SHAPE; i++) {
       colors.push(_rgbColor.r, _rgbColor.g, _rgbColor.b);
     }
-    var colorOffset = sizeof.vec3 * VERTEX_PER_SHAPE * _numDrawn;
+    var colorOffset = (sizeof.vec3 * VERTEX_PER_SHAPE * _numDrawn) + (sizeof.vec3 * VERTEX_PER_END_SHAPE * _numEndDrawn);
     _gl.bindBuffer(_gl.ARRAY_BUFFER, _cBuffer);
     _gl.bufferSubData(_gl.ARRAY_BUFFER, colorOffset, flatten(colors));
+  };
+
+  var addEndColor = function() {
+    var colors = [];
+    for (var i=0; i<VERTEX_PER_END_SHAPE; i++) {
+      colors.push(_rgbColor.r, _rgbColor.g, _rgbColor.b);
+    }
+    var colorOffset = (sizeof.vec3 * VERTEX_PER_SHAPE * _numDrawn) + (sizeof.vec3 * VERTEX_PER_END_SHAPE * _numEndDrawn);
+    _gl.bindBuffer(_gl.ARRAY_BUFFER, _cBuffer);
+    _gl.bufferSubData(_gl.ARRAY_BUFFER, colorOffset, flatten(colors));
+  };
+
+  var drawEndLine = function(canvasPoint1, canvasPoint2) {
+    var dx = canvasPoint2.x - canvasPoint1.x,
+      dy = canvasPoint2.y - canvasPoint1.y,
+      t = Math.sqrt(_lineWidth * _lineWidth / (dx * dx + dy * dy)),
+      normalX = t * -dy,
+      normalY = t * dx;
+
+    var a = CoordUtils.windowToClip(canvasPoint1.x - normalX, canvasPoint1.y - normalY, _canvas.width, _canvas.height);
+    var b = CoordUtils.windowToClip(canvasPoint1.x + normalX, canvasPoint1.y + normalY, _canvas.width, _canvas.height);
+    var c = CoordUtils.windowToClip(canvasPoint2.x - normalX, canvasPoint2.y - normalY, _canvas.width, _canvas.height);
+    var d = CoordUtils.windowToClip(canvasPoint2.x + normalX, canvasPoint2.y + normalY, _canvas.width, _canvas.height);
+
+    var verteces = [ a, a, b, c, d, d ];
+
+    var offset = (sizeof.vec2 * VERTEX_PER_SHAPE * _numDrawn) + (sizeof.vec2 * VERTEX_PER_END_SHAPE * _numEndDrawn) ;
+    _gl.bindBuffer(_gl.ARRAY_BUFFER, _vBuffer);
+    _gl.bufferSubData(_gl.ARRAY_BUFFER, offset, flatten(verteces));
+
+    addEndColor();
+
+    render();
+    _numEndDrawn++;
   };
 
   var drawLine = function(canvasPoint1, canvasPoint2) {
@@ -157,9 +193,10 @@
     var c = CoordUtils.windowToClip(canvasPoint2.x - normalX, canvasPoint2.y - normalY, _canvas.width, _canvas.height);
     var d = CoordUtils.windowToClip(canvasPoint2.x + normalX, canvasPoint2.y + normalY, _canvas.width, _canvas.height);
 
-    var verteces = [ a, a, b, c, d, d ];
+    var verteces = [ a, b, c, d ];
 
-    var offset = sizeof.vec2 * VERTEX_PER_SHAPE * _numDrawn;
+    // var offset = (sizeof.vec2 * VERTEX_PER_SHAPE * _numDrawn) + (sizeof.vec2 * VERTEX_PER_END_SHAPE * _numEndDrawn) ;
+    var offset = (sizeof.vec2 * VERTEX_PER_SHAPE * _numDrawn) + (sizeof.vec2 * VERTEX_PER_END_SHAPE * _numEndDrawn) ;
     _gl.bindBuffer(_gl.ARRAY_BUFFER, _vBuffer);
     _gl.bufferSubData(_gl.ARRAY_BUFFER, offset, flatten(verteces));
 
@@ -167,12 +204,11 @@
 
     render();
     _numDrawn++;
-
   };
 
   var render = function() {
     _gl.clear( _gl.COLOR_BUFFER_BIT );
-    _gl.drawArrays( _gl.TRIANGLE_STRIP, 0, _numDrawn * VERTEX_PER_SHAPE );
+    _gl.drawArrays( _gl.TRIANGLE_STRIP, 0, (_numDrawn * VERTEX_PER_SHAPE) + (_numEndDrawn * VERTEX_PER_END_SHAPE) );
   };
 
   var dragStart = function(evt) {
@@ -189,7 +225,9 @@
     }
   };
 
-  var dragEnd = function() {
+  var dragEnd = function(evt) {
+    var currentPoint = CoordUtils.getRelativeCoords(evt);
+    drawEndLine(_dragStartPoint, currentPoint);
     _dragStartPoint = null;
   };
 
