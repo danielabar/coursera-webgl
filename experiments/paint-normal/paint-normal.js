@@ -239,7 +239,7 @@
   var clearBuffer = function() {
     _numDrawn = 0;
     _numEndDrawn = 0;
-    
+
     // Load an empty vertex buffer onto the GPU
     _vBuffer = _gl.createBuffer();
     _gl.bindBuffer( _gl.ARRAY_BUFFER, _vBuffer );
@@ -263,18 +263,23 @@
     render();
   };
 
+  var downloadImage = function(evt) {
+    evt.target.href = _canvas.toDataURL();
+  };
+
   var App = {
 
     init: function() {
 
       // Setup canvas
       _canvas = document.getElementById('gl-canvas');
-      _gl = WebGLUtils.setupWebGL( _canvas );
+      _gl = WebGLUtils.setupWebGL( _canvas, {preserveDrawingBuffer: true} );
       if ( !_gl ) { alert( 'WebGL isn\'t available' ); }
 
       // Register settings event handlers
       document.getElementById('settings').addEventListener('change', updateSettings);
       document.getElementById('clear').addEventListener('click', clearBuffer);
+      document.getElementById('download').addEventListener('click', downloadImage);
 
       // Register canvas event handlers
       _canvas.addEventListener('mousedown', dragStart);
