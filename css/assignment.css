@@ -172,6 +172,30 @@ input[type=button] {
 
 
 /* ---------------------------------- */
+/* Controls Form */
+/* ---------------------------------- */
+
+.controls .form-group {
+  display: inline-block;
+  margin-right: 20px;
+}
+
+.button {
+  outline: none;
+  border: solid 1px #ccc;
+  padding: 5px 10px;
+  letter-spacing: 1px;
+  font-size: 1em;
+  text-transform: lowercase;
+  color: #474747;
+  cursor: pointer;
+  border-radius: 3px;
+  background-image: -webkit-linear-gradient(top, #ddd, #CECCCC);
+  background-image: linear-gradient(top, #ddd, #CECCCC);
+}
+
+
+/* ---------------------------------- */
 /* Footer */
 /* ---------------------------------- */
 
