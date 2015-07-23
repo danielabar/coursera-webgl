@@ -134,7 +134,7 @@
   var updateSettings = function(evt) {
     evt.preventDefault();
     _rgbColor = ColorUtils.hexToGL(document.getElementById('squareColor').value);
-    _lineWidth = DomUtils.getCheckedNumber('lineWidth');
+    _lineWidth = document.getElementById('lineWidth').valueAsNumber;
   };
 
   var addColor = function() {
