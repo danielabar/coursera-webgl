@@ -175,6 +175,11 @@ input[type=button] {
 /* Controls Form */
 /* ---------------------------------- */
 
+.assignment section.controls {
+  padding-top: 25px;
+  padding-bottom: 25px;
+}
+
 .controls .form-group {
   display: inline-block;
   margin-right: 20px;
