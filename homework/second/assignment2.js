@@ -102,6 +102,14 @@
       var clipX = windowToClipX(clientX, width);
       var clipY = windowToClipY(clientY, height);
       return vec2(clipX, clipY);
+    },
+
+    distance: function(point1, point2) {
+      var subX = point2.x - point1.x;
+      var subY = point2.y - point1.y;
+      var subX2 = Math.pow(subX, 2);
+      var subY2 = Math.pow(subY, 2);
+      return Math.sqrt(subX2 + subY2);
     }
 
   };
@@ -216,11 +224,16 @@
 
   // Debounce?
   var dragging = function(evt) {
-    var currentPoint;
+    var currentPoint,
+      distance;
     if (_dragStartPoint) {
       currentPoint = CoordUtils.getRelativeCoords(evt);
-      drawLine(_dragStartPoint, currentPoint);
-      _dragStartPoint = currentPoint;
+      distance = CoordUtils.distance(_dragStartPoint, currentPoint);
+      console.log('distance: ' + distance);
+      if (distance > (_lineWidth * 0.5)) {
+        drawLine(_dragStartPoint, currentPoint);
+        _dragStartPoint = currentPoint;
+      }
     }
   };
 
@@ -238,7 +251,7 @@
 
   var clearBuffer = function(evt) {
     evt.preventDefault();
-    
+
     _numDrawn = 0;
     _numEndDrawn = 0;
 
