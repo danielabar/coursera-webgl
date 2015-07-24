@@ -181,6 +181,9 @@ input[type=button] {
 }
 
 .button {
+  display: inline-block;
+  width: 130px;
+  text-align: center;
   outline: none;
   border: solid 1px #ccc;
   padding: 5px 10px;
@@ -192,6 +195,10 @@ input[type=button] {
   border-radius: 3px;
   background-image: -webkit-linear-gradient(top, #ddd, #CECCCC);
   background-image: linear-gradient(top, #ddd, #CECCCC);
+}
+
+.icon {
+  margin-right: 5px;
 }
 
 
