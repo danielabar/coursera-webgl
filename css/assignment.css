@@ -193,11 +193,13 @@ input[type=button] {
   color: #474747;
   cursor: pointer;
   border-radius: 3px;
+  background-image: -moz-linear-gradient(top, #ddd, #CECCCC);
   background-image: -webkit-linear-gradient(top, #ddd, #CECCCC);
   background-image: linear-gradient(top, #ddd, #CECCCC);
 }
 
 .button:hover {
+  background-image: -moz-linear-gradient(top, #C7C7C7, #B9B8B8);
   background-image: -webkit-linear-gradient(top, #C7C7C7, #B9B8B8);
   background-image: linear-gradient(top, #C7C7C7, #B9B8B8);
   color: #595959;
