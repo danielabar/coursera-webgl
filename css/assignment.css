@@ -197,6 +197,13 @@ input[type=button] {
   background-image: linear-gradient(top, #ddd, #CECCCC);
 }
 
+.button:hover {
+  background-image: -webkit-linear-gradient(top, #C7C7C7, #B9B8B8);
+  background-image: linear-gradient(top, #C7C7C7, #B9B8B8);
+  color: #595959;
+  border: solid 1px #B8B8B8;
+}
+
 .icon {
   margin-right: 5px;
 }
