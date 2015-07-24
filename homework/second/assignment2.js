@@ -229,11 +229,10 @@
     if (_dragStartPoint) {
       currentPoint = CoordUtils.getRelativeCoords(evt);
       distance = CoordUtils.distance(_dragStartPoint, currentPoint);
-      console.log('distance: ' + distance);
       if (distance > (_lineWidth * 0.5)) {
         drawLine(_dragStartPoint, currentPoint);
-        _dragStartPoint = currentPoint;
       }
+      _dragStartPoint = currentPoint;
     }
   };
 
