@@ -208,6 +208,10 @@ input[type=button] {
   margin-right: 5px;
 }
 
+.actions {
+  margin-left: 115px;
+}
+
 
 /* ---------------------------------- */
 /* Footer */
