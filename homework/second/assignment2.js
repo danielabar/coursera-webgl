@@ -121,7 +121,7 @@
 /**
  * App
  */
-(function(window, CoordUtils, ColorUtils, DomUtils) {
+(function(window, CoordUtils, ColorUtils) {
   'use strict';
 
   var MAX_SHAPES = 10000;
@@ -137,18 +137,20 @@
     _numEndDrawn = 0,
     _dragStartPoint,
     _rgbColor = {r: 1.0, g: 0.0, b: 0.0},
+    _alpha = 1.0,
     _lineWidth = 1;
 
   var updateSettings = function(evt) {
     evt.preventDefault();
     _rgbColor = ColorUtils.hexToGL(document.getElementById('squareColor').value);
     _lineWidth = document.getElementById('lineWidth').valueAsNumber;
+    _alpha = document.getElementById('alpha').valueAsNumber;
   };
 
   var addColor = function() {
     var colors = [];
     for (var i=0; i<VERTEX_PER_SHAPE; i++) {
-      colors.push(_rgbColor.r, _rgbColor.g, _rgbColor.b, 1.0);
+      colors.push(_rgbColor.r, _rgbColor.g, _rgbColor.b, _alpha);
     }
     var colorOffset = (sizeof.vec4 * VERTEX_PER_SHAPE * _numDrawn) + (sizeof.vec4 * VERTEX_PER_END_SHAPE * _numEndDrawn);
     _gl.bindBuffer(_gl.ARRAY_BUFFER, _cBuffer);
@@ -158,7 +160,7 @@
   var addEndColor = function() {
     var colors = [];
     for (var i=0; i<VERTEX_PER_END_SHAPE; i++) {
-      colors.push(_rgbColor.r, _rgbColor.g, _rgbColor.b, 1.0);
+      colors.push(_rgbColor.r, _rgbColor.g, _rgbColor.b, _alpha);
     }
     var colorOffset = (sizeof.vec4 * VERTEX_PER_SHAPE * _numDrawn) + (sizeof.vec4 * VERTEX_PER_END_SHAPE * _numEndDrawn);
     _gl.bindBuffer(_gl.ARRAY_BUFFER, _cBuffer);
@@ -222,7 +224,6 @@
     _dragStartPoint = CoordUtils.getRelativeCoords(evt);
   };
 
-  // Debounce?
   var dragging = function(evt) {
     var currentPoint,
       distance;
@@ -301,10 +302,12 @@
       _canvas.addEventListener('mouseup', dragEnd);
 
       // Configure WebGL
+      _gl.enable(_gl.BLEND);
       _gl.blendFunc(_gl.SRC_ALPHA, _gl.ONE_MINUS_SRC_ALPHA);
       _gl.viewport( 0, 0, _canvas.width, _canvas.height );
       _gl.clearColor(0.0, 0.0, 0.0, 1.0);
-      _gl.lineWidth(_lineWidth);
+      _gl.colorMask(true, true, true, false);
+      // _gl.lineWidth(_lineWidth);
 
       // Load shaders
       _program = initShaders( _gl, 'vertex-shader', 'fragment-shader' );
@@ -337,7 +340,7 @@
 
   window.App = App;
 
-}(window, window.CoordUtils, window.ColorUtils, window.DomUtils));
+}(window, window.CoordUtils, window.ColorUtils));
 
 
 /**
