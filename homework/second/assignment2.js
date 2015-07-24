@@ -236,7 +236,9 @@
     return sizeOfLine * MAX_SHAPES;
   };
 
-  var clearBuffer = function() {
+  var clearBuffer = function(evt) {
+    evt.preventDefault();
+    
     _numDrawn = 0;
     _numEndDrawn = 0;
 
