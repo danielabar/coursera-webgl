@@ -148,9 +148,9 @@
   var addColor = function() {
     var colors = [];
     for (var i=0; i<VERTEX_PER_SHAPE; i++) {
-      colors.push(_rgbColor.r, _rgbColor.g, _rgbColor.b);
+      colors.push(_rgbColor.r, _rgbColor.g, _rgbColor.b, 1.0);
     }
-    var colorOffset = (sizeof.vec3 * VERTEX_PER_SHAPE * _numDrawn) + (sizeof.vec3 * VERTEX_PER_END_SHAPE * _numEndDrawn);
+    var colorOffset = (sizeof.vec4 * VERTEX_PER_SHAPE * _numDrawn) + (sizeof.vec4 * VERTEX_PER_END_SHAPE * _numEndDrawn);
     _gl.bindBuffer(_gl.ARRAY_BUFFER, _cBuffer);
     _gl.bufferSubData(_gl.ARRAY_BUFFER, colorOffset, flatten(colors));
   };
@@ -158,9 +158,9 @@
   var addEndColor = function() {
     var colors = [];
     for (var i=0; i<VERTEX_PER_END_SHAPE; i++) {
-      colors.push(_rgbColor.r, _rgbColor.g, _rgbColor.b);
+      colors.push(_rgbColor.r, _rgbColor.g, _rgbColor.b, 1.0);
     }
-    var colorOffset = (sizeof.vec3 * VERTEX_PER_SHAPE * _numDrawn) + (sizeof.vec3 * VERTEX_PER_END_SHAPE * _numEndDrawn);
+    var colorOffset = (sizeof.vec4 * VERTEX_PER_SHAPE * _numDrawn) + (sizeof.vec4 * VERTEX_PER_END_SHAPE * _numEndDrawn);
     _gl.bindBuffer(_gl.ARRAY_BUFFER, _cBuffer);
     _gl.bufferSubData(_gl.ARRAY_BUFFER, colorOffset, flatten(colors));
   };
@@ -271,7 +271,7 @@
 
     // Associate shader variables with color data buffer
     var vColor = _gl.getAttribLocation( _program, 'vColor' );
-    _gl.vertexAttribPointer( vColor, 3, _gl.FLOAT, false, 0, 0 );
+    _gl.vertexAttribPointer( vColor, 4, _gl.FLOAT, false, 0, 0 );
     _gl.enableVertexAttribArray( vColor );
 
     render();
@@ -287,7 +287,7 @@
 
       // Setup canvas
       _canvas = document.getElementById('gl-canvas');
-      _gl = WebGLUtils.setupWebGL( _canvas, {preserveDrawingBuffer: true} );
+      _gl = WebGLUtils.setupWebGL( _canvas, {alpha: false, preserveDrawingBuffer: true} );
       if ( !_gl ) { alert( 'WebGL isn\'t available' ); }
 
       // Register settings event handlers
@@ -301,6 +301,7 @@
       _canvas.addEventListener('mouseup', dragEnd);
 
       // Configure WebGL
+      _gl.blendFunc(_gl.SRC_ALPHA, _gl.ONE_MINUS_SRC_ALPHA);
       _gl.viewport( 0, 0, _canvas.width, _canvas.height );
       _gl.clearColor(0.0, 0.0, 0.0, 1.0);
       _gl.lineWidth(_lineWidth);
@@ -326,7 +327,7 @@
 
       // Associate shader variables with color data buffer
       var vColor = _gl.getAttribLocation( _program, 'vColor' );
-      _gl.vertexAttribPointer( vColor, 3, _gl.FLOAT, false, 0, 0 );
+      _gl.vertexAttribPointer( vColor, 4, _gl.FLOAT, false, 0, 0 );
       _gl.enableVertexAttribArray( vColor );
 
       render();
