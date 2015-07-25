@@ -136,6 +136,7 @@
     _numDrawn = 0,
     _numEndDrawn = 0,
     _dragStartPoint,
+    _dragStartTime,
     _rgbColor = {r: 1.0, g: 0.0, b: 0.0},
     _alpha = 1.0,
     _lineWidth = 1;
@@ -222,18 +223,26 @@
 
   var dragStart = function(evt) {
     _dragStartPoint = CoordUtils.getRelativeCoords(evt);
+    _dragStartTime = new Date().getTime();
   };
 
   var dragging = function(evt) {
     var currentPoint,
-      distance;
+      currentTime,
+      timeSinceLastPoint,
+      distance,
+      speed;
     if (_dragStartPoint) {
       currentPoint = CoordUtils.getRelativeCoords(evt);
+      currentTime = new Date().getTime();
+      timeSinceLastPoint = new Date(currentTime - _dragStartTime);
       distance = CoordUtils.distance(_dragStartPoint, currentPoint);
-      if (distance > (_lineWidth * 0.5)) {
+      speed = distance / timeSinceLastPoint;
+      if (distance > _lineWidth  || speed < 0.5) {
         drawLine(_dragStartPoint, currentPoint);
       }
       _dragStartPoint = currentPoint;
+      _dragStartTime = currentTime;
     }
   };
 
