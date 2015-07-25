@@ -373,6 +373,29 @@ Surfaces are formed from two-parameter functions P(&alpha; &beta;)
 
 Linear functions give pllanes and polygons.
 
-### Planes
+### Planes and Triangles
 
-A plane can be defined by a point and two vectors or by three points
+A plane can be defined by a point `R` and two vectors `u` and `v`, or by three points `R`, `Q`, `P`
+
+P(&alpha;, &beta;) = R + &alpha;u + &beta;v
+
+P(&alpha;, &beta;) = R + &alpha;(Q-R) + &beta;(P-Q)
+
+Three points also define a triangle. As long as &alpha; and &beta; are between 0 and 1 for some point T(&alpha; &beta;),
+then it is located inside the triangle.
+
+### Normals
+
+In 3D spaces, everyplane has a vector `n` perpendiculr or orthogonal to it called the _normal vector_
+
+From the two-point vector form:
+
+P(&alpha;, &beta;) = P + &alpha;u + &beta;v
+
+we can use the cross product to find:
+
+n = u x v
+
+and the equivalent form (dot product):
+
+(P(&alpha;, &beta;) - P) * n = 0
