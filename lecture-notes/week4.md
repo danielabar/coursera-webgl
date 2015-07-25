@@ -399,3 +399,33 @@ n = u x v
 and the equivalent form (dot product):
 
 (P(&alpha;, &beta;) - P) * n = 0
+
+## Representation
+
+Need a frame of reference to relate points and objects to the physical world. For example,
+where is a point? Can't answer without a reference system.
+
+* World coordinates
+* Camera coordinates
+
+### Linear Independence
+
+A set of vectors _v1, v2, ..., vn_ is _linearly independent_ if
+
+  &alpha;1v1 + &alpha;2v2  + ... + &alpha;nvn = 0 iff &alpha;1 = &alpha;2 ... = 0
+
+If a set of fectors is linearly independent, one cannot be represented in terms of the others
+
+If a set of vectors is _linearly dependent_, at least one can be written in terms of the others.
+
+### Dimension
+
+In a vector space, the maximum number of linearly independent vectors is fixed and is called the _dimension_ of the space
+
+In an n-dimensional space, any set of n linearly independent vectors form a _basis_ for the space
+
+Given a basis _v1, v2, ..., vn_, any vector _v_ can be written as
+
+  _v = &alpha;1v1 + &alpha;2v2 + ... + &alpha;3v3_
+
+where the {&alpha;i} are unique.
