@@ -71,3 +71,174 @@ Events generated b other applications that use the canvas can affect the WebGL c
 There are default callbacks for some of these events.
 
 ### Reshape Events
+
+Mouse can be used to change size of canvas. In this case, must redraw contents. Options:
+
+* Display same content but change size
+* Display more or fewer objects at the same size
+
+Usually want to maintain proportions. For example, window shape may have gone from square to rectangle,
+so shapes of the objects are going to change.
+
+### onresize Event
+
+* Size of new canvas available via `window.innerWidth` and `window.innerHeight`
+* Use new window size to proportionally change canvas size
+
+For example, to maintain a square display
+
+```javascript
+window.onresize = function() {
+  var min = innerWidth;
+  if (innerHeight < min) {
+    min = innerHeight;
+  }
+  if (min < canvs.width || min < canvas.height) {
+    gl.viewport(0, canvas.height-min, min, min);
+  }
+};
+```
+
+### Picking
+
+* Given a point in the canvas, how to map this point back to an object?
+* Lack of uniqueness (there could be multiple objects layered on top of each other at that point)
+* Forward nature of pipeline
+* Difficult to get exact position with a pointing device
+
+#### Picking with Color
+
+* Use `gl.readPixels` to get color at any location in window
+* Use color to identify object but note that
+  * Multiple objects can have same color
+  * Shaded object will display many colors
+* Solution: assign unique color to each object and render off-screen
+  * Use `gl.readPixels` to get color at mouse location
+  * Use table to map this color to an object
+
+#### Picking with Bounding Boxes
+
+This technique does not require extra rendering for each pick.
+
+* Use table of axis-aligned bounding boxes (smallest box that object fits into that's aligned with the axes)
+* Map mouse location to object through table
+
+To compute a bounding box: Scan through the list of verteces, get the minimum and maximum in both x and y.
+Then can look at any given pixel and determine if its inside or outside the bounding box.
+
+Works most, but not all of the time. Could have a pixel that's inside the bounding box, but outside the shape (eg: triangle in a squre bounding box).
+
+### Homogeneous Coordinates in WebGL
+
+All versions of OpenGL support homogenous coordinates.
+
+Regardless of how vertex data is specified (2, 3, or 4 dimensional),
+it's stored in 4D homogenous form.
+
+Defaults: z = 0, w = 1
+
+Recall example from simple triangle
+
+```javascript
+var vertices = [-1, -1, 0, 1, 1, -1];
+
+// specify 2 dimensional data and they're floats
+gl.vertexAttribPointer( vPosition, 2, gl.FLOAT, false, 0, 0);
+```
+
+But in the GPU, each vertex is actually stored as 4 dimensions. Recall vertex shader
+
+```
+// Defined as 4 dimensional
+attribtue vec4 vPosition;
+
+void main() {
+  // IMPORTANT: Output MUST be 4 dimensional!
+  gl_Position = vPosition;
+}
+```
+
+#### Equivalents
+
+Could have vertex shader specify vec2, then generate 4D in code as follows
+
+```
+// Now this matches definition passed in from application
+attribtue vec2 vPosition;
+
+void main() {
+  // Start with 2D vector from application,
+  // Then use vec4 construction in GLSL to add default z = 0.0 and w = 1.0
+  gl_Position = vec4(vPosition, 0.0, 1.0);
+}
+```
+
+OR could specify 4D vertices in application
+
+```javascript
+var vertices = [
+  -1, -1, 0, 1,
+  0, 1, 0, 1,
+  1, -1, 0, 1
+];
+```
+
+### GLSL Caveats
+
+#### Automatic Perspective Division
+
+Remember that a perspective division is done automatically!
+
+For example, scale vertees by 0.5 in shader.
+
+Operators are overloaded, but this will do nothing:
+
+```
+gl_Position = 0.5 * vPosition;
+```
+
+Because overloading multiplies x, y, z AND w.
+
+But this will work, multiply only x, y, z:
+
+```
+gl_Position = vec4(0.5*vPosition.xyz, 1.0);
+```
+
+#### Points have w = 1
+
+Built in GLSL functions can give misleading results. For example
+
+```
+attribute vec4 vPosition;
+float d = normalize(vPosition);
+```
+
+Probably really want
+
+```
+float d = normalize(vPosition.xyz);
+```
+
+#### GLSL types are storage types
+
+A `vec4` is neither a column vector, nor a row vector. It can be used either way:
+
+```
+vec4 a, b;
+mat4 T;
+
+// operator overloading interprets "a" as a row
+vec4 c = a * T;
+
+// operator overloadign will interpret "b" as a column
+vec4 d = T * b;
+```
+
+#### Column major order
+
+* WebGL assumes 4 x 4 matrices are sent as 16 element arrays in _column major order_
+* In most programming languages, arrays are stored in _row major order_
+* Often have to transpose arrays before sending to shaders
+
+## Geometry 1
