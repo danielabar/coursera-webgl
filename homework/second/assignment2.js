@@ -102,14 +102,6 @@
       var clipX = windowToClipX(clientX, width);
       var clipY = windowToClipY(clientY, height);
       return vec2(clipX, clipY);
-    },
-
-    distance: function(point1, point2) {
-      var subX = point2.x - point1.x;
-      var subY = point2.y - point1.y;
-      var subX2 = Math.pow(subX, 2);
-      var subY2 = Math.pow(subY, 2);
-      return Math.sqrt(subX2 + subY2);
     }
 
   };
@@ -121,7 +113,7 @@
 /**
  * App
  */
-(function(window, CoordUtils, ColorUtils) {
+(function(window, CoordUtils, ColorUtils, DomUtils) {
   'use strict';
 
   var MAX_SHAPES = 10000;
@@ -136,24 +128,21 @@
     _numDrawn = 0,
     _numEndDrawn = 0,
     _dragStartPoint,
-    _dragStartTime,
     _rgbColor = {r: 1.0, g: 0.0, b: 0.0},
-    _alpha = 1.0,
     _lineWidth = 1;
 
   var updateSettings = function(evt) {
     evt.preventDefault();
     _rgbColor = ColorUtils.hexToGL(document.getElementById('squareColor').value);
     _lineWidth = document.getElementById('lineWidth').valueAsNumber;
-    _alpha = document.getElementById('alpha').valueAsNumber;
   };
 
   var addColor = function() {
     var colors = [];
     for (var i=0; i<VERTEX_PER_SHAPE; i++) {
-      colors.push(_rgbColor.r, _rgbColor.g, _rgbColor.b, _alpha);
+      colors.push(_rgbColor.r, _rgbColor.g, _rgbColor.b);
     }
-    var colorOffset = (sizeof.vec4 * VERTEX_PER_SHAPE * _numDrawn) + (sizeof.vec4 * VERTEX_PER_END_SHAPE * _numEndDrawn);
+    var colorOffset = (sizeof.vec3 * VERTEX_PER_SHAPE * _numDrawn) + (sizeof.vec3 * VERTEX_PER_END_SHAPE * _numEndDrawn);
     _gl.bindBuffer(_gl.ARRAY_BUFFER, _cBuffer);
     _gl.bufferSubData(_gl.ARRAY_BUFFER, colorOffset, flatten(colors));
   };
@@ -161,9 +150,9 @@
   var addEndColor = function() {
     var colors = [];
     for (var i=0; i<VERTEX_PER_END_SHAPE; i++) {
-      colors.push(_rgbColor.r, _rgbColor.g, _rgbColor.b, _alpha);
+      colors.push(_rgbColor.r, _rgbColor.g, _rgbColor.b);
     }
-    var colorOffset = (sizeof.vec4 * VERTEX_PER_SHAPE * _numDrawn) + (sizeof.vec4 * VERTEX_PER_END_SHAPE * _numEndDrawn);
+    var colorOffset = (sizeof.vec3 * VERTEX_PER_SHAPE * _numDrawn) + (sizeof.vec3 * VERTEX_PER_END_SHAPE * _numEndDrawn);
     _gl.bindBuffer(_gl.ARRAY_BUFFER, _cBuffer);
     _gl.bufferSubData(_gl.ARRAY_BUFFER, colorOffset, flatten(colors));
   };
@@ -223,26 +212,15 @@
 
   var dragStart = function(evt) {
     _dragStartPoint = CoordUtils.getRelativeCoords(evt);
-    _dragStartTime = new Date().getTime();
   };
 
+  // Debounce?
   var dragging = function(evt) {
-    var currentPoint,
-      currentTime,
-      timeSinceLastPoint,
-      distance,
-      speed;
+    var currentPoint;
     if (_dragStartPoint) {
       currentPoint = CoordUtils.getRelativeCoords(evt);
-      currentTime = new Date().getTime();
-      timeSinceLastPoint = new Date(currentTime - _dragStartTime);
-      distance = CoordUtils.distance(_dragStartPoint, currentPoint);
-      speed = distance / timeSinceLastPoint;
-      if (distance > _lineWidth  || speed < 0.5) {
-        drawLine(_dragStartPoint, currentPoint);
-      }
+      drawLine(_dragStartPoint, currentPoint);
       _dragStartPoint = currentPoint;
-      _dragStartTime = currentTime;
     }
   };
 
@@ -260,7 +238,7 @@
 
   var clearBuffer = function(evt) {
     evt.preventDefault();
-
+    
     _numDrawn = 0;
     _numEndDrawn = 0;
 
@@ -281,7 +259,7 @@
 
     // Associate shader variables with color data buffer
     var vColor = _gl.getAttribLocation( _program, 'vColor' );
-    _gl.vertexAttribPointer( vColor, 4, _gl.FLOAT, false, 0, 0 );
+    _gl.vertexAttribPointer( vColor, 3, _gl.FLOAT, false, 0, 0 );
     _gl.enableVertexAttribArray( vColor );
 
     render();
@@ -297,7 +275,7 @@
 
       // Setup canvas
       _canvas = document.getElementById('gl-canvas');
-      _gl = WebGLUtils.setupWebGL( _canvas, {alpha: false, preserveDrawingBuffer: true} );
+      _gl = WebGLUtils.setupWebGL( _canvas, {preserveDrawingBuffer: true} );
       if ( !_gl ) { alert( 'WebGL isn\'t available' ); }
 
       // Register settings event handlers
@@ -311,12 +289,9 @@
       _canvas.addEventListener('mouseup', dragEnd);
 
       // Configure WebGL
-      _gl.enable(_gl.BLEND);
-      _gl.blendFunc(_gl.SRC_ALPHA, _gl.ONE_MINUS_SRC_ALPHA);
       _gl.viewport( 0, 0, _canvas.width, _canvas.height );
       _gl.clearColor(0.0, 0.0, 0.0, 1.0);
-      _gl.colorMask(true, true, true, false);
-      // _gl.lineWidth(_lineWidth);
+      _gl.lineWidth(_lineWidth);
 
       // Load shaders
       _program = initShaders( _gl, 'vertex-shader', 'fragment-shader' );
@@ -339,7 +314,7 @@
 
       // Associate shader variables with color data buffer
       var vColor = _gl.getAttribLocation( _program, 'vColor' );
-      _gl.vertexAttribPointer( vColor, 4, _gl.FLOAT, false, 0, 0 );
+      _gl.vertexAttribPointer( vColor, 3, _gl.FLOAT, false, 0, 0 );
       _gl.enableVertexAttribArray( vColor );
 
       render();
@@ -349,7 +324,7 @@
 
   window.App = App;
 
-}(window, window.CoordUtils, window.ColorUtils));
+}(window, window.CoordUtils, window.ColorUtils, window.DomUtils));
 
 
 /**
