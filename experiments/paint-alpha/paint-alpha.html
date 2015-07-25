@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link href='http://fonts.googleapis.com/css?family=Nixie+One|Open+Sans:300italic,300,700|Pacifico' rel='stylesheet' type='text/css'>
+	<meta charset="UTF-8">
+  <title>Daniela Baron | Experiments | Paint Alpha</title>
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="../../css/reset.css">
+  <link rel="stylesheet" href="../../css/styles.css">
+  <link rel="stylesheet" href="../../css/assignment.css">
+
+  <script id="vertex-shader" type="x-shader/x-vertex">
+  attribute vec4 vPosition; // specified by application
+  attribute vec4 vColor;    // specified by application
+  varying vec4 fColor;      // to pass vColor through to rasterizer
+
+  void main() {
+    gl_Position = vPosition;
+    fColor = vColor;
+  }
+  </script>
+
+  <script id="fragment-shader" type="x-shader/x-fragment">
+  precision mediump float;
+
+  varying vec4 fColor;
+
+  void main() {
+    gl_FragColor = fColor;
+  }
+  </script>
+
+  <script type="text/javascript" src="../../Common/webgl-utils.js"></script>
+  <script type="text/javascript" src="../../Common/initShaders.js"></script>
+  <script type="text/javascript" src="../../Common/flatten.js"></script>
+  <script type="text/javascript" src="../../Common/MV.js"></script>
+  <script type="text/javascript" src="paint-alpha.js"></script>
+</head>
+
+<body class="assignment">
+
+  <!--[if lt IE 9]>
+    <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+  <![endif]-->
+
+  <nav>
+		<a href="../../index.html#assignments">Assignments</a>
+		<a href="../../index.html#experiments">Experiments</a>
+		<a href="../../index.html">Home</a>
+	</nav>
+
+  <header>
+    <h1>Experiment</h1>
+    <h2>Paint Alpha</h2>
+  </header>
+
+  <section id="settings" class="settings controls">
+    <div class="form-group">
+      <label for="squareColor" accesskey="c">Choose color</label>
+      <input type="color" name="squareColor" id="squareColor" value="#ff0000">
+    </div>
+    <div class="form-group">
+      <label for="lineWidth">Brush size</label>
+      <input type=range id=lineWidth min=1 value=1 max=20 step=1>
+    </div>
+    <div class="form-group">
+      <label for="alpha">Alpha</label>
+      <input type=range id="alpha" min="0.1" value="1" max="1.0" step="0.1">
+    </div>
+    <div class="form-group actions">
+      <a href="#" id="clear" class="button"><i class="fa fa-refresh icon"></i>Clear</a>
+      <a href="#" id="download" title="download" class="button" download><i class="fa fa-download icon"></i>Download</a>
+    </div>
+  </section>
+
+  <section class="drawing">
+    <canvas id="gl-canvas" width="900" height="600">
+      Oops ... your browser doesn't support the HTML5 canvas element
+    </canvas>
+  </section>
+
+  <footer>
+    <p>Daniela Baron <a href="https://www.coursera.org/course/webgl">Coursera WebGL</a></p>
+  </footer>
+
+</body>
+</html>
