@@ -178,11 +178,12 @@ input[type=button] {
 .assignment section.controls {
   padding-top: 25px;
   padding-bottom: 25px;
+  letter-spacing: 1px;
 }
 
 .controls .form-group {
   display: inline-block;
-  margin-right: 20px;
+  margin-right: 9px;
 }
 
 .button {
@@ -207,7 +208,7 @@ input[type=button] {
   background-image: -moz-linear-gradient(top, #C7C7C7, #B9B8B8);
   background-image: -webkit-linear-gradient(top, #C7C7C7, #B9B8B8);
   background-image: linear-gradient(top, #C7C7C7, #B9B8B8);
-  color: #595959;
+  color: #fff;
   border: solid 1px #B8B8B8;
 }
 
