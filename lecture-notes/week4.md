@@ -242,3 +242,137 @@ vec4 d = T * b;
 * Often have to transpose arrays before sending to shaders
 
 ## Geometry 1
+
+Elements of geometry:
+* Scalars (real numbers)
+* Vectors (directed line segments)
+* Points (locations in space)
+
+Objective is to develop mathematical operations among these elements in a coordinate-free manner
+
+Basic primitives:
+* Line segments
+* Polygons
+
+Geometry is the study of relationships among objects in an n-dimensional space.
+In computer graphics, we're interested in objects that exist in three dimensions.
+
+Want a mimimum set of primitives from which we can build more sophisticated objects (scalars, vectors, points).
+
+### Vector
+
+Quantity with two attributes: Direction, Magnitude.
+
+Example: force,velocity, directed line segments
+
+Vectors lack position. Vector spaces insufficient for geometry, need points to fix a location in space.
+
+* Every vector has an inverse (same magniturde but points in opposite direction)
+* Every vecor can be multiplied by a scalars (scales length but doesn't change direction)
+* Zero vector is defined as zero magnitude and undefined orientation
+* Sum of any two vectors is a vector (head to tail axiom)
+
+### Linear Vector Space
+
+* Mathematiccal system for manipulating vectors
+* Scalar-vector multiplication: `u = a * v`
+* Vector-vector addition: `w = u + v`
+
+Example expression: `v = u + 2w - 3r`
+
+### Point
+
+* Points are location in space
+* Doesn't have size or any other geometric properties
+* Operations allowed between points and vectors:
+  * Point-point subtraction yields a vector
+  * Equivalent to point-vector addition
+
+For example, if `P` and `Q` are two points in space, then the vector `v` going from `Q` to `P` is defined by:
+
+```
+v = P - Q
+```
+
+Also we can say:
+
+```
+P = v + Q
+```
+
+The distance between the two points is the magnitude of the vector.
+
+### Affine Spaces
+
+* Point plus a vector space
+* Operations
+  * Vector-vector addition
+  * Scalar-vector multiplication
+  * Point-vector addition
+  * Scalar-scalar operations
+
+For any point define
+  * 1 x P = P
+  * 0 x P = 0 (zero vector)
+
+### Lines
+
+Consider all points of the form:
+
+`Po` is the starting point.
+
+`d` is direction
+
+&alpha; is a scalar
+
+&alpha; * `d` is a scalar times a vector, therefore a vector
+
+P(&alpha;) = Po + ad
+
+These are the set of all points that pass through Po in the direction of the vector d
+
+### Parametric Form
+
+P(&alpha;) = Po + ad
+
+This form is known as the _parametric form_ of the line. Extends to curves and surfaces.
+
+Two dimensional forms:
+* Explicit: `y = mx + h`
+* Implicit: `ax + by + c = 0`
+* Parametric:
+  * x(&alpha;) = &alpha; * xo + (1-&alpha;) * x1
+  * y(&alpha;) = &alpha; * yo + (1-&alpha;) * y1
+
+### Rays and Line Segments
+
+If &alpha; >= 0, then P(&alpha;) is the _ray_ leaving Po in the direction `d`
+
+Recall that difference between two points is a vector.
+
+If we use two points `Q` (from) and `P` (to) to define `v`, then
+
+P(&alpha;) = Q + &alpha;(R-Q) = Q + &alpha;v
+= &alpha;R + (1-&alpha;)Q
+
+For 0 <= &alpha; <= 1, we get all the points on the _line segment_ joining `R` and `Q`.
+
+### Convexity
+
+An object is convex iff for any two points in the object, all points on the line segment between these points are also in the object.
+
+A _convex hull_ is the smallest convect object containing points P1, P2, ..., Pn
+
+Formed by "shrink wrapping" ppoints
+
+### Curves and Surfaces
+
+Curves are on parameter entities of the form P(&alpha;) where the function is nonlinear
+
+Surfaces are formed from two-parameter functions P(&alpha; &beta;)
+
+Linear functions give pllanes and polygons.
+
+### Planes
+
+A plane can be defined by a point and two vectors or by three points
