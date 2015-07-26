@@ -53,7 +53,10 @@
 
   var render = function() {
     _gl.clear( _gl.COLOR_BUFFER_BIT | _gl.DEPTH_BUFFER_BIT);
-    _gl.drawElements( _gl.TRIANGLES, _indices.length, _gl.UNSIGNED_BYTE, 0 );
+    // _gl.drawElements( _gl.TRIANGLES, _indices.length, _gl.UNSIGNED_BYTE, 0 );
+    for (var i=0; i<_indices.length; i+=3) {
+      _gl.drawElements( _gl.LINE_LOOP, 3, _gl.UNSIGNED_BYTE, i );
+    }
   };
 
   var App = {
