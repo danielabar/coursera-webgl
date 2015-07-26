@@ -129,7 +129,7 @@
       // Load index data onto GPU
       var iBuffer = _gl.createBuffer();
       _gl.bindBuffer(_gl.ELEMENT_ARRAY_BUFFER, iBuffer);
-      _gl.bufferData(_gl.ELEMENT_ARRAY_BUFFER, new Uint8Array(_indices), _gl.STATIC_DRAW);
+      _gl.bufferData(_gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(_indices), _gl.STATIC_DRAW);
 
       // Load color data buffer onto GPU
       var cBuffer = _gl.createBuffer();
