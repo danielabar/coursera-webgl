@@ -11,8 +11,7 @@
     _vertexColors,
     _indices;
 
-  // a cube for now, to verify drawElements implementation
-  var drawSphere = function() {
+  var drawCube = function() {
     _vertices = [
       vec3( -0.5, -0.5,  0.5 ),
       vec3( -0.5,  0.5,  0.5 ),
@@ -74,7 +73,7 @@
       _gl.enable(_gl.DEPTH_TEST);
 
       // Initialize data arrays
-      drawSphere();
+      drawCube();
 
       // Load shaders
       _program = initShaders( _gl, 'vertex-shader', 'fragment-shader' );
@@ -100,7 +99,7 @@
       _gl.bindBuffer( _gl.ARRAY_BUFFER, vBuffer );
       _gl.bufferData( _gl.ARRAY_BUFFER, flatten(_vertices), _gl.STATIC_DRAW );
 
-      // Associate shader variabels with vertex data buffer
+      // Associate shader variables with vertex data buffer
       var vPosition = _gl.getAttribLocation( _program, 'vPosition' );
       _gl.vertexAttribPointer( vPosition, 3, _gl.FLOAT, false, 0, 0 );
       _gl.enableVertexAttribArray( vPosition );

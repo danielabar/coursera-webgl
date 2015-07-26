@@ -27,7 +27,7 @@
     "flatten": false,
     "vec2": false,
     "vec3": false,
-    "vec3": false,
+    "vec4": false,
     "mix": false,
     "sizeof": false,
     "subtract": false,
