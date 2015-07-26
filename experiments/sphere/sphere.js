@@ -13,8 +13,8 @@
     _indices = [];
 
   var drawSphere = function(radius) {
-    var latitudeBands = 5,
-      longitudeBands = 5,
+    var latitudeBands = 15,
+      longitudeBands = 15,
       theta, sinTheta, cosTheta,
       phi, sinPhi, cosPhi,
       x, y, z,
@@ -127,7 +127,7 @@
 
       // Initialize data arrays
       // drawCube();
-      drawSphere(1);
+      drawSphere(0.5);
 
       // Load shaders
       _program = initShaders( _gl, 'vertex-shader', 'fragment-shader' );
