@@ -8,6 +8,7 @@
     _program,
     _canvas,
     _vertices = [],
+    _normals = [],
     _vertexColors = [],
     _indices = [];
 
@@ -33,6 +34,10 @@
         y = cosTheta;
         z = sinPhi * sinTheta;
 
+        _normals.push(x);
+        _normals.push(y);
+        _normals.push(z);
+
         _vertices.push(radius * x);
         _vertices.push(radius * y);
         _vertices.push(radius * z);
@@ -40,6 +45,8 @@
         _vertexColors.push(vec4( 1.0, 0.0, 0.0, 1.0 ));
       }
     }
+
+    console.log(_vertices);
 
     for (var latNumberI = 0; latNumberI < latitudeBands; latNumberI++) {
       for (var longNumberI = 0; longNumberI < longitudeBands; longNumberI++) {
@@ -120,7 +127,7 @@
 
       // Initialize data arrays
       // drawCube();
-      drawSphere(2);
+      drawSphere(1);
 
       // Load shaders
       _program = initShaders( _gl, 'vertex-shader', 'fragment-shader' );
@@ -130,6 +137,16 @@
       var iBuffer = _gl.createBuffer();
       _gl.bindBuffer(_gl.ELEMENT_ARRAY_BUFFER, iBuffer);
       _gl.bufferData(_gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(_indices), _gl.STATIC_DRAW);
+
+      // Load normal data buffer onto GPU
+      var nBuffer = _gl.createBuffer();
+      _gl.bindBuffer(_gl.ARRAY_BUFFER, nBuffer);
+      _gl.bufferData(_gl.ARRAY_BUFFER, flatten(_normals), _gl.STATIC_DRAW);
+
+      // Associate shader variables with normal data buffer
+      var vNormal = _gl.getAttribLocation( _program, 'vNormal');
+      _gl.vertexAttribPointer(0, 3, _gl.FLOAT, false, 0, 0);
+      // _gl.enableVertexAttribArray( vNormal );
 
       // Load color data buffer onto GPU
       var cBuffer = _gl.createBuffer();
