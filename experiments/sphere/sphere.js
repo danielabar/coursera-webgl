@@ -7,9 +7,55 @@
   var _gl,
     _program,
     _canvas,
-    _vertices,
-    _vertexColors,
-    _indices;
+    _vertices = [],
+    _vertexColors = [],
+    _indices = [];
+
+  var drawSphere = function(radius) {
+    var latitudeBands = 5,
+      longitudeBands = 5,
+      theta, sinTheta, cosTheta,
+      phi, sinPhi, cosPhi,
+      x, y, z,
+      first, second;
+
+    for (var latNumber = 0; latNumber <= latitudeBands; latNumber++) {
+      theta = latNumber * Math.PI / latitudeBands;
+      sinTheta = Math.sin(theta);
+      cosTheta = Math.cos(theta);
+
+      for (var longNumber = 0; longNumber <= longitudeBands; longNumber++) {
+        phi = longNumber * 2 * Math.PI / longitudeBands;
+        sinPhi = Math.sin(phi);
+        cosPhi = Math.cos(phi);
+
+        x = cosPhi * sinTheta;
+        y = cosTheta;
+        z = sinPhi * sinTheta;
+
+        _vertices.push(radius * x);
+        _vertices.push(radius * y);
+        _vertices.push(radius * z);
+
+        _vertexColors.push(vec4( 1.0, 0.0, 0.0, 1.0 ));
+      }
+    }
+
+    for (var latNumberI = 0; latNumberI < latitudeBands; latNumberI++) {
+      for (var longNumberI = 0; longNumberI < longitudeBands; longNumberI++) {
+        first = (latNumberI * (longitudeBands + 1)) + longNumberI;
+        second = first + longitudeBands + 1;
+
+        _indices.push(first);
+        _indices.push(second);
+        _indices.push(first + 1);
+
+        _indices.push(second);
+        _indices.push(second + 1);
+        _indices.push(first + 1);
+      }
+    }
+  };
 
   var drawCube = function() {
     _vertices = [
@@ -73,7 +119,8 @@
       _gl.enable(_gl.DEPTH_TEST);
 
       // Initialize data arrays
-      drawCube();
+      // drawCube();
+      drawSphere(2);
 
       // Load shaders
       _program = initShaders( _gl, 'vertex-shader', 'fragment-shader' );
