@@ -17,3 +17,12 @@ Camera: Projection Transformation
 Output of vertex shader is:
 
 q = P * MV * p
+
+### Current Transformation Matrix (CTM)
+
+Generally the product of the Projection matrix and ModelView matrix
+
+### Matrix Multiplication Order
+
+Last operation specified is the first executed in the program.
+Think of it like a stack - last added is first popped off.
