@@ -33,7 +33,6 @@
             _vertices.push(radius * y);
             _vertices.push(radius * z);
 
-            // _vertexColors.push(vec4( 1.0, 0.0, 0.0, 1.0 ));
             _vertexColors.push(vec4( Math.random(), Math.random(), Math.random(), 1.0 ));
         }
     }
@@ -52,15 +51,13 @@
         }
     }
 
-    // temp debug
-    console.dir(_vertices);
-    console.dir(_indices);
   };
 
 
   var render = function() {
     gl.clear( gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-    gl.drawElements( gl.TRIANGLES, _indices.length, gl.UNSIGNED_SHORT, 0 );
+    // gl.drawElements( gl.TRIANGLES, _indices.length, gl.UNSIGNED_SHORT, 0 );
+    gl.drawElements( gl.LINE_LOOP, _indices.length, gl.UNSIGNED_SHORT, 0 );
     // for (var i=0; i<_indices.length; i+=3) {
     //   gl.drawElements( gl.LINE_LOOP, 3, gl.UNSIGNED_SHORT, i );
     // }
