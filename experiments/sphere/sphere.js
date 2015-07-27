@@ -12,55 +12,51 @@
     _vertexColors = [],
     _indices = [];
 
+  // https://www.webkit.org/blog-files/webgl/Earth.html
   var drawSphere = function(radius) {
-    var latitudeBands = 15,
-      longitudeBands = 15,
-      theta, sinTheta, cosTheta,
-      phi, sinPhi, cosPhi,
-      x, y, z,
-      first, second;
+    var lats = 15,
+      longs = 15;
 
-    for (var latNumber = 0; latNumber <= latitudeBands; latNumber++) {
-      theta = latNumber * Math.PI / latitudeBands;
-      sinTheta = Math.sin(theta);
-      cosTheta = Math.cos(theta);
+      for (var latNumber = 0; latNumber <= lats; ++latNumber) {
+        for (var longNumber = 0; longNumber <= longs; ++longNumber) {
+            var theta = latNumber * Math.PI / lats;
+            var phi = longNumber * 2 * Math.PI / longs;
+            var sinTheta = Math.sin(theta);
+            var sinPhi = Math.sin(phi);
+            var cosTheta = Math.cos(theta);
+            var cosPhi = Math.cos(phi);
 
-      for (var longNumber = 0; longNumber <= longitudeBands; longNumber++) {
-        phi = longNumber * 2 * Math.PI / longitudeBands;
-        sinPhi = Math.sin(phi);
-        cosPhi = Math.cos(phi);
+            var x = cosPhi * sinTheta;
+            var y = cosTheta;
+            var z = sinPhi * sinTheta;
+            // var u = 1-(longNumber/longs);
+            // var v = latNumber/lats;
 
-        x = cosPhi * sinTheta;
-        y = cosTheta;
-        z = sinPhi * sinTheta;
+            // normalData.push(x);
+            // normalData.push(y);
+            // normalData.push(z);
+            // texCoordData.push(u);
+            // texCoordData.push(v);
+            _vertices.push(radius * x);
+            _vertices.push(radius * y);
+            _vertices.push(radius * z);
 
-        _normals.push(x);
-        _normals.push(y);
-        _normals.push(z);
-
-        _vertices.push(radius * x);
-        _vertices.push(radius * y);
-        _vertices.push(radius * z);
-
-        _vertexColors.push(vec4( 1.0, 0.0, 0.0, 1.0 ));
-      }
+            _vertexColors.push(vec4( 1.0, 0.0, 0.0, 1.0 ));
+        }
     }
 
-    console.log(_vertices);
+    for (var latNumberI = 0; latNumberI < lats; ++latNumberI) {
+        for (var longNumberI = 0; longNumberI < longs; ++longNumberI) {
+            var first = (latNumberI * (longs+1)) + longNumberI;
+            var second = first + longs + 1;
+            _indices.push(first);
+            _indices.push(second);
+            _indices.push(first+1);
 
-    for (var latNumberI = 0; latNumberI < latitudeBands; latNumberI++) {
-      for (var longNumberI = 0; longNumberI < longitudeBands; longNumberI++) {
-        first = (latNumberI * (longitudeBands + 1)) + longNumberI;
-        second = first + longitudeBands + 1;
-
-        _indices.push(first);
-        _indices.push(second);
-        _indices.push(first + 1);
-
-        _indices.push(second);
-        _indices.push(second + 1);
-        _indices.push(first + 1);
-      }
+            _indices.push(second);
+            _indices.push(second+1);
+            _indices.push(first+1);
+        }
     }
   };
 
