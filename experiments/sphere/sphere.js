@@ -58,9 +58,6 @@
     gl.clear( gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
     // gl.drawElements( gl.TRIANGLES, _indices.length, gl.UNSIGNED_SHORT, 0 );
     gl.drawElements( gl.LINE_LOOP, _indices.length, gl.UNSIGNED_SHORT, 0 );
-    // for (var i=0; i<_indices.length; i+=3) {
-    //   gl.drawElements( gl.LINE_LOOP, 3, gl.UNSIGNED_SHORT, i );
-    // }
   };
 
   var App = {
@@ -78,7 +75,7 @@
       gl.enable(gl.DEPTH_TEST);
 
       // Initialize data arrays
-      drawSphere(1);
+      drawSphere(0.8);
 
       // Load shaders
       _program = initShaders( gl, 'vertex-shader', 'fragment-shader' );
