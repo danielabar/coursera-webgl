@@ -4,18 +4,17 @@
 (function(window) {
   'use strict';
 
-  var _gl,
+  var gl,
     _program,
     _canvas,
     _vertices = [],
-    _normals = [],
     _vertexColors = [],
     _indices = [];
 
   // https://www.webkit.org/blog-files/webgl/Earth.html
   var drawSphere = function(radius) {
-    var lats = 15,
-      longs = 15;
+    var lats = 30,
+      longs = 30;
 
       for (var latNumber = 0; latNumber <= lats; ++latNumber) {
         for (var longNumber = 0; longNumber <= longs; ++longNumber) {
@@ -29,19 +28,13 @@
             var x = cosPhi * sinTheta;
             var y = cosTheta;
             var z = sinPhi * sinTheta;
-            // var u = 1-(longNumber/longs);
-            // var v = latNumber/lats;
 
-            // normalData.push(x);
-            // normalData.push(y);
-            // normalData.push(z);
-            // texCoordData.push(u);
-            // texCoordData.push(v);
             _vertices.push(radius * x);
             _vertices.push(radius * y);
             _vertices.push(radius * z);
 
-            _vertexColors.push(vec4( 1.0, 0.0, 0.0, 1.0 ));
+            // _vertexColors.push(vec4( 1.0, 0.0, 0.0, 1.0 ));
+            _vertexColors.push(vec4( Math.random(), Math.random(), Math.random(), 1.0 ));
         }
     }
 
@@ -58,53 +51,19 @@
             _indices.push(first+1);
         }
     }
+
+    // temp debug
+    console.dir(_vertices);
+    console.dir(_indices);
   };
 
-  var drawCube = function() {
-    _vertices = [
-      vec3( -0.5, -0.5,  0.5 ),
-      vec3( -0.5,  0.5,  0.5 ),
-      vec3(  0.5,  0.5,  0.5 ),
-      vec3(  0.5, -0.5,  0.5 ),
-      vec3( -0.5, -0.5, -0.5 ),
-      vec3( -0.5,  0.5, -0.5 ),
-      vec3(  0.5,  0.5, -0.5 ),
-      vec3(  0.5, -0.5, -0.5 )
-    ];
-
-    _vertexColors = [
-      vec4( 0.0, 0.0, 0.0, 1.0 ),
-      vec4( 1.0, 0.0, 0.0, 1.0 ),
-      vec4( 1.0, 1.0, 0.0, 1.0 ),
-      vec4( 0.0, 1.0, 0.0, 1.0 ),
-      vec4( 0.0, 0.0, 1.0, 1.0 ),
-      vec4( 1.0, 0.0, 1.0, 1.0 ),
-      vec4( 1.0, 1.0, 1.0, 1.0 ),
-      vec4( 0.0, 1.0, 1.0, 1.0 )
-    ];
-
-    _indices = [
-      1, 0, 3,
-      3, 2, 1,
-      2, 3, 7,
-      7, 6, 2,
-      3, 0, 4,
-      4, 7, 3,
-      6, 5, 1,
-      1, 2, 6,
-      4, 5, 6,
-      6, 7, 4,
-      5, 4, 0,
-      0, 1, 5
-    ];
-  };
 
   var render = function() {
-    _gl.clear( _gl.COLOR_BUFFER_BIT | _gl.DEPTH_BUFFER_BIT);
-    // _gl.drawElements( _gl.TRIANGLES, _indices.length, _gl.UNSIGNED_BYTE, 0 );
-    for (var i=0; i<_indices.length; i+=3) {
-      _gl.drawElements( _gl.LINE_LOOP, 3, _gl.UNSIGNED_BYTE, i );
-    }
+    gl.clear( gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+    gl.drawElements( gl.TRIANGLES, _indices.length, gl.UNSIGNED_SHORT, 0 );
+    // for (var i=0; i<_indices.length; i+=3) {
+    //   gl.drawElements( gl.LINE_LOOP, 3, gl.UNSIGNED_SHORT, i );
+    // }
   };
 
   var App = {
@@ -113,56 +72,45 @@
 
       // Setup canvas
       _canvas = document.getElementById('gl-canvas');
-      _gl = WebGLUtils.setupWebGL( _canvas, {preserveDrawingBuffer: true} );
-      if ( !_gl ) { alert( 'WebGL isn\'t available' ); }
+      gl = WebGLUtils.setupWebGL( _canvas, {preserveDrawingBuffer: true} );
+      if ( !gl ) { alert( 'WebGL isn\'t available' ); }
 
       // Configure WebGL
-      _gl.viewport( 0, 0, _canvas.width, _canvas.height );
-      _gl.clearColor(0.0, 0.0, 0.0, 1.0);
-      _gl.enable(_gl.DEPTH_TEST);
+      gl.viewport( 0, 0, _canvas.width, _canvas.height );
+      gl.clearColor(0.0, 0.0, 0.0, 1.0);
+      gl.enable(gl.DEPTH_TEST);
 
       // Initialize data arrays
-      // drawCube();
-      drawSphere(0.5);
+      drawSphere(1);
 
       // Load shaders
-      _program = initShaders( _gl, 'vertex-shader', 'fragment-shader' );
-      _gl.useProgram( _program );
+      _program = initShaders( gl, 'vertex-shader', 'fragment-shader' );
+      gl.useProgram( _program );
 
       // Load index data onto GPU
-      var iBuffer = _gl.createBuffer();
-      _gl.bindBuffer(_gl.ELEMENT_ARRAY_BUFFER, iBuffer);
-      _gl.bufferData(_gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(_indices), _gl.STATIC_DRAW);
-
-      // Load normal data buffer onto GPU
-      var nBuffer = _gl.createBuffer();
-      _gl.bindBuffer(_gl.ARRAY_BUFFER, nBuffer);
-      _gl.bufferData(_gl.ARRAY_BUFFER, flatten(_normals), _gl.STATIC_DRAW);
-
-      // Associate shader variables with normal data buffer
-      var vNormal = _gl.getAttribLocation( _program, 'vNormal');
-      _gl.vertexAttribPointer(0, 3, _gl.FLOAT, false, 0, 0);
-      // _gl.enableVertexAttribArray( vNormal );
+      var iBuffer = gl.createBuffer();
+      gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, iBuffer);
+      gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(_indices), gl.STATIC_DRAW);
 
       // Load color data buffer onto GPU
-      var cBuffer = _gl.createBuffer();
-      _gl.bindBuffer( _gl.ARRAY_BUFFER, cBuffer );
-      _gl.bufferData( _gl.ARRAY_BUFFER, flatten(_vertexColors), _gl.STATIC_DRAW );
+      var cBuffer = gl.createBuffer();
+      gl.bindBuffer( gl.ARRAY_BUFFER, cBuffer );
+      gl.bufferData( gl.ARRAY_BUFFER, flatten(_vertexColors), gl.STATIC_DRAW );
 
       // Associate shader variables with color data buffer
-      var vColor = _gl.getAttribLocation( _program, 'vColor' );
-      _gl.vertexAttribPointer( vColor, 4, _gl.FLOAT, false, 0, 0 );
-      _gl.enableVertexAttribArray( vColor );
+      var vColor = gl.getAttribLocation( _program, 'vColor' );
+      gl.vertexAttribPointer( vColor, 4, gl.FLOAT, false, 0, 0 );
+      gl.enableVertexAttribArray( vColor );
 
       // Load vertex buffer onto GPU
-      var vBuffer = _gl.createBuffer();
-      _gl.bindBuffer( _gl.ARRAY_BUFFER, vBuffer );
-      _gl.bufferData( _gl.ARRAY_BUFFER, flatten(_vertices), _gl.STATIC_DRAW );
+      var vBuffer = gl.createBuffer();
+      gl.bindBuffer( gl.ARRAY_BUFFER, vBuffer );
+      gl.bufferData( gl.ARRAY_BUFFER, flatten(_vertices), gl.STATIC_DRAW );
 
       // Associate shader variables with vertex data buffer
-      var vPosition = _gl.getAttribLocation( _program, 'vPosition' );
-      _gl.vertexAttribPointer( vPosition, 3, _gl.FLOAT, false, 0, 0 );
-      _gl.enableVertexAttribArray( vPosition );
+      var vPosition = gl.getAttribLocation( _program, 'vPosition' );
+      gl.vertexAttribPointer( vPosition, 3, gl.FLOAT, false, 0, 0 );
+      gl.enableVertexAttribArray( vPosition );
 
       render();
     }
