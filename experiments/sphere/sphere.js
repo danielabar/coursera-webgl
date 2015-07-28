@@ -11,7 +11,9 @@
     _vertexColors = [],
     _indices = [],
     _theta = [30, 60, 0],
-    _thetaLoc;
+    _thetaLoc,
+    _scale = [1, 1, 1],
+    _scaleLoc;
 
   // https://www.webkit.org/blog-files/webgl/Earth.html
   var drawSphere = function(radius) {
@@ -60,11 +62,11 @@
     gl.clear( gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
     // gl.drawElements( gl.TRIANGLES, _indices.length, gl.UNSIGNED_SHORT, 0 );
     gl.uniform3fv(_thetaLoc, _theta);
+    gl.uniform3fv(_scaleLoc, _scale);
     gl.drawElements( gl.LINE_LOOP, _indices.length, gl.UNSIGNED_SHORT, 0 );
   };
 
   var updateSettings = function(evt) {
-    console.dir(evt.target);
     if (evt.target.id === 'rotateX') {
       _theta[0] = evt.target.valueAsNumber;
     }
@@ -73,6 +75,15 @@
     }
     if (evt.target.id === 'rotateZ') {
       _theta[2] = evt.target.valueAsNumber;
+    }
+    if (evt.target.id === 'scaleX') {
+      _scale[0] = evt.target.valueAsNumber;
+    }
+    if (evt.target.id === 'scaleY') {
+      _scale[1] = evt.target.valueAsNumber;
+    }
+    if (evt.target.id === 'scaleZ') {
+      _scale[2] = evt.target.valueAsNumber;
     }
     render();
   };
@@ -128,6 +139,7 @@
 
       // Uniform vars for user specified parameters
       _thetaLoc = gl.getUniformLocation(_program, 'theta');
+      _scaleLoc = gl.getUniformLocation(_program, 'scale');
 
       render();
     }
