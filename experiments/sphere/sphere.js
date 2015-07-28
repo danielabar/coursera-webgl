@@ -63,6 +63,20 @@
     gl.drawElements( gl.LINE_LOOP, _indices.length, gl.UNSIGNED_SHORT, 0 );
   };
 
+  var updateSettings = function(evt) {
+    console.dir(evt.target);
+    if (evt.target.id === 'rotateX') {
+      _theta[0] = evt.target.valueAsNumber;
+    }
+    if (evt.target.id === 'rotateY') {
+      _theta[1] = evt.target.valueAsNumber;
+    }
+    if (evt.target.id === 'rotateZ') {
+      _theta[2] = evt.target.valueAsNumber;
+    }
+    render();
+  };
+
   var App = {
 
     init: function() {
@@ -71,6 +85,9 @@
       _canvas = document.getElementById('gl-canvas');
       gl = WebGLUtils.setupWebGL( _canvas, {preserveDrawingBuffer: true} );
       if ( !gl ) { alert( 'WebGL isn\'t available' ); }
+
+      // Register settings event handlers
+      document.getElementById('settings').addEventListener('change', updateSettings);
 
       // Configure WebGL
       gl.viewport( 0, 0, _canvas.width, _canvas.height );
