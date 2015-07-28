@@ -9,7 +9,9 @@
     _canvas,
     _vertices = [],
     _vertexColors = [],
-    _indices = [];
+    _indices = [],
+    _theta = [30, 60, 0],
+    _thetaLoc;
 
   // https://www.webkit.org/blog-files/webgl/Earth.html
   var drawSphere = function(radius) {
@@ -57,6 +59,7 @@
   var render = function() {
     gl.clear( gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
     // gl.drawElements( gl.TRIANGLES, _indices.length, gl.UNSIGNED_SHORT, 0 );
+    gl.uniform3fv(_thetaLoc, _theta);
     gl.drawElements( gl.LINE_LOOP, _indices.length, gl.UNSIGNED_SHORT, 0 );
   };
 
@@ -105,6 +108,9 @@
       var vPosition = gl.getAttribLocation( _program, 'vPosition' );
       gl.vertexAttribPointer( vPosition, 3, gl.FLOAT, false, 0, 0 );
       gl.enableVertexAttribArray( vPosition );
+
+      // Uniform vars for user specified parameters
+      _thetaLoc = gl.getUniformLocation(_program, 'theta');
 
       render();
     }
