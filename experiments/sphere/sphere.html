@@ -14,12 +14,53 @@
   // specified by application
   attribute vec4 vColor;
   attribute vec4 vPosition;
+  uniform vec3 theta;
+  uniform vec3 scale;
 
   // to pass vColor through to rasterizer
   varying vec4 fColor;
 
   void main() {
-    gl_Position = vPosition;
+
+    // trig
+    vec3 angles = radians( theta );
+    vec3 c = cos( angles );
+    vec3 s = sin( angles );
+
+    // rotation matrix for x axis (column major)
+    mat4 rx = mat4(
+      1.0,  0.0,  0.0, 0.0,
+	    0.0,  c.x,  s.x, 0.0,
+	    0.0, -s.x,  c.x, 0.0,
+	    0.0,  0.0,  0.0, 1.0
+    );
+
+    mat4 ry = mat4(
+      c.y, 0.0, -s.y, 0.0,
+	    0.0, 1.0,  0.0, 0.0,
+	    s.y, 0.0,  c.y, 0.0,
+	    0.0, 0.0,  0.0, 1.0
+    );
+
+    mat4 rz = mat4(
+      c.z, -s.z, 0.0, 0.0,
+	    s.z,  c.z, 0.0, 0.0,
+	    0.0,  0.0, 1.0, 0.0,
+	    0.0,  0.0, 0.0, 1.0
+    );
+
+    // scale matrix (column major)
+    mat4 sc = mat4(
+      scale.x, 0.0, 0.0, 0.0,
+      0.0, scale.y, 0.0, 0.0,
+      0.0, 0.0, scale.z, 0.0,
+      0.0, 0.0, 0.0, 1.0
+    );
+
+    // apply rotation matricies to the vertex
+    gl_Position = sc * rz * ry * rx * vPosition;
+
+    // pass color through to rasterizer
     fColor = vColor;
   }
   </script>
@@ -61,22 +102,50 @@
     <h2>Sphere</h2>
   </header>
 
-  <!-- <section id="settings" class="settings controls">
+  <section id="settings" class="settings side-controls">
+
+    <!--  color -->
     <div class="form-group">
       <label for="squareColor" accesskey="c">Choose color</label>
       <input type="color" name="squareColor" id="squareColor" value="#ff0000">
     </div>
+
+    <!--  rotate -->
     <div class="form-group">
-      <label for="lineWidth">Brush size</label>
-      <input type=range id=lineWidth min=1 value=1 max=20 step=1>
+      <label for="rotateX">Rotate X</label>
+      <input type=range id=rotateX min=0 value=0 max=359 step=1>
     </div>
+    <div class="form-group">
+      <label for="rotateY">Rotate Y</label>
+      <input type=range id=rotateY min=0 value=0 max=359 step=1>
+    </div>
+    <div class="form-group">
+      <label for="rotateZ">Rotate Z</label>
+      <input type=range id=rotateZ min=0 value=0 max=359 step=1>
+    </div>
+
+    <!-- scale -->
+    <div class="form-group">
+      <label for="scaleX">Scale X</label>
+      <input type=range id=scaleX min=0.1 value=1.0 max=1.0 step=0.1>
+    </div>
+    <div class="form-group">
+      <label for="scaleY">Scale Y</label>
+      <input type=range id=scaleY min=0.1 value=1.0 max=1.0 step=0.1>
+    </div>
+    <div class="form-group">
+      <label for="scaleZ">Scale Z</label>
+      <input type=range id=scaleZ min=0.1 value=1.0 max=1.0 step=0.1>
+    </div>
+
+    <!--  actions -->
     <div class="form-group actions">
       <a href="#" id="clear" class="button"><i class="fa fa-refresh icon"></i>Clear</a>
       <a href="#" id="download" title="download" class="button" download><i class="fa fa-download icon"></i>Download</a>
     </div>
-  </section> -->
+  </section>
 
-  <section class="drawing">
+  <section class="drawing with-side-controls">
     <canvas id="gl-canvas" width="700" height="700">
       Oops ... your browser doesn't support the HTML5 canvas element
     </canvas>
