@@ -22,39 +22,39 @@
     var lats = 30,
       longs = 30;
 
-      for (var latNumber = 0; latNumber <= lats; ++latNumber) {
-        for (var longNumber = 0; longNumber <= longs; ++longNumber) {
-            var theta = latNumber * Math.PI / lats;
-            var phi = longNumber * 2 * Math.PI / longs;
-            var sinTheta = Math.sin(theta);
-            var sinPhi = Math.sin(phi);
-            var cosTheta = Math.cos(theta);
-            var cosPhi = Math.cos(phi);
+    for (var latNumber = 0; latNumber <= lats; ++latNumber) {
+      for (var longNumber = 0; longNumber <= longs; ++longNumber) {
+        var theta = latNumber * Math.PI / lats;
+        var phi = longNumber * 2 * Math.PI / longs;
+        var sinTheta = Math.sin(theta);
+        var sinPhi = Math.sin(phi);
+        var cosTheta = Math.cos(theta);
+        var cosPhi = Math.cos(phi);
 
-            var x = cosPhi * sinTheta;
-            var y = cosTheta;
-            var z = sinPhi * sinTheta;
+        var x = cosPhi * sinTheta;
+        var y = cosTheta;
+        var z = sinPhi * sinTheta;
 
-            _vertices.push(radius * x);
-            _vertices.push(radius * y);
-            _vertices.push(radius * z);
+        _vertices.push(radius * x);
+        _vertices.push(radius * y);
+        _vertices.push(radius * z);
 
-            _vertexColors.push(vec4( Math.random(), Math.random(), Math.random(), 1.0 ));
-        }
+        _vertexColors.push(vec4( 1.0, 0.0, 0.0, 1.0 ));
+      }
     }
 
     for (var latNumberI = 0; latNumberI < lats; ++latNumberI) {
-        for (var longNumberI = 0; longNumberI < longs; ++longNumberI) {
-            var first = (latNumberI * (longs+1)) + longNumberI;
-            var second = first + longs + 1;
-            _indices.push(first);
-            _indices.push(second);
-            _indices.push(first+1);
+      for (var longNumberI = 0; longNumberI < longs; ++longNumberI) {
+        var first = (latNumberI * (longs+1)) + longNumberI;
+        var second = first + longs + 1;
+        _indices.push(first);
+        _indices.push(second);
+        _indices.push(first+1);
 
-            _indices.push(second);
-            _indices.push(second+1);
-            _indices.push(first+1);
-        }
+        _indices.push(second);
+        _indices.push(second+1);
+        _indices.push(first+1);
+      }
     }
 
   };
