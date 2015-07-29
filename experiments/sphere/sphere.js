@@ -1,7 +1,7 @@
 /**
  * App
  */
-(function(window) {
+(function(window, ColorUtils) {
   'use strict';
 
   var gl,
@@ -10,6 +10,8 @@
     _vertices = [],
     _vertexColors = [],
     _indices = [],
+    _color = vec4(1.0, 0.0, 0.0, 1.0),
+    _colorLoc,
     _theta = [30, 60, 0],
     _thetaLoc,
     _scale = [1, 1, 1],
@@ -39,7 +41,7 @@
         _vertices.push(radius * y);
         _vertices.push(radius * z);
 
-        _vertexColors.push(vec4( 1.0, 0.0, 0.0, 1.0 ));
+        // _vertexColors.push(vec4( 1.0, 0.0, 0.0, 1.0 ));
       }
     }
 
@@ -65,12 +67,16 @@
     gl.uniform3fv(_thetaLoc, _theta);
     gl.uniform3fv(_scaleLoc, _scale);
     gl.uniform3fv(_translateLoc, _translate);
+    gl.uniform4fv(_colorLoc, _color);
 
     // gl.drawElements( gl.TRIANGLES, _indices.length, gl.UNSIGNED_SHORT, 0 );
     gl.drawElements( gl.LINE_LOOP, _indices.length, gl.UNSIGNED_SHORT, 0 );
   };
 
   var updateSettings = function(evt) {
+    if (evt.target.id === 'shapeColor') {
+      _color = ColorUtils.hexToGLvec4(document.getElementById('shapeColor').value);
+    }
     if (evt.target.id === 'rotateX') {
       _theta[0] = evt.target.valueAsNumber;
     }
@@ -132,14 +138,14 @@
       gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(_indices), gl.STATIC_DRAW);
 
       // Load color data buffer onto GPU
-      var cBuffer = gl.createBuffer();
-      gl.bindBuffer( gl.ARRAY_BUFFER, cBuffer );
-      gl.bufferData( gl.ARRAY_BUFFER, flatten(_vertexColors), gl.STATIC_DRAW );
+      // var cBuffer = gl.createBuffer();
+      // gl.bindBuffer( gl.ARRAY_BUFFER, cBuffer );
+      // gl.bufferData( gl.ARRAY_BUFFER, flatten(_vertexColors), gl.STATIC_DRAW );
 
       // Associate shader variables with color data buffer
-      var vColor = gl.getAttribLocation( _program, 'vColor' );
-      gl.vertexAttribPointer( vColor, 4, gl.FLOAT, false, 0, 0 );
-      gl.enableVertexAttribArray( vColor );
+      // var vColor = gl.getAttribLocation( _program, 'vColor' );
+      // gl.vertexAttribPointer( vColor, 4, gl.FLOAT, false, 0, 0 );
+      // gl.enableVertexAttribArray( vColor );
 
       // Load vertex buffer onto GPU
       var vBuffer = gl.createBuffer();
@@ -152,6 +158,7 @@
       gl.enableVertexAttribArray( vPosition );
 
       // Uniform vars for user specified parameters
+      _colorLoc = gl.getUniformLocation(_program, 'fColor');
       _thetaLoc = gl.getUniformLocation(_program, 'theta');
       _scaleLoc = gl.getUniformLocation(_program, 'scale');
       _translateLoc = gl.getUniformLocation(_program, 'translate');
@@ -163,7 +170,7 @@
 
   window.App = App;
 
-}(window));
+}(window, window.ColorUtils));
 
 
 /**

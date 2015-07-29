@@ -12,14 +12,14 @@
   <script id="vertex-shader" type="x-shader/x-vertex">
 
   // specified by application
-  attribute vec4 vColor;
+  // attribute vec4 vColor;
   attribute vec4 vPosition;
   uniform vec3 theta;
   uniform vec3 scale;
   uniform vec3 translate;
 
   // to pass vColor through to rasterizer
-  varying vec4 fColor;
+  // varying vec4 fColor;
 
   void main() {
 
@@ -70,14 +70,15 @@
     gl_Position = tr * rz * ry * rx * sc * vPosition;
 
     // pass color through to rasterizer
-    fColor = vColor;
+    // fColor = vColor;
   }
   </script>
 
   <script id="fragment-shader" type="x-shader/x-fragment">
   precision mediump float;
 
-  varying vec4 fColor;
+  uniform vec4 fColor;
+  // varying vec4 fColor;
 
   void main() {
     gl_FragColor = fColor;
@@ -115,8 +116,8 @@
 
     <!--  color -->
     <div class="form-group">
-      <label for="squareColor" accesskey="c">Choose color</label>
-      <input type="color" name="squareColor" id="squareColor" value="#ff0000">
+      <label for="shapeColor" accesskey="c">Choose color</label>
+      <input type="color" name="shapeColor" id="shapeColor" value="#ff0000">
     </div>
 
     <!--  rotate -->

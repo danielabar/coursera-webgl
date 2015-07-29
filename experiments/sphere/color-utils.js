@@ -28,6 +28,11 @@
       return this.rgbToGL(
         this.hexToRgb(hex)
       );
+    },
+
+    hexToGLvec4: function(hex) {
+      var temp = this.rgbToGL(this.hexToRgb(hex));
+      return vec4(temp.r, temp.g, temp.b, 1.0);
     }
 
   };
