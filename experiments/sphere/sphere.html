@@ -10,16 +10,10 @@
   <link rel="stylesheet" href="../../css/assignment.css">
 
   <script id="vertex-shader" type="x-shader/x-vertex">
-
-  // specified by application
-  // attribute vec4 vColor;
   attribute vec4 vPosition;
   uniform vec3 theta;
   uniform vec3 scale;
   uniform vec3 translate;
-
-  // to pass vColor through to rasterizer
-  // varying vec4 fColor;
 
   void main() {
 
@@ -68,9 +62,6 @@
 
     // apply rotation matricies to the vertex
     gl_Position = tr * rz * ry * rx * sc * vPosition;
-
-    // pass color through to rasterizer
-    // fColor = vColor;
   }
   </script>
 
@@ -78,7 +69,6 @@
   precision mediump float;
 
   uniform vec4 fColor;
-  // varying vec4 fColor;
 
   void main() {
     gl_FragColor = fColor;

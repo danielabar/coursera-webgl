@@ -40,8 +40,6 @@
         _vertices.push(radius * x);
         _vertices.push(radius * y);
         _vertices.push(radius * z);
-
-        // _vertexColors.push(vec4( 1.0, 0.0, 0.0, 1.0 ));
       }
     }
 
@@ -58,7 +56,6 @@
         _indices.push(first+1);
       }
     }
-
   };
 
   var render = function() {
@@ -69,7 +66,6 @@
     gl.uniform3fv(_translateLoc, _translate);
     gl.uniform4fv(_colorLoc, _color);
 
-    // gl.drawElements( gl.TRIANGLES, _indices.length, gl.UNSIGNED_SHORT, 0 );
     gl.drawElements( gl.LINE_LOOP, _indices.length, gl.UNSIGNED_SHORT, 0 );
   };
 
@@ -136,16 +132,6 @@
       var iBuffer = gl.createBuffer();
       gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, iBuffer);
       gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(_indices), gl.STATIC_DRAW);
-
-      // Load color data buffer onto GPU
-      // var cBuffer = gl.createBuffer();
-      // gl.bindBuffer( gl.ARRAY_BUFFER, cBuffer );
-      // gl.bufferData( gl.ARRAY_BUFFER, flatten(_vertexColors), gl.STATIC_DRAW );
-
-      // Associate shader variables with color data buffer
-      // var vColor = gl.getAttribLocation( _program, 'vColor' );
-      // gl.vertexAttribPointer( vColor, 4, gl.FLOAT, false, 0, 0 );
-      // gl.enableVertexAttribArray( vColor );
 
       // Load vertex buffer onto GPU
       var vBuffer = gl.createBuffer();
