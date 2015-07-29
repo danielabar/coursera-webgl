@@ -13,7 +13,9 @@
     _theta = [30, 60, 0],
     _thetaLoc,
     _scale = [1, 1, 1],
-    _scaleLoc;
+    _scaleLoc,
+    _translate = [0, 0, 0],
+    _translateLoc;
 
   // https://www.webkit.org/blog-files/webgl/Earth.html
   var drawSphere = function(radius) {
@@ -57,12 +59,14 @@
 
   };
 
-
   var render = function() {
     gl.clear( gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-    // gl.drawElements( gl.TRIANGLES, _indices.length, gl.UNSIGNED_SHORT, 0 );
+
     gl.uniform3fv(_thetaLoc, _theta);
     gl.uniform3fv(_scaleLoc, _scale);
+    gl.uniform3fv(_translateLoc, _translate);
+
+    // gl.drawElements( gl.TRIANGLES, _indices.length, gl.UNSIGNED_SHORT, 0 );
     gl.drawElements( gl.LINE_LOOP, _indices.length, gl.UNSIGNED_SHORT, 0 );
   };
 
@@ -85,6 +89,16 @@
     if (evt.target.id === 'scaleZ') {
       _scale[2] = evt.target.valueAsNumber;
     }
+    if (evt.target.id === 'translateX') {
+      _translate[0] = evt.target.valueAsNumber;
+    }
+    if (evt.target.id === 'translateY') {
+      _translate[1] = evt.target.valueAsNumber;
+    }
+    if (evt.target.id === 'translateZ') {
+      _translate[2] = evt.target.valueAsNumber;
+    }
+
     render();
   };
 
@@ -140,6 +154,7 @@
       // Uniform vars for user specified parameters
       _thetaLoc = gl.getUniformLocation(_program, 'theta');
       _scaleLoc = gl.getUniformLocation(_program, 'scale');
+      _translateLoc = gl.getUniformLocation(_program, 'translate');
 
       render();
     }
