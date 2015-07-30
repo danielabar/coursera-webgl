@@ -1,7 +1,7 @@
 /**
  * App
  */
-(function(window, ColorUtils) {
+(function(window, ColorUtils, Shape) {
   'use strict';
 
   var gl,
@@ -133,13 +133,15 @@
 
     shape.program = initShaders( gl, 'vertex-shader', 'fragment-shader' );
 
-    if (shapeOption === 'sphere') {
-      shapeVI = drawSphere(1);
-    }
+    shapeVI = Shape.draw(shapeOption);
 
-    if (shapeOption === 'cylinder') {
-      shapeVI = drawCylinder(1);
-    }
+    // if (shapeOption === 'sphere') {
+    //   shapeVI = drawSphere(1);
+    // }
+    //
+    // if (shapeOption === 'cylinder') {
+    //   shapeVI = drawCylinder(1);
+    // }
 
     shape.vertices = shapeVI.v;
     shape.indices = shapeVI.i;
@@ -164,7 +166,9 @@
     return shape;
   };
 
+  // TODO Use input buttons instead of links for add shape, then get rid of preventDefault
   var update = function(evt) {
+    // evt.preventDefault();
     var shapeSelect = document.getElementById('shape');
     var shapeOption = shapeSelect.options[shapeSelect.selectedIndex].value;
     if (evt.target.id === 'addShape') {
@@ -197,7 +201,7 @@
 
   window.App = App;
 
-}(window, window.ColorUtils));
+}(window, window.ColorUtils, window.Shape));
 
 
 /**

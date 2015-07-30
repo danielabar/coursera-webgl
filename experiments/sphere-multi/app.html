@@ -75,14 +75,24 @@
   }
   </script>
 
+  <!-- WebGL Utilities -->
   <script type="text/javascript" src="../../Common/webgl-utils.js"></script>
   <script type="text/javascript" src="../../Common/initShaders.js"></script>
   <script type="text/javascript" src="../../Common/flatten.js"></script>
   <script type="text/javascript" src="../../Common/MV.js"></script>
+
+  <!-- App Utilities -->
   <script type="text/javascript" src="dom-utils.js"></script>
   <script type="text/javascript" src="color-utils.js"></script>
   <script type="text/javascript" src="coord-utils.js"></script>
-  <script type="text/javascript" src="sphere-multi.js"></script>
+
+  <!-- Shapes -->
+  <script type="text/javascript" src="shapes/sphere.js"></script>
+  <script type="text/javascript" src="shapes/cylinder.js"></script>
+  <script type="text/javascript" src="shapes/shape.js"></script>
+
+  <!-- App -->
+  <script type="text/javascript" src="app.js"></script>
 </head>
 
 <body class="assignment">
@@ -108,8 +118,8 @@
     <div class="form-group">
       <label for="shape">Choose shape</label>
       <select name="shape" id="shape">
-        <option value="sphere">sphere</option>
-        <option value="cylinder">cylinder</option>
+        <option value="Sphere">Sphere</option>
+        <option value="Cylinder">Cylinder</option>
       </select>
     </div>
 
