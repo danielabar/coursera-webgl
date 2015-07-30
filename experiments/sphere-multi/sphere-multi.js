@@ -53,6 +53,41 @@
     };
   };
 
+  // Do a cube for now, to verify can handle multiple shapes
+  var drawCylinder = function() {
+
+    var vertices = [
+      vec3( -0.5, -0.5,  0.5 ),
+      vec3( -0.5,  0.5,  0.5 ),
+      vec3(  0.5,  0.5,  0.5 ),
+      vec3(  0.5, -0.5,  0.5 ),
+      vec3( -0.5, -0.5, -0.5 ),
+      vec3( -0.5,  0.5, -0.5 ),
+      vec3(  0.5,  0.5, -0.5 ),
+      vec3(  0.5, -0.5, -0.5 )
+    ];
+
+    var indices = [
+      1, 0, 3,
+      3, 2, 1,
+      2, 3, 7,
+      7, 6, 2,
+      3, 0, 4,
+      4, 7, 3,
+      6, 5, 1,
+      1, 2, 6,
+      4, 5, 6,
+      6, 7, 4,
+      5, 4, 0,
+      0, 1, 5
+    ];
+
+    return {
+      v: vertices,
+      i: indices
+    };
+  };
+
   var renderAll = function(shapes) {
     gl.clear( gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
@@ -92,13 +127,20 @@
     });
   };
 
-  var addShape = function() {
+  var addShape = function(shapeOption) {
     var shape = {},
       shapeVI;
 
     shape.program = initShaders( gl, 'vertex-shader', 'fragment-shader' );
 
-    shapeVI = drawSphere(1); // default radius
+    if (shapeOption === 'sphere') {
+      shapeVI = drawSphere(1);
+    }
+
+    if (shapeOption === 'cylinder') {
+      shapeVI = drawCylinder(1);
+    }
+
     shape.vertices = shapeVI.v;
     shape.indices = shapeVI.i;
 
@@ -123,8 +165,10 @@
   };
 
   var update = function(evt) {
+    var shapeSelect = document.getElementById('shape');
+    var shapeOption = shapeSelect.options[shapeSelect.selectedIndex].value;
     if (evt.target.id === 'addShape') {
-      _shapes.push(addShape());
+      _shapes.push(addShape(shapeOption));
       renderAll(_shapes);
     }
   };
