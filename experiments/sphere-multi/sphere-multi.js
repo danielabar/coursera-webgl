@@ -75,55 +75,95 @@
   };
 
   var drawCylinder = function() {
-    var lowerCapCenter = [],
-      lowerCap,
-      upperCap,
-      upperCapCenter = [],
-      indicies = [],
-      n = 10,
-      startAngle = 1,
-      h = 0.5,
-      totalVerteces;
+    var vertices = [],
+      indices = [],
+      bottomCap = [],
+      n = 8,
+      startAngle = 1;
 
-    lowerCapCenter.push(0.0);
-    lowerCapCenter.push(0.0);
-    lowerCapCenter.push(0.0);
+    // centerpoint
+    bottomCap.push(0.0);
+    bottomCap.push(0.0);
+    bottomCap.push(0.0);
 
-    lowerCap = createNgon(n, startAngle);
+    bottomCap = bottomCap.concat(createNgon(n, startAngle));
 
-    upperCap = createNgon(n, startAngle, h);
-
-    upperCapCenter.push(0.0);
-    upperCapCenter.push(0.0 + h);
-    upperCapCenter.push(0.0);
-
-    /**
-     * let circle1 be lower and circle2 be upper circle ,
-     * for each point on ith index in circle 1
-     * 1st triangle{ circle1[i], circle1[i+1], circle2[i]}
-     * second triangle {circle1[i+1], circle2[i] , circle2[i+1] }
-     * make sure last connects to first (wrapped).
-     */
-    for (var i=0; i<lowerCap.length; i++) {
-      // first triangle
-      indicies.push(lowerCap[i]);
-      indicies.push(lowerCap[i+1]);
-      indicies.push(upperCap[i]);
-
-      // second triangle
-      indicies.push(lowerCap[i+1]);
-      indicies.push(upperCap[i]);
-      indicies.push(upperCap[i+1]);
+    for (var i=0; i<n; i++) {
+      if (i === n-1) {
+        indices.push(0);
+        indices.push(n);
+        indices.push(1);
+      } else {
+        console.log(i);
+        indices.push(0);
+        indices.push(i+1);
+        indices.push(i+2);
+      }
     }
 
-    totalVerteces = lowerCapCenter.concat(lowerCap.concat(upperCapCenter.concat(upperCap)));
+    // Eventually this will be concat of bottomCap, tube, and topCap
+    vertices = bottomCap;
+
+    console.dir(vertices);
+    console.dir(indices);
 
     return {
-      v: totalVerteces,
-      i: indicies
+      v: vertices,
+      i: indices
     };
-
   };
+
+  // var drawCylinder = function() {
+  //   var lowerCapCenter = [],
+  //     lowerCap,
+  //     upperCap,
+  //     upperCapCenter = [],
+  //     indicies = [],
+  //     n = 10,
+  //     startAngle = 1,
+  //     h = 0.5,
+  //     totalVerteces;
+  //
+  //   lowerCapCenter.push(0.0);
+  //   lowerCapCenter.push(0.0);
+  //   lowerCapCenter.push(0.0);
+  //
+  //   lowerCap = createNgon(n, startAngle);
+  //
+  //   upperCap = createNgon(n, startAngle, h);
+  //
+  //   upperCapCenter.push(0.0);
+  //   upperCapCenter.push(0.0 + h);
+  //   upperCapCenter.push(0.0);
+  //
+  //   /**
+  //    * let circle1 be lower and circle2 be upper circle ,
+  //    * for each point on ith index in circle 1
+  //    * 1st triangle{ circle1[i], circle1[i+1], circle2[i]}
+  //    * second triangle {circle1[i+1], circle2[i] , circle2[i+1] }
+  //    * make sure last connects to first (wrapped).
+  //    */
+  //   for (var i=0; i<lowerCap.length; i++) {
+  //     // first triangle
+  //     indicies.push(lowerCap[i]);
+  //     indicies.push(lowerCap[i+1]);
+  //     indicies.push(upperCap[i]);
+  //
+  //     // second triangle
+  //     indicies.push(lowerCap[i+1]);
+  //     indicies.push(upperCap[i]);
+  //     indicies.push(upperCap[i+1]);
+  //   }
+  //
+  //   totalVerteces = lowerCapCenter.concat(lowerCap.concat(upperCapCenter.concat(upperCap)));
+  //
+  //   return {
+  //     v: totalVerteces,
+  //     i: indicies,
+  //     pointsInCap: n+1
+  //   };
+  //
+  // };
 
   var drawCube = function() {
 
@@ -194,17 +234,17 @@
       gl.uniform4fv(colorLoc, shape.color);
 
       // TODO Should have module per shape with draw method
-      if (shape.type === 'cylinder') {
+      // if (shape.type === 'cylinder') {
         /**
           1) draw lower cap using drawArrays from 0th vertex to 3*n th vertex (1st center to end of first circle) using gl.TRIANGLE_FAN (as center is common for each triangle)
           2) draw middle curve using drawElements () call for vertices of circle1 and circle2 part of vertex buffer using indices Array (send using flatten())
           3) draw upper cap, same as first circle cap , but with center2 and circle2 points using gl.TriangleFAN
         */
-        // temp experiment
-        gl.drawArrays( gl.TRIANGLE_FAN, 0, 5 );
-      } else {
+        // temp experiment - draw lower cap as line loop
+        // gl.drawArrays( gl.LINE_LOOP, 0, shape.data.pointsInCap );
+      // } else {
         gl.drawElements( gl.LINE_LOOP, shape.indices.length, gl.UNSIGNED_SHORT, 0 );
-      }
+      // }
 
     });
   };
@@ -229,6 +269,7 @@
 
     shape.vertices = shapeVI.v;
     shape.indices = shapeVI.i;
+    shape.data = shapeVI;
 
     shape.color = ColorUtils.hexToGLvec4(document.getElementById('shapeColor').value);
     shape.theta = [
