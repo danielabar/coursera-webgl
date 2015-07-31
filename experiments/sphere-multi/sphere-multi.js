@@ -78,31 +78,48 @@
     var vertices = [],
       indices = [],
       bottomCap = [],
-      n = 8,
-      startAngle = 1;
+      topCap = [],
+      n = 30,
+      startAngle = 1,
+      h=0.5;
 
-    // centerpoint
     bottomCap.push(0.0);
     bottomCap.push(0.0);
     bottomCap.push(0.0);
-
     bottomCap = bottomCap.concat(createNgon(n, startAngle));
 
+    topCap.push(0.0);
+    topCap.push(h);
+    topCap.push(0.0);
+    topCap = topCap.concat(createNgon(n, startAngle, h));
+
+    vertices = bottomCap.concat(topCap);
+
+    // for now this only handles the bottom cap
     for (var i=0; i<n; i++) {
       if (i === n-1) {
         indices.push(0);
         indices.push(n);
         indices.push(1);
       } else {
-        console.log(i);
         indices.push(0);
         indices.push(i+1);
         indices.push(i+2);
       }
     }
 
-    // Eventually this will be concat of bottomCap, tube, and topCap
-    vertices = bottomCap;
+    var offset = n+1;
+    for (var j=0; j<n; j++) {
+      if (j === n-1) {
+        indices.push(offset);
+        indices.push(n + offset);
+        indices.push(1 + offset);
+      } else {
+        indices.push(offset);
+        indices.push(j+1 + offset);
+        indices.push(j+2 + offset);
+      }
+    }
 
     console.dir(vertices);
     console.dir(indices);
