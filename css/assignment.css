@@ -227,10 +227,11 @@ input[type=button] {
 
 .side-controls {
   float: right;
+  padding-left: 0;
 }
 
 .with-side-controls {
-  padding-left: 40px;  
+  padding-left: 40px;
 }
 
 /* ---------------------------------- */

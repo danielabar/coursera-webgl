@@ -75,31 +75,27 @@
   };
 
   var drawCylinder = function() {
-    var array1 = [],
-      array2 = [],
-      array3 = [],
-      array4 = [],
+    var lowerCapCenter = [],
+      lowerCap,
+      upperCap,
+      upperCapCenter = [],
       indicies = [],
       n = 10,
       startAngle = 1,
       h = 0.5,
       totalVerteces;
 
-    // lower cap centerpoint
-    array1.push(0.0);
-    array1.push(0.0);
-    array1.push(0.0);
+    lowerCapCenter.push(0.0);
+    lowerCapCenter.push(0.0);
+    lowerCapCenter.push(0.0);
 
-    // lower cap
-    array2 = array2.concat(createNgon(n, startAngle));
+    lowerCap = createNgon(n, startAngle);
 
-    // upper cap
-    array3 = array3.concat(createNgon(n, startAngle, h));
+    upperCap = createNgon(n, startAngle, h);
 
-    // upper cap centerpoint
-    array4.push(0.0);
-    array4.push(0.0 + h);
-    array4.push(0.0);
+    upperCapCenter.push(0.0);
+    upperCapCenter.push(0.0 + h);
+    upperCapCenter.push(0.0);
 
     /**
      * let circle1 be lower and circle2 be upper circle ,
@@ -108,19 +104,19 @@
      * second triangle {circle1[i+1], circle2[i] , circle2[i+1] }
      * make sure last connects to first (wrapped).
      */
-    for (var i=0; i<array2.length; i++) {
+    for (var i=0; i<lowerCap.length; i++) {
       // first triangle
-      indicies.push(array2[i]);
-      indicies.push(array2[i+1]);
-      indicies.push(array3[i]);
+      indicies.push(lowerCap[i]);
+      indicies.push(lowerCap[i+1]);
+      indicies.push(upperCap[i]);
 
       // second triangle
-      indicies.push(array2[i+1]);
-      indicies.push(array3[i]);
-      indicies.push(array3[i+1]);
+      indicies.push(lowerCap[i+1]);
+      indicies.push(upperCap[i]);
+      indicies.push(upperCap[i+1]);
     }
 
-    totalVerteces = array1.concat(array2.concat(array4.concat(array3)));
+    totalVerteces = lowerCapCenter.concat(lowerCap.concat(upperCapCenter.concat(upperCap)));
 
     return {
       v: totalVerteces,
@@ -200,10 +196,12 @@
       // TODO Should have module per shape with draw method
       if (shape.type === 'cylinder') {
         /**
-        1) draw lower cap using drawArrays from 0th vertex to 3*n th vertex (1st center to end of first circle) using gl.TRIANGLE_FAN (as center is common for each triangle)
-        2) draw middle curve using drawElements () call for vertices of circle1 and circle2 part of vertex buffer using indices Array (send using flatten())
-        3) draw upper cap, same as first circle cap , but with center2 and circle2 points using gl.TriangleFAN
-         */
+          1) draw lower cap using drawArrays from 0th vertex to 3*n th vertex (1st center to end of first circle) using gl.TRIANGLE_FAN (as center is common for each triangle)
+          2) draw middle curve using drawElements () call for vertices of circle1 and circle2 part of vertex buffer using indices Array (send using flatten())
+          3) draw upper cap, same as first circle cap , but with center2 and circle2 points using gl.TriangleFAN
+        */
+        // temp experiment
+        gl.drawArrays( gl.TRIANGLE_FAN, 0, 5 );
       } else {
         gl.drawElements( gl.LINE_LOOP, shape.indices.length, gl.UNSIGNED_SHORT, 0 );
       }
@@ -255,7 +253,7 @@
   var update = function(evt) {
     var shapeSelect = document.getElementById('shape');
     var shapeOption = shapeSelect.options[shapeSelect.selectedIndex].value;
-    if (evt.target.id === 'addShape') {
+    if (evt.target.id === 'addShape' || evt.target.id === 'addShapeIcon') {
       _shapes.push(addShape(shapeOption));
       renderAll(_shapes);
     }
