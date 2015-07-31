@@ -92,10 +92,9 @@
     topCap.push(h);
     topCap.push(0.0);
     topCap = topCap.concat(createNgon(n, startAngle, h));
-
     vertices = bottomCap.concat(topCap);
 
-    // for now this only handles the bottom cap
+    // Index bottom cap
     for (var i=0; i<n; i++) {
       if (i === n-1) {
         indices.push(0);
@@ -108,6 +107,7 @@
       }
     }
 
+    // Index top cap
     var offset = n+1;
     for (var j=0; j<n; j++) {
       if (j === n-1) {
@@ -119,6 +119,20 @@
         indices.push(j+1 + offset);
         indices.push(j+2 + offset);
       }
+    }
+
+    // Index tube connecting top and bottom
+    for (var k=1; i<n-1; k++) {
+
+      // first triangle
+      indices.push(k);
+      indices.push(k+1);
+      indices.push(k+1 + offset);
+
+      // second triangle
+      indices.push(k);
+      indices.push(k + offset);
+      indices.push(k+1 + offset);
     }
 
     console.dir(vertices);
