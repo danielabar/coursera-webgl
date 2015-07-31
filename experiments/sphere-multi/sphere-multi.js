@@ -53,22 +53,19 @@
     };
   };
 
-  var createNgon = function (n, startAngle, h) {
+  var createNgon = function (n, startAngle, z) {
     var vertices = [],
 		  dA = Math.PI*2 / n,
       r = 0.9,
       angle,
-      x, y,
-      z = 0.0;
-
-    h = h ? h : 0.0;
+      x, y;
 
     for (var i=0; i < n; i++) {
       angle = startAngle + dA*i;
       x = r * Math.cos(angle);
       y = r * Math.sin(angle);
       vertices.push(x);
-      vertices.push(y + h);
+      vertices.push(y);
       vertices.push(z);
     }
     return vertices;
@@ -80,18 +77,17 @@
       bottomCap = [],
       topCap = [],
       n = 30,
-      startAngle = 1,
-      h=0.5;
+      startAngle = 1;
 
     bottomCap.push(0.0);
     bottomCap.push(0.0);
     bottomCap.push(0.0);
-    bottomCap = bottomCap.concat(createNgon(n, startAngle));
+    bottomCap = bottomCap.concat(createNgon(n, startAngle, 0.0));
 
     topCap.push(0.0);
-    topCap.push(h);
     topCap.push(0.0);
-    topCap = topCap.concat(createNgon(n, startAngle, h));
+    topCap.push(-1.0);
+    topCap = topCap.concat(createNgon(n, startAngle, -1.0));
     vertices = bottomCap.concat(topCap);
 
     // Index bottom cap
