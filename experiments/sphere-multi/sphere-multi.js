@@ -53,8 +53,83 @@
     };
   };
 
-  // Do a cube for now, to verify can handle multiple shapes
+  var createNgon = function (n, startAngle, h) {
+    var vertices = [],
+		  dA = Math.PI*2 / n,
+      r = 0.9,
+      angle,
+      x, y,
+      z = 0.0;
+
+    h = h ? h : 0.0;
+
+    for (var i=0; i < n; i++) {
+      angle = startAngle + dA*i;
+      x = r * Math.cos(angle);
+      y = r * Math.sin(angle);
+      vertices.push(x);
+      vertices.push(y + h);
+      vertices.push(z);
+    }
+    return vertices;
+  };
+
   var drawCylinder = function() {
+    var array1 = [],
+      array2 = [],
+      array3 = [],
+      array4 = [],
+      indicies = [],
+      n = 10,
+      startAngle = 1,
+      h = 0.5,
+      totalVerteces;
+
+    // lower cap centerpoint
+    array1.push(0.0);
+    array1.push(0.0);
+    array1.push(0.0);
+
+    // lower cap
+    array2 = array2.concat(createNgon(n, startAngle));
+
+    // upper cap
+    array3 = array3.concat(createNgon(n, startAngle, h));
+
+    // upper cap centerpoint
+    array4.push(0.0);
+    array4.push(0.0 + h);
+    array4.push(0.0);
+
+    /**
+     * let circle1 be lower and circle2 be upper circle ,
+     * for each point on ith index in circle 1
+     * 1st triangle{ circle1[i], circle1[i+1], circle2[i]}
+     * second triangle {circle1[i+1], circle2[i] , circle2[i+1] }
+     * make sure last connects to first (wrapped).
+     */
+    for (var i=0; i<array2.length; i++) {
+      // first triangle
+      indicies.push(array2[i]);
+      indicies.push(array2[i+1]);
+      indicies.push(array3[i]);
+
+      // second triangle
+      indicies.push(array2[i+1]);
+      indicies.push(array3[i]);
+      indicies.push(array3[i+1]);
+    }
+
+    totalVerteces = array1.concat(array2.concat(array4.concat(array3)));
+
+    return {
+      v: totalVerteces,
+      i: indicies
+    };
+
+  };
+
+  var drawCube = function() {
 
     var vertices = [
       vec3( -0.5, -0.5,  0.5 ),
@@ -122,13 +197,22 @@
       gl.uniform3fv(translateLoc, shape.translate);
       gl.uniform4fv(colorLoc, shape.color);
 
-      gl.drawElements( gl.LINE_LOOP, shape.indices.length, gl.UNSIGNED_SHORT, 0 );
+      // TODO Should have module per shape with draw method
+      if (shape.type === 'cylinder') {
+        /**
+        1) draw lower cap using drawArrays from 0th vertex to 3*n th vertex (1st center to end of first circle) using gl.TRIANGLE_FAN (as center is common for each triangle)
+        2) draw middle curve using drawElements () call for vertices of circle1 and circle2 part of vertex buffer using indices Array (send using flatten())
+        3) draw upper cap, same as first circle cap , but with center2 and circle2 points using gl.TriangleFAN
+         */
+      } else {
+        gl.drawElements( gl.LINE_LOOP, shape.indices.length, gl.UNSIGNED_SHORT, 0 );
+      }
 
     });
   };
 
   var addShape = function(shapeOption) {
-    var shape = {},
+    var shape = {type: shapeOption},
       shapeVI;
 
     shape.program = initShaders( gl, 'vertex-shader', 'fragment-shader' );
@@ -139,6 +223,10 @@
 
     if (shapeOption === 'cylinder') {
       shapeVI = drawCylinder(1);
+    }
+
+    if (shapeOption === 'cube') {
+      shapeVI = drawCube(1);
     }
 
     shape.vertices = shapeVI.v;
