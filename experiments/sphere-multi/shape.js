@@ -6,8 +6,8 @@
 
   var Shape = {
 
-    generate: function(shapeName) {
-      return window[shapeName].generate();
+    generate: function(shapeName, opts) {
+      return window[shapeName].generate(opts);
     },
 
      /**

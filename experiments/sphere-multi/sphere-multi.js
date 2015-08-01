@@ -53,15 +53,19 @@
       gl.uniform4fv(colorLoc, shape.color);
     }
 
-    gl.drawElements( gl.LINE_LOOP, shape.indices.length, gl.UNSIGNED_SHORT, 0 );
+    if (isBorder) {
+      gl.drawArrays( gl.LINE_LOOP, 0, shape.border.vertices.length/3 );
+    } else {
+      gl.drawElements( gl.LINE_LOOP, shape.indices.length, gl.UNSIGNED_SHORT, 0 );
+    }
   };
 
   var render = function(shapes, oneShape) {
     gl.clear( gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
     if (oneShape) {
-      renderShape(oneShape);
       renderShape(oneShape, true);
+      renderShape(oneShape);
     }
 
     shapes.forEach(function(shape) {
@@ -76,7 +80,11 @@
 
     shape.program = initShaders( gl, 'vertex-shader', 'fragment-shader' );
 
-    shapeVI = Shape.generate(shapeType);
+    if (editing) {
+      shapeVI = Shape.generate(shapeType, {outlineOnly: true});
+    } else {
+      shapeVI = Shape.generate(shapeType);
+    }
     shape.vertices = shapeVI.v;
     shape.indices = shapeVI.i;
 
