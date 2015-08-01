@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link href='http://fonts.googleapis.com/css?family=Nixie+One|Open+Sans:300italic,300,700|Pacifico' rel='stylesheet' type='text/css'>
+	<meta charset="UTF-8">
+  <title>Daniela Baron | Experiments | Sphere Multi</title>
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="../../css/reset.css">
+  <link rel="stylesheet" href="../../css/styles.css">
+  <link rel="stylesheet" href="../../css/assignment.css">
+
+  <script id="vertex-shader" type="x-shader/x-vertex">
+  attribute vec4 vPosition;
+  uniform vec3 theta;
+  uniform vec3 scale;
+  uniform vec3 translate;
+
+  void main() {
+
+    // trig
+    vec3 angles = radians( theta );
+    vec3 c = cos( angles );
+    vec3 s = sin( angles );
+
+    // rotation matrix for x axis (column major)
+    mat4 rx = mat4(
+      1.0,  0.0,  0.0, 0.0,
+	    0.0,  c.x,  s.x, 0.0,
+	    0.0, -s.x,  c.x, 0.0,
+	    0.0,  0.0,  0.0, 1.0
+    );
+
+    mat4 ry = mat4(
+      c.y, 0.0, -s.y, 0.0,
+	    0.0, 1.0,  0.0, 0.0,
+	    s.y, 0.0,  c.y, 0.0,
+	    0.0, 0.0,  0.0, 1.0
+    );
+
+    mat4 rz = mat4(
+      c.z, -s.z, 0.0, 0.0,
+	    s.z,  c.z, 0.0, 0.0,
+	    0.0,  0.0, 1.0, 0.0,
+	    0.0,  0.0, 0.0, 1.0
+    );
+
+    // scale matrix (column major)
+    mat4 sc = mat4(
+      scale.x, 0.0, 0.0, 0.0,
+      0.0, scale.y, 0.0, 0.0,
+      0.0, 0.0, scale.z, 0.0,
+      0.0, 0.0, 0.0, 1.0
+    );
+
+    // translate matrix (column major)
+    mat4 tr = mat4(
+      1.0, 0.0, 0.0, 0.0,
+      0.0, 1.0, 0.0, 0.0,
+      0.0, 0.0, 1.0, 0.0,
+      translate.x, translate.y, translate.z, 1.0
+    );
+
+    // apply rotation matricies to the vertex
+    gl_Position = tr * rz * ry * rx * sc * vPosition;
+  }
+  </script>
+
+  <script id="fragment-shader" type="x-shader/x-fragment">
+  precision mediump float;
+
+  uniform vec4 fColor;
+
+  void main() {
+    gl_FragColor = fColor;
+  }
+  </script>
+
+  <!--  WebGL Utils -->
+  <script type="text/javascript" src="../../Common/webgl-utils.js"></script>
+  <script type="text/javascript" src="../../Common/initShaders.js"></script>
+  <script type="text/javascript" src="../../Common/flatten.js"></script>
+  <script type="text/javascript" src="../../Common/MV.js"></script>
+
+  <!--  App Utils -->
+  <script type="text/javascript" src="dom-utils.js"></script>
+  <script type="text/javascript" src="color-utils.js"></script>
+  <script type="text/javascript" src="coord-utils.js"></script>
+
+  <!-- Shapes -->
+  <script type="text/javascript" src="shapes/shape-common.js"></script>
+  <script type="text/javascript" src="shapes/sphere.js"></script>
+  <script type="text/javascript" src="shapes/cylinder.js"></script>
+  <script type="text/javascript" src="shape.js"></script>
+
+  <!-- App -->
+  <script type="text/javascript" src="sphere-multi.js"></script>
+</head>
+
+<body class="assignment">
+
+  <!--[if lt IE 9]>
+    <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+  <![endif]-->
+
+  <nav>
+		<a href="../../index.html#assignments">Assignments</a>
+		<a href="../../index.html#experiments">Experiments</a>
+		<a href="../../index.html">Home</a>
+	</nav>
+
+  <header>
+    <h1>Experiments</h1>
+    <h2>Sphere Multi</h2>
+  </header>
+
+  <section id="settings" class="settings side-controls">
+
+    <!-- shape -->
+    <div class="form-group">
+      <label for="shape">Choose shape</label>
+      <select name="shape" id="shape">
+        <option value="Sphere">Sphere</option>
+        <option value="Cylinder">Cylinder</option>
+      </select>
+    </div>
+
+    <!--  color -->
+    <div class="form-group">
+      <label for="shapeColor" accesskey="c">Choose color</label>
+      <input type="color" name="shapeColor" id="shapeColor" value="#ff0000">
+    </div>
+
+    <!--  rotate -->
+    <div class="form-group">
+      <label for="rotateX">Rotate X</label>
+      <input type=range id=rotateX min=0 value=0 max=360 step=1 oninput="outputRX(value)">
+      <output for=rotateX id=rxv>0</output>
+    </div>
+    <div class="form-group">
+      <label for="rotateY">Rotate Y</label>
+      <input type=range id=rotateY min=0 value=0 max=360 step=1 oninput="outputRY(value)">
+      <output for=rotateY id=ryv>0</output>
+    </div>
+    <div class="form-group">
+      <label for="rotateZ">Rotate Z</label>
+      <input type=range id=rotateZ min=0 value=0 max=360 step=1 oninput="outputRZ(value)">
+      <output for=rotateZ id=rzv>0</output>
+    </div>
+
+    <!-- scale -->
+    <div class="form-group">
+      <label for="scaleX">Scale X</label>
+      <input type=range id=scaleX min=0.1 value=1.0 max=1.0 step=0.1>
+    </div>
+    <div class="form-group">
+      <label for="scaleY">Scale Y</label>
+      <input type=range id=scaleY min=0.1 value=1.0 max=1.0 step=0.1>
+    </div>
+    <div class="form-group">
+      <label for="scaleZ">Scale Z</label>
+      <input type=range id=scaleZ min=0.1 value=1.0 max=1.0 step=0.1>
+    </div>
+
+    <!-- translate -->
+    <div class="form-group">
+      <label for="translateX">Translate X</label>
+      <input type=range id=translateX min=-1.0 value=0 max=1.0 step=0.1>
+    </div>
+    <div class="form-group">
+      <label for="translateY">Translate Y</label>
+      <input type=range id=translateY min=-1.0 value=0 max=1.0 step=0.1>
+    </div>
+    <div class="form-group">
+      <label for="translateZ">Translate Z</label>
+      <input type=range id=translateZ min=-1.0 value=0 max=1.0 step=0.1>
+    </div>
+
+    <!--  actions -->
+    <div class="form-group actions">
+      <button id="addShape" class="button"><i id="addShapeIcon" class="fa fa-plus icon"></i>Add</button>
+      <!-- <a href="#" id="clear" class="button"><i class="fa fa-refresh icon"></i>Clear</a>
+      <a href="#" id="download" title="download" class="button" download><i class="fa fa-download icon"></i>Download</a> -->
+    </div>
+  </section>
+
+  <section class="drawing with-side-controls">
+    <canvas id="gl-canvas" width="700" height="700">
+      Oops ... your browser doesn't support the HTML5 canvas element
+    </canvas>
+  </section>
+
+  <footer>
+    <p>Daniela Baron <a href="https://www.coursera.org/course/webgl">Coursera WebGL</a></p>
+  </footer>
+
+  <script>
+  var outputRX = function(value) {
+    document.querySelector('#rxv').value = value;
+  }
+  var outputRY = function(value) {
+    document.querySelector('#ryv').value = value;
+  }
+  var outputRZ = function(value) {
+    document.querySelector('#rzv').value = value;
+  }
+  </script>
+
+</body>
+</html>
