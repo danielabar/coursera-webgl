@@ -118,7 +118,7 @@
 
     <!-- shape -->
     <div class="form-group">
-      <label for="shape">Choose shape</label>
+      <label for="shape">Shape</label>
       <select name="shape" id="shape">
         <option value="Sphere">Sphere</option>
         <option value="Cylinder">Cylinder</option>
@@ -128,7 +128,7 @@
 
     <!--  color -->
     <div class="form-group">
-      <label for="shapeColor" accesskey="c">Choose color</label>
+      <label for="shapeColor" accesskey="c">Color</label>
       <input type="color" name="shapeColor" id="shapeColor" value="#ff0000">
     </div>
 
@@ -152,34 +152,41 @@
     <!-- scale -->
     <div class="form-group">
       <label for="scaleX">Scale X</label>
-      <input type=range id=scaleX min=0.1 value=1.0 max=1.0 step=0.1>
+      <input type=range id=scaleX min=0.1 value=1.0 max=1.0 step=0.1 oninput="outputSX(value)">
+      <output for=scaleX id=sxv>1.0</output>
     </div>
     <div class="form-group">
       <label for="scaleY">Scale Y</label>
-      <input type=range id=scaleY min=0.1 value=1.0 max=1.0 step=0.1>
+      <input type=range id=scaleY min=0.1 value=1.0 max=1.0 step=0.1 oninput="outputSY(value)">
+      <output for=scaleY id=syv>1.0</output>
     </div>
     <div class="form-group">
       <label for="scaleZ">Scale Z</label>
-      <input type=range id=scaleZ min=0.1 value=1.0 max=1.0 step=0.1>
+      <input type=range id=scaleZ min=0.1 value=1.0 max=1.0 step=0.1 oninput="outputSZ(value)">
+      <output for=scaleZ id=szv>1.0</output>
     </div>
 
     <!-- translate -->
     <div class="form-group">
       <label for="translateX">Translate X</label>
-      <input type=range id=translateX min=-1.0 value=0 max=1.0 step=0.1>
+      <input type=range id=translateX min=-1.0 value=0 max=1.0 step=0.1 oninput="outputTX(value)">
+      <output for=translateX id=txv>0</output>
     </div>
     <div class="form-group">
       <label for="translateY">Translate Y</label>
-      <input type=range id=translateY min=-1.0 value=0 max=1.0 step=0.1>
+      <input type=range id=translateY min=-1.0 value=0 max=1.0 step=0.1 oninput="outputTY(value)">
+      <output for=translateY id=tyv>0</output>
     </div>
     <div class="form-group">
       <label for="translateZ">Translate Z</label>
-      <input type=range id=translateZ min=-1.0 value=0 max=1.0 step=0.1>
+      <input type=range id=translateZ min=-1.0 value=0 max=1.0 step=0.1 oninput="outputTZ(value)">
+      <output for=translateZ id=tzv>0</output>
     </div>
 
     <!--  actions -->
     <div class="form-group actions">
-      <button id="addShape" class="button"><i id="addShapeIcon" class="fa fa-plus icon"></i>Add</button>
+      <button id="addShape" class="button button-small"><i id="addShapeIcon" class="fa fa-plus icon"></i>Add</button>
+      <button id="clear" class="button button-small"><i id="clearIcon" class="fa fa-refresh icon"></i>Clear</button>
       <!-- <a href="#" id="clear" class="button"><i class="fa fa-refresh icon"></i>Clear</a>
       <a href="#" id="download" title="download" class="button" download><i class="fa fa-download icon"></i>Download</a> -->
     </div>
@@ -204,6 +211,24 @@
   }
   var outputRZ = function(value) {
     document.querySelector('#rzv').value = value;
+  }
+  var outputSX = function(value) {
+    document.querySelector('#sxv').value = value;
+  }
+  var outputSY = function(value) {
+    document.querySelector('#syv').value = value;
+  }
+  var outputSZ = function(value) {
+    document.querySelector('#szv').value = value;
+  }
+  var outputTX = function(value) {
+    document.querySelector('#txv').value = value;
+  }
+  var outputTY = function(value) {
+    document.querySelector('#tyv').value = value;
+  }
+  var outputTZ = function(value) {
+    document.querySelector('#tzv').value = value;
   }
   </script>
 
