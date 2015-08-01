@@ -123,13 +123,20 @@
     var shapeSelect = document.getElementById('shape');
     var shapeType = shapeSelect.options[shapeSelect.selectedIndex].value;
 
-    if (evt.target.id === 'addShape' || evt.target.id === 'addShapeIcon') {
+    if (evt.target.id === 'commitShape' || evt.target.id === 'commitShapeIcon') {
       _shapes.push(addShape(shapeType));
       render(_shapes);
 
-      // get back to edit mode
+      document.getElementById('commitShape').classList.add( 'toggle' );
+      document.getElementById('newShape').classList.remove( 'toggle' );
+    }
+
+    if (evt.target.id === 'newShape' || evt.target.id === 'newShapeIcon') {
       setDefaults();
       edit();
+
+      document.getElementById('newShape').classList.add( 'toggle' );
+      document.getElementById('commitShape').classList.remove( 'toggle' );
     }
 
     if (evt.target.id === 'clear' || evt.target.id === 'clearIcon') {
@@ -138,6 +145,9 @@
       // Re-seed the system with one shape
       setDefaults();
       edit();
+
+      document.getElementById('newShape').classList.add( 'toggle' );
+      document.getElementById('commitShape').classList.remove( 'toggle' );
     }
   };
 
