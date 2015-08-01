@@ -8,43 +8,50 @@
     _canvas,
     _shapes = [];
 
-  var renderAll = function(shapes) {
+  var renderShape = function(shape) {
+    // Load shaders
+    gl.useProgram(shape.program);
+
+    // Load index data onto GPU
+    var iBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, iBuffer);
+    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(shape.indices), gl.STATIC_DRAW);
+
+    // Load vertex buffer onto GPU
+    var vBuffer = gl.createBuffer();
+    gl.bindBuffer( gl.ARRAY_BUFFER, vBuffer );
+    gl.bufferData( gl.ARRAY_BUFFER, flatten(shape.vertices), gl.STATIC_DRAW );
+
+    // Associate shader variables with vertex data buffer
+    var vPosition = gl.getAttribLocation( shape.program, 'vPosition' );
+    gl.vertexAttribPointer( vPosition, 3, gl.FLOAT, false, 0, 0 );
+    gl.enableVertexAttribArray( vPosition );
+
+    // Uniform vars for user specified parameters
+    var colorLoc = gl.getUniformLocation(shape.program, 'fColor');
+    var thetaLoc = gl.getUniformLocation(shape.program, 'theta');
+    var scaleLoc = gl.getUniformLocation(shape.program, 'scale');
+    var translateLoc = gl.getUniformLocation(shape.program, 'translate');
+
+    gl.uniform3fv(thetaLoc, shape.theta);
+    gl.uniform3fv(scaleLoc, shape.scale);
+    gl.uniform3fv(translateLoc, shape.translate);
+    gl.uniform4fv(colorLoc, shape.color);
+
+    gl.drawElements( gl.LINE_LOOP, shape.indices.length, gl.UNSIGNED_SHORT, 0 );
+  };
+
+  var render = function(shapes, oneShape) {
     gl.clear( gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
+    if (oneShape) {
+      renderShape(oneShape);
+    }
+    
     shapes.forEach(function(shape) {
-
-      // Load shaders
-      gl.useProgram(shape.program);
-
-      // Load index data onto GPU
-      var iBuffer = gl.createBuffer();
-      gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, iBuffer);
-      gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(shape.indices), gl.STATIC_DRAW);
-
-      // Load vertex buffer onto GPU
-      var vBuffer = gl.createBuffer();
-      gl.bindBuffer( gl.ARRAY_BUFFER, vBuffer );
-      gl.bufferData( gl.ARRAY_BUFFER, flatten(shape.vertices), gl.STATIC_DRAW );
-
-      // Associate shader variables with vertex data buffer
-      var vPosition = gl.getAttribLocation( shape.program, 'vPosition' );
-      gl.vertexAttribPointer( vPosition, 3, gl.FLOAT, false, 0, 0 );
-      gl.enableVertexAttribArray( vPosition );
-
-      // Uniform vars for user specified parameters
-      var colorLoc = gl.getUniformLocation(shape.program, 'fColor');
-      var thetaLoc = gl.getUniformLocation(shape.program, 'theta');
-      var scaleLoc = gl.getUniformLocation(shape.program, 'scale');
-      var translateLoc = gl.getUniformLocation(shape.program, 'translate');
-
-      gl.uniform3fv(thetaLoc, shape.theta);
-      gl.uniform3fv(scaleLoc, shape.scale);
-      gl.uniform3fv(translateLoc, shape.translate);
-      gl.uniform4fv(colorLoc, shape.color);
-
-      gl.drawElements( gl.LINE_LOOP, shape.indices.length, gl.UNSIGNED_SHORT, 0 );
-
+      renderShape(shape);
     });
+
   };
 
   var addShape = function(shapeOption) {
@@ -81,18 +88,28 @@
   };
 
   var update = function(evt) {
+    console.log('click');
     var shapeSelect = document.getElementById('shape');
     var shapeOption = shapeSelect.options[shapeSelect.selectedIndex].value;
 
     if (evt.target.id === 'addShape' || evt.target.id === 'addShapeIcon') {
       _shapes.push(addShape(shapeOption));
-      renderAll(_shapes);
+      render(_shapes);
     }
 
     if (evt.target.id === 'clear' || evt.target.id === 'clearIcon') {
       _shapes = [];
-      renderAll(_shapes);
+      render(_shapes);
     }
+  };
+
+  var edit = function() {
+    console.log('change');
+    var shapeSelect = document.getElementById('shape');
+    var shapeOption = shapeSelect.options[shapeSelect.selectedIndex].value;
+
+    var shapeToEdit = addShape(shapeOption);
+    render(_shapes, shapeToEdit);
   };
 
   var App = {
@@ -106,13 +123,14 @@
 
       // Register settings event handlers
       document.getElementById('settings').addEventListener('click', update);
+      document.getElementById('settings').addEventListener('change', edit);
 
       // Configure WebGL
       gl.viewport( 0, 0, _canvas.width, _canvas.height );
       gl.clearColor(0.0, 0.0, 0.0, 1.0);
       gl.enable(gl.DEPTH_TEST);
 
-      renderAll(_shapes);
+      render(_shapes);
     }
 
   };
