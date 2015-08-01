@@ -8,7 +8,7 @@
     _canvas,
     _shapes = [];
 
-  var renderShape = function(shape, isBoundingBox) {
+  var renderShape = function(shape, isBorder) {
     // Load shaders
     gl.useProgram(shape.program);
 
@@ -16,17 +16,17 @@
     var iBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, iBuffer);
 
-    if (isBoundingBox) {
-      gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(shape.boundingBox.i), gl.STATIC_DRAW);
-    } else {
+    // if (isBorder) {
+    //   gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(shape.border.indices), gl.STATIC_DRAW);
+    // } else {
       gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(shape.indices), gl.STATIC_DRAW);
-    }
+    // }
 
     // Load vertex buffer onto GPU
     var vBuffer = gl.createBuffer();
     gl.bindBuffer( gl.ARRAY_BUFFER, vBuffer );
-    if (isBoundingBox) {
-      gl.bufferData( gl.ARRAY_BUFFER, flatten(shape.boundingBox.v), gl.STATIC_DRAW );
+    if (isBorder) {
+      gl.bufferData( gl.ARRAY_BUFFER, flatten(shape.border.vertices), gl.STATIC_DRAW );
     } else {
       gl.bufferData( gl.ARRAY_BUFFER, flatten(shape.vertices), gl.STATIC_DRAW );
     }
@@ -43,28 +43,34 @@
     var translateLoc = gl.getUniformLocation(shape.program, 'translate');
 
     gl.uniform3fv(thetaLoc, shape.theta);
-    if (isBoundingBox) {
-      gl.uniform3fv(scaleLoc, [
-        shape.boundingBox.s[0] * shape.scale[0],
-        shape.boundingBox.s[1] * shape.scale[1],
-        shape.boundingBox.s[2] * shape.scale[2]
-      ]);
+
+    if (isBorder) {
+      gl.uniform3fv(scaleLoc, shape.border.scale);
     } else {
       gl.uniform3fv(scaleLoc, shape.scale);
     }
-    gl.uniform3fv(translateLoc, shape.translate);
 
-    if (isBoundingBox) {
+    // if (isBorder) {
+    //   gl.uniform3fv(translateLoc, [
+    //     shape.boundingBox.t[0] * shape.translate[0],
+    //     shape.boundingBox.t[1] * shape.translate[1],
+    //     shape.boundingBox.t[2] * shape.translate[2]
+    //   ]);
+    // } else {
+      gl.uniform3fv(translateLoc, shape.translate);
+    // }
+
+    if (isBorder) {
         gl.uniform4fv(colorLoc, vec4(1.0, 1.0, 1.0, 1.0));
     } else {
       gl.uniform4fv(colorLoc, shape.color);
     }
 
-    if (isBoundingBox) {
-      gl.drawElements( gl.LINE_LOOP, shape.boundingBox.i.length, gl.UNSIGNED_SHORT, 0 );
-    } else {
+    // if (isBorder) {
+    //   gl.drawElements( gl.LINE_LOOP, shape.boundingBox.i.length, gl.UNSIGNED_SHORT, 0 );
+    // } else {
       gl.drawElements( gl.LINE_LOOP, shape.indices.length, gl.UNSIGNED_SHORT, 0 );
-    }
+    // }
   };
 
   var render = function(shapes, oneShape) {
@@ -91,9 +97,9 @@
     shape.vertices = shapeVI.v;
     shape.indices = shapeVI.i;
 
-    if (editing) {
-      shape.boundingBox = Shape.boundingBox(shape.vertices);
-    }
+    // if (editing) {
+    //   shape.boundingBox = Shape.boundingBox(shape.vertices);
+    // }
 
     shape.color = ColorUtils.hexToGLvec4(document.getElementById('shapeColor').value);
 
@@ -103,11 +109,19 @@
       document.getElementById('rotateZ').valueAsNumber
     ];
 
-    shape.scale = [
-      document.getElementById('scaleX').valueAsNumber,
-      document.getElementById('scaleY').valueAsNumber,
-      document.getElementById('scaleZ').valueAsNumber
-    ];
+    if (editing) {
+      shape.scale = [
+        document.getElementById('scaleX').valueAsNumber * 1.1,
+        document.getElementById('scaleY').valueAsNumber * 1.1,
+        document.getElementById('scaleZ').valueAsNumber * 1.1
+      ];
+    } else {
+      shape.scale = [
+        document.getElementById('scaleX').valueAsNumber,
+        document.getElementById('scaleY').valueAsNumber,
+        document.getElementById('scaleZ').valueAsNumber
+      ];
+    }
 
     shape.translate = [
       document.getElementById('translateX').valueAsNumber,
@@ -137,7 +151,8 @@
     var shapeSelect = document.getElementById('shape');
     var shapeOption = shapeSelect.options[shapeSelect.selectedIndex].value;
 
-    var shapeToEdit = addShape(shapeOption, true);
+    var shapeToEdit = addShape(shapeOption);
+    shapeToEdit.border = addShape(shapeOption, true);
     render(_shapes, shapeToEdit);
   };
 

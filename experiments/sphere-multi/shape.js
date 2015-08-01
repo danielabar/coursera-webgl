@@ -32,13 +32,17 @@
         if (curZ > maxP.z) { maxP.z = curX; }
       }
 
-      // var bbSize = vec3(maxP.x - minP.x, maxP.y - minP.y, maxP.z - minP.z);
       var bbSize = {
         x: maxP.x - minP.x,
         y: maxP.y - minP.y,
         z: maxP.z - minP.z
       };
-      // var bbCenter = vec3((minP.x + maxP.x)/2, (minP.y + maxP.y)/2, (minP.z + maxP.z)/2 );
+
+      var bbCenter = {
+        x: (minP.x + maxP.x)/2,
+        y: (minP.y + maxP.y)/2,
+        z: (minP.z + maxP.z)/2
+      };
 
       var unitCube = [
         vec3( -0.5, -0.5,  0.5 ),
@@ -66,18 +70,11 @@
         0, 1, 5
       ];
 
-
-      // var sc = genScaleMatrix(bbSize.x, bbSize.y, bbSize.z);
-
-      //   vec3(maxP.x, maxP.y, maxP.z)
-      // ];
-
-      console.log([bbSize.x, bbSize.y, bbSize.z]);
-
       return {
         v: unitCube,
         i: indices,
-        s: [bbSize.x, bbSize.y, bbSize.z]
+        s: [bbSize.x, bbSize.y, bbSize.z],
+        t: [bbCenter.x, bbCenter.y, bbCenter.z]
       };
     }
 
