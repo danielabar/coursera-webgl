@@ -6,7 +6,8 @@
 
   var gl,
     _canvas,
-    _shapes = [];
+    _shapes = [],
+    _editing = true;
 
   var renderShape = function(shape, isBorder) {
     // Load shaders
@@ -124,6 +125,7 @@
     var shapeType = shapeSelect.options[shapeSelect.selectedIndex].value;
 
     if (evt.target.id === 'commitShape' || evt.target.id === 'commitShapeIcon') {
+      _editing = false;
       _shapes.push(addShape(shapeType));
       render(_shapes);
 
@@ -132,6 +134,7 @@
     }
 
     if (evt.target.id === 'newShape' || evt.target.id === 'newShapeIcon') {
+      _editing = true;
       setDefaults();
       edit();
 
@@ -140,6 +143,7 @@
     }
 
     if (evt.target.id === 'clear' || evt.target.id === 'clearIcon') {
+      _editing = true;
       _shapes = [];
 
       // Re-seed the system with one shape
@@ -152,12 +156,14 @@
   };
 
   var edit = function() {
-    var shapeSelect = document.getElementById('shape');
-    var shapeType = shapeSelect.options[shapeSelect.selectedIndex].value;
+    if (_editing) {
+      var shapeSelect = document.getElementById('shape');
+      var shapeType = shapeSelect.options[shapeSelect.selectedIndex].value;
+      var shapeToEdit = addShape(shapeType);
 
-    var shapeToEdit = addShape(shapeType);
-    shapeToEdit.border = addShape(shapeType, true);
-    render(_shapes, shapeToEdit);
+      shapeToEdit.border = addShape(shapeType, true);
+      render(_shapes, shapeToEdit);
+    }
   };
 
   var setDefaults = function() {
