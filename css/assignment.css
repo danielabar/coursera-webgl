@@ -61,7 +61,8 @@ section.drawing {
   width: 7%;
 }
 
-input:hover {
+input:hover,
+select:hover {
   cursor: pointer;
 }
 
@@ -230,9 +231,22 @@ input[type=button] {
   padding-left: 0;
 }
 
+.side-controls label {
+  display: inline-block;
+  width: 95px;
+}
+
+.side-controls output {
+  display: inline-block;
+  margin-left: 5px;
+  text-align: right;
+  width: 20px;
+}
+
 .with-side-controls {
   padding-left: 40px;
 }
+
 
 /* ---------------------------------- */
 /* Footer */
