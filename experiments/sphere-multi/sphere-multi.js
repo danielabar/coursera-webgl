@@ -126,12 +126,16 @@
     if (evt.target.id === 'addShape' || evt.target.id === 'addShapeIcon') {
       _shapes.push(addShape(shapeType));
       render(_shapes);
+
+      // get back to edit mode
+      setDefaults();
+      edit();
     }
 
     if (evt.target.id === 'clear' || evt.target.id === 'clearIcon') {
       _shapes = [];
-      // render(_shapes);
-      // Seed the system with one shape
+
+      // Re-seed the system with one shape
       setDefaults();
       edit();
     }
