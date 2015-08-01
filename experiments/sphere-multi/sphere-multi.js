@@ -8,7 +8,7 @@
     _canvas,
     _shapes = [];
 
-  var renderShape = function(shape) {
+  var renderShape = function(shape, isBorder) {
     // Load shaders
     gl.useProgram(shape.program);
 
@@ -20,7 +20,11 @@
     // Load vertex buffer onto GPU
     var vBuffer = gl.createBuffer();
     gl.bindBuffer( gl.ARRAY_BUFFER, vBuffer );
-    gl.bufferData( gl.ARRAY_BUFFER, flatten(shape.vertices), gl.STATIC_DRAW );
+    if (isBorder) {
+      gl.bufferData( gl.ARRAY_BUFFER, flatten(shape.border.vertices), gl.STATIC_DRAW );
+    } else {
+      gl.bufferData( gl.ARRAY_BUFFER, flatten(shape.vertices), gl.STATIC_DRAW );
+    }
 
     // Associate shader variables with vertex data buffer
     var vPosition = gl.getAttribLocation( shape.program, 'vPosition' );
@@ -34,33 +38,53 @@
     var translateLoc = gl.getUniformLocation(shape.program, 'translate');
 
     gl.uniform3fv(thetaLoc, shape.theta);
-    gl.uniform3fv(scaleLoc, shape.scale);
-    gl.uniform3fv(translateLoc, shape.translate);
-    gl.uniform4fv(colorLoc, shape.color);
 
-    gl.drawElements( gl.LINE_LOOP, shape.indices.length, gl.UNSIGNED_SHORT, 0 );
+    if (isBorder) {
+      gl.uniform3fv(scaleLoc, shape.border.scale);
+    } else {
+      gl.uniform3fv(scaleLoc, shape.scale);
+    }
+
+    gl.uniform3fv(translateLoc, shape.translate);
+
+    if (isBorder) {
+        gl.uniform4fv(colorLoc, vec4(1.0, 1.0, 1.0, 1.0));
+    } else {
+      gl.uniform4fv(colorLoc, shape.color);
+    }
+
+    if (isBorder) {
+      gl.drawArrays( gl.LINE_LOOP, 0, shape.border.vertices.length/3 );
+    } else {
+      gl.drawElements( gl.LINE_LOOP, shape.indices.length, gl.UNSIGNED_SHORT, 0 );
+    }
   };
 
   var render = function(shapes, oneShape) {
     gl.clear( gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
     if (oneShape) {
+      renderShape(oneShape, true);
       renderShape(oneShape);
     }
-    
+
     shapes.forEach(function(shape) {
       renderShape(shape);
     });
 
   };
 
-  var addShape = function(shapeOption) {
-    var shape = {type: shapeOption},
+  var addShape = function(shapeType, editing) {
+    var shape = {type: shapeType},
       shapeVI;
 
     shape.program = initShaders( gl, 'vertex-shader', 'fragment-shader' );
 
-    shapeVI = Shape.generate(shapeOption);
+    if (editing) {
+      shapeVI = Shape.generate(shapeType, {outlineOnly: true});
+    } else {
+      shapeVI = Shape.generate(shapeType);
+    }
     shape.vertices = shapeVI.v;
     shape.indices = shapeVI.i;
 
@@ -72,11 +96,19 @@
       document.getElementById('rotateZ').valueAsNumber
     ];
 
-    shape.scale = [
-      document.getElementById('scaleX').valueAsNumber,
-      document.getElementById('scaleY').valueAsNumber,
-      document.getElementById('scaleZ').valueAsNumber
-    ];
+    if (editing) {
+      shape.scale = [
+        document.getElementById('scaleX').valueAsNumber * 1.1,
+        document.getElementById('scaleY').valueAsNumber * 1.1,
+        document.getElementById('scaleZ').valueAsNumber * 1.1
+      ];
+    } else {
+      shape.scale = [
+        document.getElementById('scaleX').valueAsNumber,
+        document.getElementById('scaleY').valueAsNumber,
+        document.getElementById('scaleZ').valueAsNumber
+      ];
+    }
 
     shape.translate = [
       document.getElementById('translateX').valueAsNumber,
@@ -88,12 +120,11 @@
   };
 
   var update = function(evt) {
-    console.log('click');
     var shapeSelect = document.getElementById('shape');
-    var shapeOption = shapeSelect.options[shapeSelect.selectedIndex].value;
+    var shapeType = shapeSelect.options[shapeSelect.selectedIndex].value;
 
     if (evt.target.id === 'addShape' || evt.target.id === 'addShapeIcon') {
-      _shapes.push(addShape(shapeOption));
+      _shapes.push(addShape(shapeType));
       render(_shapes);
     }
 
@@ -104,11 +135,11 @@
   };
 
   var edit = function() {
-    console.log('change');
     var shapeSelect = document.getElementById('shape');
-    var shapeOption = shapeSelect.options[shapeSelect.selectedIndex].value;
+    var shapeType = shapeSelect.options[shapeSelect.selectedIndex].value;
 
-    var shapeToEdit = addShape(shapeOption);
+    var shapeToEdit = addShape(shapeType);
+    shapeToEdit.border = addShape(shapeType, true);
     render(_shapes, shapeToEdit);
   };
 
@@ -130,7 +161,8 @@
       gl.clearColor(0.0, 0.0, 0.0, 1.0);
       gl.enable(gl.DEPTH_TEST);
 
-      render(_shapes);
+      // Seed the system with one shape
+      edit();
     }
 
   };

@@ -6,7 +6,7 @@
 
   var Sphere = {
 
-    generate: function() {
+    generate: function(opts) {
       var lats = 30,
         longs = 30,
         radius = 1,

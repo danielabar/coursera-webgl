@@ -206,7 +206,7 @@ input[type=button] {
 }
 
 .button-small {
-  width: 100px;
+  width: 110px;
 }
 
 .button:hover {
@@ -222,7 +222,7 @@ input[type=button] {
 }
 
 .actions {
-  margin-left: 115px;
+  margin-left: 100px;
 }
 
 
@@ -247,10 +247,27 @@ input[type=button] {
   width: 20px;
 }
 
+.side-controls .actions {
+  margin-top: 20px;
+}
+
 .with-side-controls {
   padding-left: 40px;
 }
 
+
+/* ---------------------------------- */
+/* Messages */
+/* ---------------------------------- */
+
+.message {
+  margin-bottom: 15px;
+  padding: 15px;
+  border: 2px solid white;
+  font-family: 'Open Sans';
+  font-weight: 500;
+  text-transform: uppercase;
+}
 
 /* ---------------------------------- */
 /* Footer */
