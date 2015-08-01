@@ -15,12 +15,7 @@
     // Load index data onto GPU
     var iBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, iBuffer);
-
-    // if (isBorder) {
-    //   gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(shape.border.indices), gl.STATIC_DRAW);
-    // } else {
-      gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(shape.indices), gl.STATIC_DRAW);
-    // }
+    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(shape.indices), gl.STATIC_DRAW);
 
     // Load vertex buffer onto GPU
     var vBuffer = gl.createBuffer();
@@ -50,15 +45,7 @@
       gl.uniform3fv(scaleLoc, shape.scale);
     }
 
-    // if (isBorder) {
-    //   gl.uniform3fv(translateLoc, [
-    //     shape.boundingBox.t[0] * shape.translate[0],
-    //     shape.boundingBox.t[1] * shape.translate[1],
-    //     shape.boundingBox.t[2] * shape.translate[2]
-    //   ]);
-    // } else {
-      gl.uniform3fv(translateLoc, shape.translate);
-    // }
+    gl.uniform3fv(translateLoc, shape.translate);
 
     if (isBorder) {
         gl.uniform4fv(colorLoc, vec4(1.0, 1.0, 1.0, 1.0));
@@ -66,11 +53,7 @@
       gl.uniform4fv(colorLoc, shape.color);
     }
 
-    // if (isBorder) {
-    //   gl.drawElements( gl.LINE_LOOP, shape.boundingBox.i.length, gl.UNSIGNED_SHORT, 0 );
-    // } else {
-      gl.drawElements( gl.LINE_LOOP, shape.indices.length, gl.UNSIGNED_SHORT, 0 );
-    // }
+    gl.drawElements( gl.LINE_LOOP, shape.indices.length, gl.UNSIGNED_SHORT, 0 );
   };
 
   var render = function(shapes, oneShape) {
@@ -96,10 +79,6 @@
     shapeVI = Shape.generate(shapeType);
     shape.vertices = shapeVI.v;
     shape.indices = shapeVI.i;
-
-    // if (editing) {
-    //   shape.boundingBox = Shape.boundingBox(shape.vertices);
-    // }
 
     shape.color = ColorUtils.hexToGLvec4(document.getElementById('shapeColor').value);
 
@@ -174,7 +153,7 @@
       gl.clearColor(0.0, 0.0, 0.0, 1.0);
       gl.enable(gl.DEPTH_TEST);
 
-      // Seed the system with one sphere
+      // Seed the system with one shape
       edit();
     }
 
