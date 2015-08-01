@@ -47,7 +47,7 @@
     if (oneShape) {
       renderShape(oneShape);
     }
-    
+
     shapes.forEach(function(shape) {
       renderShape(shape);
     });
@@ -88,7 +88,6 @@
   };
 
   var update = function(evt) {
-    console.log('click');
     var shapeSelect = document.getElementById('shape');
     var shapeOption = shapeSelect.options[shapeSelect.selectedIndex].value;
 
@@ -104,7 +103,6 @@
   };
 
   var edit = function() {
-    console.log('change');
     var shapeSelect = document.getElementById('shape');
     var shapeOption = shapeSelect.options[shapeSelect.selectedIndex].value;
 
@@ -130,7 +128,8 @@
       gl.clearColor(0.0, 0.0, 0.0, 1.0);
       gl.enable(gl.DEPTH_TEST);
 
-      render(_shapes);
+      // Seed the system with one sphere
+      edit();
     }
 
   };
