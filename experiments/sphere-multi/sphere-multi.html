@@ -75,13 +75,24 @@
   }
   </script>
 
+  <!--  WebGL Utils -->
   <script type="text/javascript" src="../../Common/webgl-utils.js"></script>
   <script type="text/javascript" src="../../Common/initShaders.js"></script>
   <script type="text/javascript" src="../../Common/flatten.js"></script>
   <script type="text/javascript" src="../../Common/MV.js"></script>
+
+  <!--  App Utils -->
   <script type="text/javascript" src="dom-utils.js"></script>
   <script type="text/javascript" src="color-utils.js"></script>
   <script type="text/javascript" src="coord-utils.js"></script>
+
+  <!-- Shapes -->
+  <script type="text/javascript" src="shapes/shape-common.js"></script>
+  <script type="text/javascript" src="shapes/sphere.js"></script>
+  <script type="text/javascript" src="shapes/cylinder.js"></script>
+  <script type="text/javascript" src="shape.js"></script>
+
+  <!-- App -->
   <script type="text/javascript" src="sphere-multi.js"></script>
 </head>
 
@@ -108,9 +119,9 @@
     <div class="form-group">
       <label for="shape">Choose shape</label>
       <select name="shape" id="shape">
-        <option value="sphere">sphere</option>
-        <option value="cylinder">cylinder</option>
-        <option value="cube">cube</option>
+        <option value="Sphere">Sphere</option>
+        <option value="Cylinder">Cylinder</option>
+        <option value="Cube">Cube</option>
       </select>
     </div>
 
@@ -123,17 +134,17 @@
     <!--  rotate -->
     <div class="form-group">
       <label for="rotateX">Rotate X</label>
-      <input type=range id=rotateX min=0 value=0 max=359 step=1 oninput="outputRX(value)">
+      <input type=range id=rotateX min=0 value=0 max=360 step=1 oninput="outputRX(value)">
       <output for=rotateX id=rxv>0</output>
     </div>
     <div class="form-group">
       <label for="rotateY">Rotate Y</label>
-      <input type=range id=rotateY min=0 value=0 max=359 step=1 oninput="outputRY(value)">
+      <input type=range id=rotateY min=0 value=0 max=360 step=1 oninput="outputRY(value)">
       <output for=rotateY id=ryv>0</output>
     </div>
     <div class="form-group">
       <label for="rotateZ">Rotate Z</label>
-      <input type=range id=rotateZ min=0 value=0 max=359 step=1 oninput="outputRZ(value)">
+      <input type=range id=rotateZ min=0 value=0 max=360 step=1 oninput="outputRZ(value)">
       <output for=rotateZ id=rzv>0</output>
     </div>
 
