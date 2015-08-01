@@ -8,7 +8,7 @@
     _canvas,
     _shapes = [];
 
-  var renderShape = function(shape) {
+  var renderShape = function(shape, isBoundingBox) {
     // Load shaders
     gl.useProgram(shape.program);
 
@@ -20,7 +20,11 @@
     // Load vertex buffer onto GPU
     var vBuffer = gl.createBuffer();
     gl.bindBuffer( gl.ARRAY_BUFFER, vBuffer );
-    gl.bufferData( gl.ARRAY_BUFFER, flatten(shape.vertices), gl.STATIC_DRAW );
+    if (isBoundingBox) {
+      gl.bufferData( gl.ARRAY_BUFFER, flatten(shape.boundingBox), gl.STATIC_DRAW );
+    } else {
+      gl.bufferData( gl.ARRAY_BUFFER, flatten(shape.vertices), gl.STATIC_DRAW );
+    }
 
     // Associate shader variables with vertex data buffer
     var vPosition = gl.getAttribLocation( shape.program, 'vPosition' );
@@ -36,9 +40,18 @@
     gl.uniform3fv(thetaLoc, shape.theta);
     gl.uniform3fv(scaleLoc, shape.scale);
     gl.uniform3fv(translateLoc, shape.translate);
-    gl.uniform4fv(colorLoc, shape.color);
 
-    gl.drawElements( gl.LINE_LOOP, shape.indices.length, gl.UNSIGNED_SHORT, 0 );
+    if (isBoundingBox) {
+        gl.uniform4fv(colorLoc, vec4(1.0, 1.0, 1.0, 1.0));
+    } else {
+      gl.uniform4fv(colorLoc, shape.color);
+    }
+
+    if (isBoundingBox) {
+      gl.drawArrays( gl.LINE_LOOP, 0, shape.boundingBox.length );
+    } else {
+      gl.drawElements( gl.LINE_LOOP, shape.indices.length, gl.UNSIGNED_SHORT, 0 );
+    }
   };
 
   var render = function(shapes, oneShape) {
@@ -46,6 +59,7 @@
 
     if (oneShape) {
       renderShape(oneShape);
+      renderShape(oneShape, true);
     }
 
     shapes.forEach(function(shape) {
@@ -54,7 +68,7 @@
 
   };
 
-  var addShape = function(shapeOption) {
+  var addShape = function(shapeOption, editing) {
     var shape = {type: shapeOption},
       shapeVI;
 
@@ -63,6 +77,10 @@
     shapeVI = Shape.generate(shapeOption);
     shape.vertices = shapeVI.v;
     shape.indices = shapeVI.i;
+
+    if (editing) {
+      shape.boundingBox = Shape.boundingBox(shape.vertices);
+    }
 
     shape.color = ColorUtils.hexToGLvec4(document.getElementById('shapeColor').value);
 
@@ -106,7 +124,7 @@
     var shapeSelect = document.getElementById('shape');
     var shapeOption = shapeSelect.options[shapeSelect.selectedIndex].value;
 
-    var shapeToEdit = addShape(shapeOption);
+    var shapeToEdit = addShape(shapeOption, true);
     render(_shapes, shapeToEdit);
   };
 
