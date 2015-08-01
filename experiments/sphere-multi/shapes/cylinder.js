@@ -11,7 +11,7 @@
         indices = [],
         bottomCap = [],
         topCap = [],
-        n = 15,
+        n = 30,
         startAngle = 1;
 
       bottomCap.push(0.0);
