@@ -23,6 +23,7 @@
       topCap.push(0.0);
       topCap.push(-1.0);
       topCap = topCap.concat(ShapeCommon.createNgon(n, startAngle, -1.0));
+
       vertices = bottomCap.concat(topCap);
 
       // Index bottom cap
