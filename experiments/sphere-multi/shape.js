@@ -10,22 +10,6 @@
       return window[shapeName].generate();
     },
 
-    /**
-     *
-        // min = minium coordinate of the box
-        // max = maxium coordinate of the box
-        Point min = V[0];
-        Point max = V[0];
-        for (i = 1; i < n; ++i)
-        {
-        if ( V[i].x < min.x ) min.x = V[i].x;
-        if ( V[i].y < min.y ) min.y = V[i].y;
-        if ( V[i].z < min.z ) min.z = V[i].z;
-        if ( V[i].x > max.x ) max.x = V[i].x;
-        if ( V[i].y > max.y ) max.y = V[i].y;
-        if ( V[i].z > max.z ) max.z = V[i].z;
-        }
-     */
      /**
       * https://www.opengl.org/discussion_boards/showthread.php/163788-How-to-creat-the-bounding-box
       */
@@ -47,9 +31,33 @@
         if (curZ > maxPoint.z) { maxPoint.z = curX; }
       }
 
+      /**
+       * x1 = ?  ;  y1 = ? ;    // First diagonal point
+  x2 = ?  ;  y2 = ? ;    // Second diagonal point
+
+  xc = (x1 + x2)/2  ;  yc = (y1 + y2)/2  ;    // Center point
+  xd = (x1 - x2)/2  ;  yd = (y1 - y2)/2  ;    // Half-diagonal
+
+  x3 = xc - yd  ;  y3 = yc + xd;    // Third corner
+  x4 = xc + yd  ;  y4 = yc - xd;    // Fourth corner
+       */
+      var centerPointX = (minPoint.x + maxPoint.x) / 2;
+      var centerPointY = (minPoint.y + maxPoint.y) / 2;
+
+      var halfDiagonalX = (minPoint.x - maxPoint.x) / 2;
+      var halfDiagonalY = (minPoint.y - maxPoint.y) / 2;
+
+      var thirdCornerX = (centerPointX - halfDiagonalY);
+      var thirdCornerY = (centerPointY + halfDiagonalX);
+
+      var fourthCornerX = (centerPointX + halfDiagonalY);
+      var fourthCornerY = (centerPointY - halfDiagonalX);
+
       return [
         vec3(minPoint.x, minPoint.y, minPoint.z),
-        vec3(maxPoint.x, maxPoint.y, maxPoint.z)
+        vec3(thirdCornerX, thirdCornerY, minPoint.z),
+        vec3(maxPoint.x, maxPoint.y, maxPoint.z),
+        vec3(fourthCornerX, fourthCornerY, maxPoint.z)
       ];
     }
 
