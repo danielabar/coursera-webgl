@@ -205,6 +205,10 @@ input[type=button] {
   background-image: linear-gradient(top, #ddd, #CECCCC);
 }
 
+.button-small {
+  width: 100px;
+}
+
 .button:hover {
   background-image: -moz-linear-gradient(top, #C7C7C7, #B9B8B8);
   background-image: -webkit-linear-gradient(top, #C7C7C7, #B9B8B8);

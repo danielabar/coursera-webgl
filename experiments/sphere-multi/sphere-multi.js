@@ -83,8 +83,14 @@
   var update = function(evt) {
     var shapeSelect = document.getElementById('shape');
     var shapeOption = shapeSelect.options[shapeSelect.selectedIndex].value;
+
     if (evt.target.id === 'addShape' || evt.target.id === 'addShapeIcon') {
       _shapes.push(addShape(shapeOption));
+      renderAll(_shapes);
+    }
+
+    if (evt.target.id === 'clear' || evt.target.id === 'clearIcon') {
+      _shapes = [];
       renderAll(_shapes);
     }
   };
