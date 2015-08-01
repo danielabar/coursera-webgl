@@ -126,11 +126,18 @@
     if (evt.target.id === 'addShape' || evt.target.id === 'addShapeIcon') {
       _shapes.push(addShape(shapeType));
       render(_shapes);
+
+      // get back to edit mode
+      setDefaults();
+      edit();
     }
 
     if (evt.target.id === 'clear' || evt.target.id === 'clearIcon') {
       _shapes = [];
-      render(_shapes);
+
+      // Re-seed the system with one shape
+      setDefaults();
+      edit();
     }
   };
 
@@ -141,6 +148,32 @@
     var shapeToEdit = addShape(shapeType);
     shapeToEdit.border = addShape(shapeType, true);
     render(_shapes, shapeToEdit);
+  };
+
+  var setDefaults = function() {
+    document.getElementById('shape').value = 'Sphere';
+    document.getElementById('shapeColor').value = '#ff0000';
+
+    document.getElementById('rotateX').value = 0;
+    document.getElementById('rxv').value = 0;
+    document.getElementById('rotateY').value = 0;
+    document.getElementById('ryv').value = 0;
+    document.getElementById('rotateZ').value = 0;
+    document.getElementById('rzv').value = 0;
+
+    document.getElementById('scaleX').value = 0.2;
+    document.getElementById('sxv').value = 0.2;
+    document.getElementById('scaleY').value = 0.2;
+    document.getElementById('syv').value = 0.2;
+    document.getElementById('scaleZ').value = 0.2;
+    document.getElementById('szv').value = 0.2;
+
+    document.getElementById('translateX').value = 0;
+    document.getElementById('txv').value = 0;
+    document.getElementById('translateY').value = 0;
+    document.getElementById('tyv').value = 0;
+    document.getElementById('translateZ').value = 0;
+    document.getElementById('tzv').value = 0;
   };
 
   var App = {
@@ -162,6 +195,7 @@
       gl.enable(gl.DEPTH_TEST);
 
       // Seed the system with one shape
+      setDefaults();
       edit();
     }
 
