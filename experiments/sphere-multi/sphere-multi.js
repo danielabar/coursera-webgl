@@ -87,13 +87,13 @@
 
   };
 
-  var addShape = function(shapeOption, editing) {
-    var shape = {type: shapeOption},
+  var addShape = function(shapeType, editing) {
+    var shape = {type: shapeType},
       shapeVI;
 
     shape.program = initShaders( gl, 'vertex-shader', 'fragment-shader' );
 
-    shapeVI = Shape.generate(shapeOption);
+    shapeVI = Shape.generate(shapeType);
     shape.vertices = shapeVI.v;
     shape.indices = shapeVI.i;
 
@@ -134,10 +134,10 @@
 
   var update = function(evt) {
     var shapeSelect = document.getElementById('shape');
-    var shapeOption = shapeSelect.options[shapeSelect.selectedIndex].value;
+    var shapeType = shapeSelect.options[shapeSelect.selectedIndex].value;
 
     if (evt.target.id === 'addShape' || evt.target.id === 'addShapeIcon') {
-      _shapes.push(addShape(shapeOption));
+      _shapes.push(addShape(shapeType));
       render(_shapes);
     }
 
@@ -149,10 +149,10 @@
 
   var edit = function() {
     var shapeSelect = document.getElementById('shape');
-    var shapeOption = shapeSelect.options[shapeSelect.selectedIndex].value;
+    var shapeType = shapeSelect.options[shapeSelect.selectedIndex].value;
 
-    var shapeToEdit = addShape(shapeOption);
-    shapeToEdit.border = addShape(shapeOption, true);
+    var shapeToEdit = addShape(shapeType);
+    shapeToEdit.border = addShape(shapeType, true);
     render(_shapes, shapeToEdit);
   };
 
