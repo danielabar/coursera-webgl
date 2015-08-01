@@ -33,6 +33,9 @@
     "subtract": false,
     "normalize": false,
     "cross": false,
-    "add": false
+    "add": false,
+    "mult": false,
+    "mat4": false,
+    "genScaleMatrix": false,
   }
 }

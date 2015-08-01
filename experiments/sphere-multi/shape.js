@@ -12,10 +12,11 @@
 
      /**
       * https://www.opengl.org/discussion_boards/showthread.php/163788-How-to-creat-the-bounding-box
+      * https://en.wikibooks.org/wiki/OpenGL_Programming/Bounding_box
       */
     boundingBox: function(verteces) {
-      var minPoint = {x: 0.0, y: 0.0, z: 0.0},
-        maxPoint = {x: 0.0, y: 0.0, z: 0.0},
+      var minP = {x: 0.0, y: 0.0, z: 0.0},
+        maxP = {x: 0.0, y: 0.0, z: 0.0},
         curX, curY, curZ;
 
       for (var i=0; i<verteces.length-3; i+=3) {
@@ -23,42 +24,61 @@
         curY = verteces[i+1];
         curZ = verteces[i+2];
 
-        if (curX < minPoint.x) { minPoint.x = curX; }
-        if (curY < minPoint.y) { minPoint.y = curY; }
-        if (curZ < minPoint.z) { minPoint.z = curZ; }
-        if (curX > maxPoint.x) { maxPoint.x = curX; }
-        if (curY > maxPoint.y) { maxPoint.y = curX; }
-        if (curZ > maxPoint.z) { maxPoint.z = curX; }
+        if (curX < minP.x) { minP.x = curX; }
+        if (curY < minP.y) { minP.y = curY; }
+        if (curZ < minP.z) { minP.z = curZ; }
+        if (curX > maxP.x) { maxP.x = curX; }
+        if (curY > maxP.y) { maxP.y = curX; }
+        if (curZ > maxP.z) { maxP.z = curX; }
       }
 
-      /**
-       * x1 = ?  ;  y1 = ? ;    // First diagonal point
-  x2 = ?  ;  y2 = ? ;    // Second diagonal point
+      // var bbSize = vec3(maxP.x - minP.x, maxP.y - minP.y, maxP.z - minP.z);
+      var bbSize = {
+        x: maxP.x - minP.x,
+        y: maxP.y - minP.y,
+        z: maxP.z - minP.z
+      };
+      // var bbCenter = vec3((minP.x + maxP.x)/2, (minP.y + maxP.y)/2, (minP.z + maxP.z)/2 );
 
-  xc = (x1 + x2)/2  ;  yc = (y1 + y2)/2  ;    // Center point
-  xd = (x1 - x2)/2  ;  yd = (y1 - y2)/2  ;    // Half-diagonal
-
-  x3 = xc - yd  ;  y3 = yc + xd;    // Third corner
-  x4 = xc + yd  ;  y4 = yc - xd;    // Fourth corner
-       */
-      var centerPointX = (minPoint.x + maxPoint.x) / 2;
-      var centerPointY = (minPoint.y + maxPoint.y) / 2;
-
-      var halfDiagonalX = (minPoint.x - maxPoint.x) / 2;
-      var halfDiagonalY = (minPoint.y - maxPoint.y) / 2;
-
-      var thirdCornerX = (centerPointX - halfDiagonalY);
-      var thirdCornerY = (centerPointY + halfDiagonalX);
-
-      var fourthCornerX = (centerPointX + halfDiagonalY);
-      var fourthCornerY = (centerPointY - halfDiagonalX);
-
-      return [
-        vec3(minPoint.x, minPoint.y, minPoint.z),
-        vec3(thirdCornerX, thirdCornerY, minPoint.z),
-        vec3(maxPoint.x, maxPoint.y, maxPoint.z),
-        vec3(fourthCornerX, fourthCornerY, maxPoint.z)
+      var unitCube = [
+        vec3( -0.5, -0.5,  0.5 ),
+        vec3( -0.5,  0.5,  0.5 ),
+        vec3(  0.5,  0.5,  0.5 ),
+        vec3(  0.5, -0.5,  0.5 ),
+        vec3( -0.5, -0.5, -0.5 ),
+        vec3( -0.5,  0.5, -0.5 ),
+        vec3(  0.5,  0.5, -0.5 ),
+        vec3(  0.5, -0.5, -0.5 )
       ];
+
+      var indices = [
+        1, 0, 3,
+        3, 2, 1,
+        2, 3, 7,
+        7, 6, 2,
+        3, 0, 4,
+        4, 7, 3,
+        6, 5, 1,
+        1, 2, 6,
+        4, 5, 6,
+        6, 7, 4,
+        5, 4, 0,
+        0, 1, 5
+      ];
+
+
+      // var sc = genScaleMatrix(bbSize.x, bbSize.y, bbSize.z);
+
+      //   vec3(maxP.x, maxP.y, maxP.z)
+      // ];
+
+      console.log([bbSize.x, bbSize.y, bbSize.z]);
+
+      return {
+        v: unitCube,
+        i: indices,
+        s: [bbSize.x, bbSize.y, bbSize.z]
+      };
     }
 
   };

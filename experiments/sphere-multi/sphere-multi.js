@@ -15,13 +15,18 @@
     // Load index data onto GPU
     var iBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, iBuffer);
-    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(shape.indices), gl.STATIC_DRAW);
+
+    if (isBoundingBox) {
+      gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(shape.boundingBox.i), gl.STATIC_DRAW);
+    } else {
+      gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(shape.indices), gl.STATIC_DRAW);
+    }
 
     // Load vertex buffer onto GPU
     var vBuffer = gl.createBuffer();
     gl.bindBuffer( gl.ARRAY_BUFFER, vBuffer );
     if (isBoundingBox) {
-      gl.bufferData( gl.ARRAY_BUFFER, flatten(shape.boundingBox), gl.STATIC_DRAW );
+      gl.bufferData( gl.ARRAY_BUFFER, flatten(shape.boundingBox.v), gl.STATIC_DRAW );
     } else {
       gl.bufferData( gl.ARRAY_BUFFER, flatten(shape.vertices), gl.STATIC_DRAW );
     }
@@ -38,7 +43,15 @@
     var translateLoc = gl.getUniformLocation(shape.program, 'translate');
 
     gl.uniform3fv(thetaLoc, shape.theta);
-    gl.uniform3fv(scaleLoc, shape.scale);
+    if (isBoundingBox) {
+      gl.uniform3fv(scaleLoc, [
+        shape.boundingBox.s[0] * shape.scale[0],
+        shape.boundingBox.s[1] * shape.scale[1],
+        shape.boundingBox.s[2] * shape.scale[2]
+      ]);
+    } else {
+      gl.uniform3fv(scaleLoc, shape.scale);
+    }
     gl.uniform3fv(translateLoc, shape.translate);
 
     if (isBoundingBox) {
@@ -48,7 +61,7 @@
     }
 
     if (isBoundingBox) {
-      gl.drawArrays( gl.LINE_LOOP, 0, shape.boundingBox.length );
+      gl.drawElements( gl.LINE_LOOP, shape.boundingBox.i.length, gl.UNSIGNED_SHORT, 0 );
     } else {
       gl.drawElements( gl.LINE_LOOP, shape.indices.length, gl.UNSIGNED_SHORT, 0 );
     }
