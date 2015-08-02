@@ -131,6 +131,8 @@
 
       document.getElementById('commitShape').classList.add( 'toggle' );
       document.getElementById('newShape').classList.remove( 'toggle' );
+      document.getElementById('editMessage').classList.add( 'toggle' );
+      document.getElementById('addMessage').classList.remove( 'toggle' );
     }
 
     if (evt.target.id === 'newShape' || evt.target.id === 'newShapeIcon') {
@@ -140,6 +142,8 @@
 
       document.getElementById('newShape').classList.add( 'toggle' );
       document.getElementById('commitShape').classList.remove( 'toggle' );
+      document.getElementById('addMessage').classList.add( 'toggle' );
+      document.getElementById('editMessage').classList.remove( 'toggle' );
     }
 
     if (evt.target.id === 'clear' || evt.target.id === 'clearIcon') {
@@ -152,6 +156,8 @@
 
       document.getElementById('newShape').classList.add( 'toggle' );
       document.getElementById('commitShape').classList.remove( 'toggle' );
+      document.getElementById('addMessage').classList.add( 'toggle' );
+      document.getElementById('editMessage').classList.remove( 'toggle' );
     }
   };
 
