@@ -159,6 +159,17 @@
       document.getElementById('addMessage').classList.add( 'toggle' );
       document.getElementById('editMessage').classList.remove( 'toggle' );
     }
+
+    if (evt.target.id === 'downloadShapeData' || evt.target.id === 'downloadShapeDataIcon') {
+      var element = document.createElement('a');
+      // element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(JSON.stringify(_shapes)));
+      element.setAttribute('href', 'data:application/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(_shapes, null, 2)));
+      element.setAttribute('download', 'shapes.json');
+      element.style.display = 'none';
+      document.body.appendChild(element);
+      element.click();
+      document.body.removeChild(element);
+    }
   };
 
   var edit = function() {
