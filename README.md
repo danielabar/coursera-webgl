@@ -45,3 +45,5 @@ wget -r -nH --cut-dirs=4 --no-parent --reject="index.html*" http://www.cs.unm.ed
 * [Week 2](lecture-notes/week2.md)
 * [Week 3](lecture-notes/week3.md)
 * [Week 4](lecture-notes/week4.md)
+* [Week 5](lecture-notes/week5.md)
+* [Week 6](lecture-notes/week6.md)
