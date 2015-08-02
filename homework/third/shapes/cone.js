@@ -21,7 +21,7 @@
 
       topPoint.push(0.0);
       topPoint.push(0.0);
-      topPoint.push(0.9);
+      topPoint.push(1.9);
 
       vertices = bottomCap.concat(topPoint);
 
