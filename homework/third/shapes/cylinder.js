@@ -21,8 +21,8 @@
 
       topCap.push(0.0);
       topCap.push(0.0);
-      topCap.push(-1.0);
-      topCap = topCap.concat(ShapeCommon.createNgon(n, startAngle, -1.0));
+      topCap.push(-1.9);
+      topCap = topCap.concat(ShapeCommon.createNgon(n, startAngle, -1.9));
 
       vertices = bottomCap.concat(topCap);
 
