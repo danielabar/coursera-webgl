@@ -187,8 +187,8 @@
     document.getElementById('shape').value = 'Sphere';
     document.getElementById('shapeColor').value = '#ff0000';
 
-    document.getElementById('rotateX').value = 0;
-    document.getElementById('rxv').value = 0;
+    document.getElementById('rotateX').value = 60;
+    document.getElementById('rxv').value = 60;
     document.getElementById('rotateY').value = 0;
     document.getElementById('ryv').value = 0;
     document.getElementById('rotateZ').value = 0;
