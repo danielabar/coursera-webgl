@@ -12,7 +12,7 @@
         bottomCap = [],
         topCap = [],
         n = 30,
-        startAngle = 1;
+        startAngle = 0;
 
       bottomCap.push(0.0);
       bottomCap.push(0.0);
@@ -53,37 +53,35 @@
         }
       }
 
-      /**
-       * let circle1 be lower and circle2 be upper circle ,
-       * for each point on ith index in circle 1
-       * 1st triangle{ circle1[i], circle1[i+1], circle2[i]}
-       * second triangle {circle1[i+1], circle2[i] , circle2[i+1] }
-       * make sure last connects to first (wrapped).
-       */
       // Index tube connecting top and bottom
-      for (var k=1; k<n-1; k++) {
+      for (var k=1; k<=n-1; k++) {
 
-        // if (k === n) {
-        //   // first triangle
-        //   indices.push(k);
-        //   indices.push(1);
-        //   indices.push(offset);
-        //
-        //   // second triangle
-        //   indices.push(1);
-        //   indices.push(k + offset);
-        //   indices.push(1 + offset);
-        // }
+        // Special handling to "wrap it up"
+        if (k === n-1) {
 
-        // first triangle
-        indices.push(k);
-        indices.push(k+1);
-        indices.push(k + 1 + offset);
+          // first triangle
+          indices.push(k);
+          indices.push(1);
+          indices.push(k + offset);
 
-        // second triangle
-        indices.push(k);
-        indices.push(k + offset);
-        indices.push(k+1 + offset);
+          // second triangle
+          indices.push(k);
+          indices.push(1 + offset);
+          indices.push(k + offset);
+
+        } else {
+
+          // first triangle
+          indices.push(k);
+          indices.push(k+1);
+          indices.push(k + 1 + offset);
+
+          // second triangle
+          indices.push(k);
+          indices.push(k + offset);
+          indices.push(k + 1 + offset);
+        }
+
       }
 
       return {
