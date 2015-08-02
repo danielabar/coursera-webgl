@@ -298,3 +298,16 @@ input[type=button] {
 .assignment footer p {
   margin-bottom: 0;
 }
+
+
+/* ---------------------------------- */
+/* Media Queries */
+/* ---------------------------------- */
+
+@media (min-width: 1920px) {
+
+  .side-controls {
+    padding-right: 660px;
+  }
+
+}
