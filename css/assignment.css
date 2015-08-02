@@ -235,6 +235,10 @@ input[type=button] {
   padding-left: 0;
 }
 
+.side-controls .form-group {
+  margin-top: 15px;
+}
+
 .side-controls label {
   display: inline-block;
   width: 95px;
@@ -293,4 +297,17 @@ input[type=button] {
 
 .assignment footer p {
   margin-bottom: 0;
+}
+
+
+/* ---------------------------------- */
+/* Media Queries */
+/* ---------------------------------- */
+
+@media (min-width: 1920px) {
+
+  .side-controls {
+    padding-right: 660px;
+  }
+
 }
