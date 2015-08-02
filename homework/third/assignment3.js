@@ -37,6 +37,7 @@
     var thetaLoc = gl.getUniformLocation(shape.program, 'theta');
     var scaleLoc = gl.getUniformLocation(shape.program, 'scale');
     var translateLoc = gl.getUniformLocation(shape.program, 'translate');
+    var cameraZLoc = gl.getUniformLocation(shape.program, 'cameraZ');
 
     gl.uniform3fv(thetaLoc, shape.theta);
 
@@ -47,6 +48,7 @@
     }
 
     gl.uniform3fv(translateLoc, shape.translate);
+    gl.uniform3fv(cameraZLoc, shape.camera);
 
     if (isBorder) {
         gl.uniform4fv(colorLoc, vec4(1.0, 1.0, 1.0, 1.0));
@@ -116,6 +118,8 @@
       document.getElementById('translateY').valueAsNumber,
       document.getElementById('translateZ').valueAsNumber
     ];
+
+    shape.camera = [0.0, 0.0, document.getElementById('cameraZ').valueAsNumber * -1];
 
     return shape;
   };
