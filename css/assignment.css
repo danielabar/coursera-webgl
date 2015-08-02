@@ -235,6 +235,10 @@ input[type=button] {
   padding-left: 0;
 }
 
+.side-controls .form-group {
+  margin-top: 15px;
+}
+
 .side-controls label {
   display: inline-block;
   width: 95px;
