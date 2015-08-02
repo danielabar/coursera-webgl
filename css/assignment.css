@@ -206,7 +206,7 @@ input[type=button] {
 }
 
 .button-small {
-  width: 110px;
+  width: 115px;
 }
 
 .button:hover {
@@ -222,7 +222,7 @@ input[type=button] {
 }
 
 .actions {
-  margin-left: 15px;
+  margin-left: 10px;
 }
 
 
