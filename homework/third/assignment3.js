@@ -8,7 +8,12 @@
     _canvas,
     _shapes = [],
     _editing = true,
-    _camera;
+    _camera = {
+      defaultView: true,
+      theta: 0,
+      phi: 0
+    },
+    _degreeRadians = 1.1 * Math.PI/180.0;
 
   var renderShape = function(shape, isBorder) {
     var modelViewMatrix;
@@ -58,18 +63,19 @@
       gl.uniform4fv(colorLoc, shape.color);
     }
 
-    var at = vec3(0.0, 0.0, 0.0);
-    var up = vec3(0.0, 1.0, 0.0);
-    var radius = 1.0;
-    var eye = vec3(
-      radius*Math.sin(_camera.theta)*Math.cos(_camera.phi),
-      radius*Math.sin(_camera.theta)*Math.sin(_camera.phi),
-      radius*Math.cos(_camera.theta)
-    );
-
-    if (_camera.defaultCamera) {
-      modelViewMatrix = mat4();
+    // Adjust camera view
+    if (_camera.defaultView) {
+      modelViewMatrix = mat4();   // Identity matrix
     } else {
+      // TODO Should at, up and radius be constants or user defined?
+      var at = vec3(0.0, 0.0, 0.0);
+      var up = vec3(0.0, 1.0, 0.0);
+      var radius = 1.0;
+      var eye = vec3(
+        radius*Math.sin(_camera.theta)*Math.cos(_camera.phi),
+        radius*Math.sin(_camera.theta)*Math.sin(_camera.phi),
+        radius*Math.cos(_camera.theta)
+      );
       modelViewMatrix = lookAt(eye, at , up);
     }
 
@@ -138,13 +144,45 @@
       document.getElementById('translateZ').valueAsNumber
     ];
 
-    _camera = {
-      defaultCamera: document.getElementById('defaultCamera').checked ? true : false,
-      theta: radians(document.getElementById('cameraTheta').valueAsNumber),
-      phi: radians(document.getElementById('cameraPhi').valueAsNumber)
-    };
+    // _camera = {
+    //   defaultCamera: document.getElementById('defaultCamera').checked ? true : false,
+    //   theta: radians(document.getElementById('cameraTheta').valueAsNumber),
+    //   phi: radians(document.getElementById('cameraPhi').valueAsNumber)
+    // };
 
     return shape;
+  };
+
+  // TODO: Camera should not be active unless there is at least one shape saved
+  var updateCamera = function(evt) {
+
+    _camera.defaultView = false;
+
+    if (evt.target.id === 'cameraCenter') {
+      _camera.defaultView = true;
+      _camera.phi = 0.0;
+      _camera.theta = 0.0;
+    }
+
+    if (evt.target.id === 'cameraUp') {
+      _camera.phi += _degreeRadians;
+    }
+
+    if (evt.target.id === 'cameraDown') {
+      _camera.phi -= _degreeRadians;
+    }
+
+    if (evt.target.id === 'cameraLeft') {
+      _camera.theta -= _degreeRadians;
+    }
+
+    if (evt.target.id === 'cameraRight') {
+      _camera.theta += _degreeRadians;
+    }
+
+    console.dir(_camera);
+
+    render(_shapes);
   };
 
   var update = function(evt) {
@@ -189,7 +227,6 @@
 
     if (evt.target.id === 'downloadShapeData' || evt.target.id === 'downloadShapeDataIcon') {
       var element = document.createElement('a');
-      // element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(JSON.stringify(_shapes)));
       element.setAttribute('href', 'data:application/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(_shapes, null, 2)));
       element.setAttribute('download', 'shapes.json');
       element.style.display = 'none';
@@ -245,9 +282,10 @@
       gl = WebGLUtils.setupWebGL( _canvas, {preserveDrawingBuffer: true} );
       if ( !gl ) { alert( 'WebGL isn\'t available' ); }
 
-      // Register settings event handlers
+      // Register event handlers
       document.getElementById('settings').addEventListener('click', update);
       document.getElementById('settings').addEventListener('change', edit);
+      document.getElementById('cameraControls').addEventListener('click', updateCamera);
 
       // Configure WebGL
       gl.viewport( 0, 0, _canvas.width, _canvas.height );

@@ -261,14 +261,23 @@ input[type=button] {
 
 
 /* ---------------------------------- */
-/* Sub settings */
+/* Camera controls */
 /* ---------------------------------- */
 
-.sub-settings {
-  margin-top: 20px;
-  padding: 15px;
-  border: 1px solid #827C7C;
+.camera-controls {
+  position: absolute;
+  top: 315px;
+  left: 690px;
 }
+
+.control-row {
+  text-align: center;
+}
+
+.control-row i:hover {
+  cursor: pointer;
+}
+
 
 /* ---------------------------------- */
 /* Button Toggle */

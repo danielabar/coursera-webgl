@@ -14,13 +14,13 @@
   // vertex data
   attribute vec4 vPosition;
 
-  // app settings
+  // shape settings
   uniform vec3 theta;
   uniform vec3 scale;
   uniform vec3 translate;
 
+  // camera view
   uniform mat4 modelViewMatrix;
-  // uniform vec3 cameraZ;
 
   void main() {
 
@@ -37,6 +37,7 @@
 	    0.0,  0.0,  0.0, 1.0
     );
 
+    // rotation matrix for y axis (column major)
     mat4 ry = mat4(
       c.y, 0.0, -s.y, 0.0,
 	    0.0, 1.0,  0.0, 0.0,
@@ -44,6 +45,7 @@
 	    0.0, 0.0,  0.0, 1.0
     );
 
+    // rotation matrix for z axis (column major)
     mat4 rz = mat4(
       c.z, -s.z, 0.0, 0.0,
 	    s.z,  c.z, 0.0, 0.0,
@@ -67,23 +69,7 @@
       translate.x, translate.y, translate.z, 1.0
     );
 
-    // experiment: camera z scale
-    // mat4 cameraMatrix = mat4(
-    //   1.0, 0.0, 0.0, 0.0,
-    //   0.0, 1.0, 0.0, 0.0,
-    //   0.0, 0.0, cameraZ.z, 0.0,
-    //   0.0, 0.0, 0.0, 1.0
-    // );
-
-    // experiment: camera z projection - doesn't work, need to divide by w???
-    // mat4 cameraMatrix = mat4(
-    //   1.0, 0.0, 0.0, 0.0,
-    //   0.0, 1.0, 0.0, 0.0,
-    //   0.0, 0.0, 1.0, 0.0,
-    //   0.0, 0.0, 1.0/cameraZ.z, 0.0
-    // );
-
-    // apply rotation matricies to the vertex
+    // apply all matricies to the vertex
     gl_Position = modelViewMatrix * tr * rz * ry * rx * sc * vPosition;
   }
   </script>
@@ -218,30 +204,31 @@
       <button id="downloadShapeData" title="download shape data in JSON format" class="button button-small"><i id="downloadShapeDataIcon" class="fa fa-download icon"></i>JSON</button>
     </div>
 
-    <div class="sub-settings">
-      <div class="form-group">
-        <label for="defaultCamera">Default Camera</label>
-        <input type="checkbox" id="defaultCamera" name="defaultCamera" value="true">
-      </div>
-      <div class="form-group">
-        <label for="cameraTheta">Eye &theta;</label>
-        <input type=range id=cameraTheta min=-180 value=0 max=180 step=15 oninput="outputCameraTheta(value)">
-        <output for=cameraTheta id=camThetaVal>0</output>
-      </div>
-      <div class="form-group">
-        <label for="cameraPhi">Eye &phi;</label>
-        <input type=range id=cameraPhi min=-180 value=0 max=180 step=15 oninput="outputCameraPhi(value)">
-        <output for=cameraPhi id=camPhiVal>0</output>
-      </div>
-    </div>
-
   </section>
 
   <section class="drawing with-side-controls">
+
+    <!-- Drawing area -->
     <canvas id="gl-canvas" width="700" height="700">
       Oops ... your browser doesn't support the HTML5 canvas element
     </canvas>
+
+    <!-- Camera controls -->
+    <div id="cameraControls" class="camera-controls">
+      <div class="control-row">
+        <i id="cameraUp" class="fa fa-caret-up"></i>
+      </div>
+      <div class="control-row">
+        <i id="cameraLeft" class="fa fa-caret-left"></i>
+        <i id="cameraCenter" class="fa fa-square"></i>
+        <i id="cameraRight" class="fa fa-caret-right"></i>
+      </div>
+      <div class="control-row">
+        <i id="cameraDown" class="fa fa-caret-down"></i>
+      </div>
+    </div>
   </section>
+
 
   <footer>
     <p>Daniela Baron <a href="https://www.coursera.org/course/webgl">Coursera WebGL</a></p>
