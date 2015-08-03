@@ -13,7 +13,7 @@
       theta: 0,
       phi: 0
     };
-    
+
   var renderShape = function(shape, isBorder) {
     var modelViewMatrix;
 
@@ -279,6 +279,7 @@
       gl.viewport( 0, 0, _canvas.width, _canvas.height );
       gl.clearColor(0.0, 0.0, 0.0, 1.0);
       gl.enable(gl.DEPTH_TEST);
+      gl.enable(gl.CULL_FACE);
 
       // Seed the system with one shape
       setDefaults();
