@@ -7,9 +7,12 @@
   var gl,
     _canvas,
     _shapes = [],
-    _editing = true;
+    _editing = true,
+    _camera;
 
   var renderShape = function(shape, isBorder) {
+    var modelViewMatrix;
+
     // Load shaders
     gl.useProgram(shape.program);
 
@@ -37,7 +40,7 @@
     var thetaLoc = gl.getUniformLocation(shape.program, 'theta');
     var scaleLoc = gl.getUniformLocation(shape.program, 'scale');
     var translateLoc = gl.getUniformLocation(shape.program, 'translate');
-    var cameraZLoc = gl.getUniformLocation(shape.program, 'cameraZ');
+    var modelViewMatrixLoc = gl.getUniformLocation(shape.program, "modelViewMatrix" );
 
     gl.uniform3fv(thetaLoc, shape.theta);
 
@@ -48,13 +51,29 @@
     }
 
     gl.uniform3fv(translateLoc, shape.translate);
-    gl.uniform3fv(cameraZLoc, shape.camera);
 
     if (isBorder) {
         gl.uniform4fv(colorLoc, vec4(1.0, 1.0, 1.0, 1.0));
     } else {
       gl.uniform4fv(colorLoc, shape.color);
     }
+
+    var at = vec3(0.0, 0.0, 0.0);
+    var up = vec3(0.0, 1.0, 0.0);
+    var radius = 1.0;
+    var eye = vec3(
+      radius*Math.sin(_camera.theta)*Math.cos(_camera.phi),
+      radius*Math.sin(_camera.theta)*Math.sin(_camera.phi),
+      radius*Math.cos(_camera.theta)
+    );
+
+    if (_camera.defaultCamera) {
+      modelViewMatrix = mat4();
+    } else {
+      modelViewMatrix = lookAt(eye, at , up);
+    }
+
+    gl.uniformMatrix4fv( modelViewMatrixLoc, false, flatten(modelViewMatrix) );
 
     if (isBorder) {
       gl.drawArrays( gl.LINE_LOOP, 0, shape.border.vertices.length/3 );
@@ -119,7 +138,11 @@
       document.getElementById('translateZ').valueAsNumber
     ];
 
-    shape.camera = [0.0, 0.0, document.getElementById('cameraZ').valueAsNumber * -1];
+    _camera = {
+      defaultCamera: document.getElementById('defaultCamera').checked ? true : false,
+      theta: radians(document.getElementById('cameraTheta').valueAsNumber),
+      phi: radians(document.getElementById('cameraPhi').valueAsNumber)
+    };
 
     return shape;
   };
