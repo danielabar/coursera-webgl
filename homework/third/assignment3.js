@@ -12,9 +12,8 @@
       modelViewMatrix: mat4(),
       theta: 0,
       phi: 0
-    },
-    _cameraRotationIncrement = 10.0 * Math.PI/180.0;
-
+    };
+    
   var renderShape = function(shape, isBorder) {
     var modelViewMatrix;
 
@@ -131,7 +130,6 @@
     return shape;
   };
 
-  // TODO: These controls should be hidden in edit mode
   var updateCamera = function(evt) {
 
     if (evt.target.id === 'cameraCenter') {
