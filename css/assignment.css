@@ -261,6 +261,16 @@ input[type=button] {
 
 
 /* ---------------------------------- */
+/* Sub settings */
+/* ---------------------------------- */
+
+.sub-settings {
+  margin-top: 20px;
+  padding: 15px;
+  border: 1px solid #827C7C;
+}
+
+/* ---------------------------------- */
 /* Button Toggle */
 /* ---------------------------------- */
 
@@ -297,6 +307,17 @@ input[type=button] {
 
 .assignment footer p {
   margin-bottom: 0;
+}
+
+
+/* ---------------------------------- */
+/* Clear fix  */
+/* ---------------------------------- */
+
+.group:after {
+  content: "";
+  display: table;
+  clear: both;
 }
 
 

@@ -210,28 +210,29 @@
       <output for=translateZ id=tzv>0</output>
     </div>
 
-    <!-- camera -->
-    <div class="form-group">
-      <label for="defaultCamera">Default Camera</label>
-      <input type="checkbox" id="defaultCamera" name="defaultCamera" value="true">
-    </div>
-    <div class="form-group">
-      <label for="cameraTheta">Eye &theta;</label>
-      <input type=range id=cameraTheta min=-180 value=0 max=180 step=15 oninput="outputCameraTheta(value)">
-      <output for=cameraTheta id=camThetaVal>0</output>
-    </div>
-    <div class="form-group">
-      <label for="cameraPhi">Eye &phi;</label>
-      <input type=range id=cameraPhi min=-180 value=0 max=180 step=15 oninput="outputCameraPhi(value)">
-      <output for=cameraPhi id=camPhiVal>0</output>
-    </div>
-
     <!--  actions -->
     <div class="form-group actions">
       <button id="commitShape" title="save the current shape" class="button button-small"><i id="commitShapeIcon" class="fa fa-check icon"></i>Commit</button>
       <button id="newShape" title="create a new shape" class="button button-small toggle"><i id="newShapeIcon" class="fa fa-plus icon"></i>Add</button>
       <button id="clear" class="button button-small"><i id="clearIcon" class="fa fa-refresh icon"></i>Reset</button>
       <button id="downloadShapeData" title="download shape data in JSON format" class="button button-small"><i id="downloadShapeDataIcon" class="fa fa-download icon"></i>JSON</button>
+    </div>
+
+    <div class="sub-settings">
+      <div class="form-group">
+        <label for="defaultCamera">Default Camera</label>
+        <input type="checkbox" id="defaultCamera" name="defaultCamera" value="true">
+      </div>
+      <div class="form-group">
+        <label for="cameraTheta">Eye &theta;</label>
+        <input type=range id=cameraTheta min=-180 value=0 max=180 step=15 oninput="outputCameraTheta(value)">
+        <output for=cameraTheta id=camThetaVal>0</output>
+      </div>
+      <div class="form-group">
+        <label for="cameraPhi">Eye &phi;</label>
+        <input type=range id=cameraPhi min=-180 value=0 max=180 step=15 oninput="outputCameraPhi(value)">
+        <output for=cameraPhi id=camPhiVal>0</output>
+      </div>
     </div>
 
   </section>
