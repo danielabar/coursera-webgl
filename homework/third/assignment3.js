@@ -173,6 +173,7 @@
       document.getElementById('newShape').classList.remove( 'toggle' );
       document.getElementById('editMessage').classList.add( 'toggle' );
       document.getElementById('addMessage').classList.remove( 'toggle' );
+      document.getElementById('cameraControls').classList.remove( 'toggle' );
     }
 
     if (evt.target.id === 'newShape' || evt.target.id === 'newShapeIcon') {
@@ -184,6 +185,7 @@
       document.getElementById('commitShape').classList.remove( 'toggle' );
       document.getElementById('addMessage').classList.add( 'toggle' );
       document.getElementById('editMessage').classList.remove( 'toggle' );
+      document.getElementById('cameraControls').classList.add( 'toggle' );
     }
 
     if (evt.target.id === 'clear' || evt.target.id === 'clearIcon') {
@@ -198,6 +200,7 @@
       document.getElementById('commitShape').classList.remove( 'toggle' );
       document.getElementById('addMessage').classList.add( 'toggle' );
       document.getElementById('editMessage').classList.remove( 'toggle' );
+      document.getElementById('cameraControls').classList.add( 'toggle' );
     }
 
     if (evt.target.id === 'downloadShapeData' || evt.target.id === 'downloadShapeDataIcon') {
@@ -223,6 +226,12 @@
   };
 
   var setDefaults = function() {
+    _camera = {
+      modelViewMatrix: mat4(),
+      theta: 0,
+      phi: 0
+    };
+
     document.getElementById('shape').value = 'Sphere';
     document.getElementById('shapeColor').value = '#ff0000';
 
