@@ -281,13 +281,26 @@ input[type=button] {
   text-align: center;
 }
 
-.control-row i:hover {
+.control-row i:hover,
+.camera-zoom .box:hover {
   cursor: pointer;
 }
 
 .control-icon:focus,
 .control-icons:active {
   outline:none;
+}
+
+.camera-zoom {
+  margin-top: 20px;
+}
+
+.camera-zoom .box {
+  background: #322F2F;
+  border: 1px solid #322;
+  text-align: center;
+  padding-top: 10px;
+  padding-bottom: 10px;
 }
 
 
