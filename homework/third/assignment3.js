@@ -1,15 +1,22 @@
 /**
  * App
  */
-(function(window, ColorUtils, Shape) {
+(function(window, ColorUtils, Shape, DomUtils) {
   'use strict';
 
   var gl,
     _canvas,
     _shapes = [],
-    _editing = true;
-
+    _editing = true,
+    _camera = {
+      modelViewMatrix: mat4(),
+      theta: 0,
+      phi: 0
+    };
+    
   var renderShape = function(shape, isBorder) {
+    var modelViewMatrix;
+
     // Load shaders
     gl.useProgram(shape.program);
 
@@ -37,6 +44,7 @@
     var thetaLoc = gl.getUniformLocation(shape.program, 'theta');
     var scaleLoc = gl.getUniformLocation(shape.program, 'scale');
     var translateLoc = gl.getUniformLocation(shape.program, 'translate');
+    var modelViewMatrixLoc = gl.getUniformLocation(shape.program, "modelViewMatrix" );
 
     gl.uniform3fv(thetaLoc, shape.theta);
 
@@ -53,6 +61,8 @@
     } else {
       gl.uniform4fv(colorLoc, shape.color);
     }
+
+    gl.uniformMatrix4fv( modelViewMatrixLoc, false, flatten(_camera.modelViewMatrix) );
 
     if (isBorder) {
       gl.drawArrays( gl.LINE_LOOP, 0, shape.border.vertices.length/3 );
@@ -120,6 +130,34 @@
     return shape;
   };
 
+  var updateCamera = function(evt) {
+
+    if (evt.target.id === 'cameraCenter') {
+      _camera.theta = 0;
+      _camera.phi = 0;
+    }
+
+    if (evt.target.id === 'cameraUp') {
+      _camera.theta -= 15;
+    }
+
+    if (evt.target.id === 'cameraDown') {
+      _camera.theta += 15;
+    }
+
+    if (evt.target.id === 'cameraLeft') {
+      _camera.phi -= 15;
+    }
+
+    if (evt.target.id === 'cameraRight') {
+      _camera.phi += 15;
+    }
+
+    _camera.modelViewMatrix = mult(rotateY(_camera.phi), rotateX(_camera.theta));
+
+    render(_shapes);
+  };
+
   var update = function(evt) {
     var shapeSelect = document.getElementById('shape');
     var shapeType = shapeSelect.options[shapeSelect.selectedIndex].value;
@@ -133,10 +171,15 @@
       document.getElementById('newShape').classList.remove( 'toggle' );
       document.getElementById('editMessage').classList.add( 'toggle' );
       document.getElementById('addMessage').classList.remove( 'toggle' );
+      document.getElementById('cameraControls').classList.remove( 'toggle' );
+
+      DomUtils.disableInputs();
     }
 
     if (evt.target.id === 'newShape' || evt.target.id === 'newShapeIcon') {
       _editing = true;
+
+      DomUtils.enableInputs();
       setDefaults();
       edit();
 
@@ -144,6 +187,8 @@
       document.getElementById('commitShape').classList.remove( 'toggle' );
       document.getElementById('addMessage').classList.add( 'toggle' );
       document.getElementById('editMessage').classList.remove( 'toggle' );
+      document.getElementById('cameraControls').classList.add( 'toggle' );
+
     }
 
     if (evt.target.id === 'clear' || evt.target.id === 'clearIcon') {
@@ -151,6 +196,7 @@
       _shapes = [];
 
       // Re-seed the system with one shape
+      DomUtils.enableInputs();
       setDefaults();
       edit();
 
@@ -158,11 +204,11 @@
       document.getElementById('commitShape').classList.remove( 'toggle' );
       document.getElementById('addMessage').classList.add( 'toggle' );
       document.getElementById('editMessage').classList.remove( 'toggle' );
+      document.getElementById('cameraControls').classList.add( 'toggle' );
     }
 
     if (evt.target.id === 'downloadShapeData' || evt.target.id === 'downloadShapeDataIcon') {
       var element = document.createElement('a');
-      // element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(JSON.stringify(_shapes)));
       element.setAttribute('href', 'data:application/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(_shapes, null, 2)));
       element.setAttribute('download', 'shapes.json');
       element.style.display = 'none';
@@ -184,11 +230,17 @@
   };
 
   var setDefaults = function() {
+    _camera = {
+      modelViewMatrix: mat4(),
+      theta: 0,
+      phi: 0
+    };
+
     document.getElementById('shape').value = 'Sphere';
     document.getElementById('shapeColor').value = '#ff0000';
 
-    document.getElementById('rotateX').value = 0;
-    document.getElementById('rxv').value = 0;
+    document.getElementById('rotateX').value = 60;
+    document.getElementById('rxv').value = 60;
     document.getElementById('rotateY').value = 0;
     document.getElementById('ryv').value = 0;
     document.getElementById('rotateZ').value = 0;
@@ -218,9 +270,10 @@
       gl = WebGLUtils.setupWebGL( _canvas, {preserveDrawingBuffer: true} );
       if ( !gl ) { alert( 'WebGL isn\'t available' ); }
 
-      // Register settings event handlers
+      // Register event handlers
       document.getElementById('settings').addEventListener('click', update);
       document.getElementById('settings').addEventListener('change', edit);
+      document.getElementById('cameraControls').addEventListener('click', updateCamera);
 
       // Configure WebGL
       gl.viewport( 0, 0, _canvas.width, _canvas.height );
@@ -236,7 +289,7 @@
 
   window.App = App;
 
-}(window, window.ColorUtils, window.Shape));
+}(window, window.ColorUtils, window.Shape, window.DomUtils));
 
 
 /**

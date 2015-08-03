@@ -157,6 +157,11 @@ input[type=range]:focus::-ms-fill-upper {
   background: #ccc;
 }
 
+input[type="range"]:disabled {
+  background: rgb(219, 149, 221);
+  opacity: 0.2;
+}
+
 input[type=button] {
   outline: none;
   border: solid 1px #ccc;
@@ -261,6 +266,32 @@ input[type=button] {
 
 
 /* ---------------------------------- */
+/* Camera controls */
+/* ---------------------------------- */
+
+.camera-controls {
+  position: absolute;
+  top: 305px;
+  left: 665px;
+  color: #CECCCC;
+}
+
+.control-row {
+  height: 25px;
+  text-align: center;
+}
+
+.control-row i:hover {
+  cursor: pointer;
+}
+
+.control-icon:focus,
+.control-icons:active {
+  outline:none;
+}
+
+
+/* ---------------------------------- */
 /* Button Toggle */
 /* ---------------------------------- */
 
@@ -301,13 +332,24 @@ input[type=button] {
 
 
 /* ---------------------------------- */
+/* Clear fix  */
+/* ---------------------------------- */
+
+.group:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+
+/* ---------------------------------- */
 /* Media Queries */
 /* ---------------------------------- */
 
 @media (min-width: 1920px) {
 
   .side-controls {
-    padding-right: 660px;
+    padding-right: 700px;
   }
 
 }
