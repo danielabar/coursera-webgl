@@ -1,7 +1,7 @@
 /**
  * App
  */
-(function(window, ColorUtils, Shape) {
+(function(window, ColorUtils, Shape, DomUtils) {
   'use strict';
 
   var gl,
@@ -174,6 +174,8 @@
       document.getElementById('editMessage').classList.add( 'toggle' );
       document.getElementById('addMessage').classList.remove( 'toggle' );
       document.getElementById('cameraControls').classList.remove( 'toggle' );
+
+      DomUtils.disableInputs();
     }
 
     if (evt.target.id === 'newShape' || evt.target.id === 'newShapeIcon') {
@@ -186,6 +188,8 @@
       document.getElementById('addMessage').classList.add( 'toggle' );
       document.getElementById('editMessage').classList.remove( 'toggle' );
       document.getElementById('cameraControls').classList.add( 'toggle' );
+
+      DomUtils.enableInputs();
     }
 
     if (evt.target.id === 'clear' || evt.target.id === 'clearIcon') {
@@ -201,6 +205,8 @@
       document.getElementById('addMessage').classList.add( 'toggle' );
       document.getElementById('editMessage').classList.remove( 'toggle' );
       document.getElementById('cameraControls').classList.add( 'toggle' );
+
+      enableInputs();
     }
 
     if (evt.target.id === 'downloadShapeData' || evt.target.id === 'downloadShapeDataIcon') {
@@ -285,7 +291,7 @@
 
   window.App = App;
 
-}(window, window.ColorUtils, window.Shape));
+}(window, window.ColorUtils, window.Shape, window.DomUtils));
 
 
 /**
