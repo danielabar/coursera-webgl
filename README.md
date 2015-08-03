@@ -39,6 +39,12 @@ wget -r -nH --cut-dirs=4 --no-parent --reject="index.html*" http://www.cs.unm.ed
 wget -r -nH --cut-dirs=4 --no-parent --reject="index.html*" http://www.cs.unm.edu/~angel/COURSERA/CODE/EXAMPLES/
 ```
 
+More examples here
+
+```bash
+wget -r -nH --cut-dirs=1 --no-parent --reject="index.html*" http://cs.unm.edu/~angel/WebGL/
+```
+
 ## Lecture Notes
 
 * [Week 1](lecture-notes/week1.md)

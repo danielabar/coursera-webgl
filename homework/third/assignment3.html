@@ -10,10 +10,17 @@
   <link rel="stylesheet" href="../../css/assignment.css">
 
   <script id="vertex-shader" type="x-shader/x-vertex">
+
+  // vertex data
   attribute vec4 vPosition;
+
+  // shape settings
   uniform vec3 theta;
   uniform vec3 scale;
   uniform vec3 translate;
+
+  // camera view
+  uniform mat4 modelViewMatrix;
 
   void main() {
 
@@ -30,6 +37,7 @@
 	    0.0,  0.0,  0.0, 1.0
     );
 
+    // rotation matrix for y axis (column major)
     mat4 ry = mat4(
       c.y, 0.0, -s.y, 0.0,
 	    0.0, 1.0,  0.0, 0.0,
@@ -37,6 +45,7 @@
 	    0.0, 0.0,  0.0, 1.0
     );
 
+    // rotation matrix for z axis (column major)
     mat4 rz = mat4(
       c.z, -s.z, 0.0, 0.0,
 	    s.z,  c.z, 0.0, 0.0,
@@ -60,8 +69,8 @@
       translate.x, translate.y, translate.z, 1.0
     );
 
-    // apply rotation matricies to the vertex
-    gl_Position = tr * rz * ry * rx * sc * vPosition;
+    // apply all matricies to the vertex
+    gl_Position = modelViewMatrix * tr * rz * ry * rx * sc * vPosition;
   }
   </script>
 
@@ -197,12 +206,33 @@
 
   </section>
 
-
   <section class="drawing with-side-controls">
-    <canvas id="gl-canvas" width="700" height="700">
-      Oops ... your browser doesn't support the HTML5 canvas element
-    </canvas>
+
+    <!-- Drawing area -->
+    <div class="drawing-area">
+
+      <canvas id="gl-canvas" width="700" height="700">
+        Oops ... your browser doesn't support the HTML5 canvas element
+      </canvas>
+
+      <!-- Camera controls -->
+      <div id="cameraControls" class="camera-controls toggle">
+        <div class="control-row">
+          <i id="cameraUp" class="control-icon fa fa-caret-up fa-2x"></i>
+        </div>
+        <div class="control-row">
+          <i id="cameraLeft" class="control-icon fa fa-caret-left fa-2x"></i>
+          <i id="cameraCenter" class="control-icon fa fa-square fa-2x"></i>
+          <i id="cameraRight" class="control-icon fa fa-caret-right fa-2x"></i>
+        </div>
+        <div class="control-row">
+          <i id="cameraDown" class="fa fa-caret-down fa-2x"></i>
+        </div>
+      </div>
+
+    </div>
   </section>
+
 
   <footer>
     <p>Daniela Baron <a href="https://www.coursera.org/course/webgl">Coursera WebGL</a></p>
