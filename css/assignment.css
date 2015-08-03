@@ -266,16 +266,23 @@ input[type=button] {
 
 .camera-controls {
   position: absolute;
-  top: 315px;
-  left: 690px;
+  top: 305px;
+  left: 665px;
+  color: #CECCCC;
 }
 
 .control-row {
+  height: 25px;
   text-align: center;
 }
 
 .control-row i:hover {
   cursor: pointer;
+}
+
+.control-icon:focus,
+.control-icons:active {
+  outline:none;
 }
 
 

@@ -9,11 +9,11 @@
     _shapes = [],
     _editing = true,
     _camera = {
-      defaultView: true,
+      modelViewMatrix: mat4(),
       theta: 0,
       phi: 0
     },
-    _degreeRadians = 1.1 * Math.PI/180.0;
+    _cameraRotationIncrement = 10.0 * Math.PI/180.0;
 
   var renderShape = function(shape, isBorder) {
     var modelViewMatrix;
@@ -63,23 +63,7 @@
       gl.uniform4fv(colorLoc, shape.color);
     }
 
-    // Adjust camera view
-    if (_camera.defaultView) {
-      modelViewMatrix = mat4();   // Identity matrix
-    } else {
-      // TODO Should at, up and radius be constants or user defined?
-      var at = vec3(0.0, 0.0, 0.0);
-      var up = vec3(0.0, 1.0, 0.0);
-      var radius = 1.0;
-      var eye = vec3(
-        radius*Math.sin(_camera.theta)*Math.cos(_camera.phi),
-        radius*Math.sin(_camera.theta)*Math.sin(_camera.phi),
-        radius*Math.cos(_camera.theta)
-      );
-      modelViewMatrix = lookAt(eye, at , up);
-    }
-
-    gl.uniformMatrix4fv( modelViewMatrixLoc, false, flatten(modelViewMatrix) );
+    gl.uniformMatrix4fv( modelViewMatrixLoc, false, flatten(_camera.modelViewMatrix) );
 
     if (isBorder) {
       gl.drawArrays( gl.LINE_LOOP, 0, shape.border.vertices.length/3 );
@@ -144,43 +128,34 @@
       document.getElementById('translateZ').valueAsNumber
     ];
 
-    // _camera = {
-    //   defaultCamera: document.getElementById('defaultCamera').checked ? true : false,
-    //   theta: radians(document.getElementById('cameraTheta').valueAsNumber),
-    //   phi: radians(document.getElementById('cameraPhi').valueAsNumber)
-    // };
-
     return shape;
   };
 
-  // TODO: Camera should not be active unless there is at least one shape saved
+  // TODO: These controls should be hidden in edit mode
   var updateCamera = function(evt) {
 
-    _camera.defaultView = false;
-
     if (evt.target.id === 'cameraCenter') {
-      _camera.defaultView = true;
-      _camera.phi = 0.0;
-      _camera.theta = 0.0;
+      _camera.theta = 0;
+      _camera.phi = 0;
     }
 
     if (evt.target.id === 'cameraUp') {
-      _camera.phi += _degreeRadians;
+      _camera.theta -= 15;
     }
 
     if (evt.target.id === 'cameraDown') {
-      _camera.phi -= _degreeRadians;
+      _camera.theta += 15;
     }
 
     if (evt.target.id === 'cameraLeft') {
-      _camera.theta -= _degreeRadians;
+      _camera.phi -= 15;
     }
 
     if (evt.target.id === 'cameraRight') {
-      _camera.theta += _degreeRadians;
+      _camera.phi += 15;
     }
 
-    console.dir(_camera);
+    _camera.modelViewMatrix = mult(rotateY(_camera.phi), rotateX(_camera.theta));
 
     render(_shapes);
   };

@@ -209,23 +209,27 @@
   <section class="drawing with-side-controls">
 
     <!-- Drawing area -->
-    <canvas id="gl-canvas" width="700" height="700">
-      Oops ... your browser doesn't support the HTML5 canvas element
-    </canvas>
+    <div class="drawing-area">
 
-    <!-- Camera controls -->
-    <div id="cameraControls" class="camera-controls">
-      <div class="control-row">
-        <i id="cameraUp" class="fa fa-caret-up"></i>
+      <canvas id="gl-canvas" width="700" height="700">
+        Oops ... your browser doesn't support the HTML5 canvas element
+      </canvas>
+
+      <!-- Camera controls -->
+      <div id="cameraControls" class="camera-controls">
+        <div class="control-row">
+          <i id="cameraUp" class="control-icon fa fa-caret-up fa-2x"></i>
+        </div>
+        <div class="control-row">
+          <i id="cameraLeft" class="control-icon fa fa-caret-left fa-2x"></i>
+          <i id="cameraCenter" class="control-icon fa fa-square fa-2x"></i>
+          <i id="cameraRight" class="control-icon fa fa-caret-right fa-2x"></i>
+        </div>
+        <div class="control-row">
+          <i id="cameraDown" class="fa fa-caret-down fa-2x"></i>
+        </div>
       </div>
-      <div class="control-row">
-        <i id="cameraLeft" class="fa fa-caret-left"></i>
-        <i id="cameraCenter" class="fa fa-square"></i>
-        <i id="cameraRight" class="fa fa-caret-right"></i>
-      </div>
-      <div class="control-row">
-        <i id="cameraDown" class="fa fa-caret-down"></i>
-      </div>
+
     </div>
   </section>
 
