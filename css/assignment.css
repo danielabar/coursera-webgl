@@ -157,6 +157,11 @@ input[type=range]:focus::-ms-fill-upper {
   background: #ccc;
 }
 
+input[type="range"]:disabled {
+  background: rgb(219, 149, 221);
+  opacity: 0.2;
+}
+
 input[type=button] {
   outline: none;
   border: solid 1px #ccc;

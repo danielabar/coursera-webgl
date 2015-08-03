@@ -180,6 +180,8 @@
 
     if (evt.target.id === 'newShape' || evt.target.id === 'newShapeIcon') {
       _editing = true;
+
+      DomUtils.enableInputs();
       setDefaults();
       edit();
 
@@ -189,7 +191,6 @@
       document.getElementById('editMessage').classList.remove( 'toggle' );
       document.getElementById('cameraControls').classList.add( 'toggle' );
 
-      DomUtils.enableInputs();
     }
 
     if (evt.target.id === 'clear' || evt.target.id === 'clearIcon') {
@@ -197,6 +198,7 @@
       _shapes = [];
 
       // Re-seed the system with one shape
+      DomUtils.enableInputs();
       setDefaults();
       edit();
 
@@ -205,8 +207,6 @@
       document.getElementById('addMessage').classList.add( 'toggle' );
       document.getElementById('editMessage').classList.remove( 'toggle' );
       document.getElementById('cameraControls').classList.add( 'toggle' );
-
-      enableInputs();
     }
 
     if (evt.target.id === 'downloadShapeData' || evt.target.id === 'downloadShapeDataIcon') {
