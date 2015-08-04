@@ -284,6 +284,7 @@ input[type=button] {
 .control-row i:hover,
 .camera-zoom .box:hover {
   cursor: pointer;
+  color: #A5A3A3;
 }
 
 .control-icon:focus,
