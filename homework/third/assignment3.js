@@ -12,8 +12,10 @@
       modelViewMatrix: mat4(),
       theta: 0,
       phi: 0,
-      d: 0
+      dz: 0
     };
+
+    console.log('=== APP INIT: _camera = ' + JSON.stringify(_camera));
 
   var renderShape = function(shape, isBorder) {
     var modelViewMatrix;
@@ -133,10 +135,11 @@
 
   var updateCamera = function(evt) {
 
+    console.log('=== BEGIN updateCamera: _camera = ' + JSON.stringify(_camera));
+
     if (evt.target.id === 'cameraCenter') {
       _camera.theta = 0;
       _camera.phi = 0;
-      _camera.d = 0;
     }
 
     // TODO Rotations should cycle back to 0 after 360
@@ -157,17 +160,17 @@
     }
 
     if (evt.target.id === 'zoomIn') {
-      _camera.d += 0.1;
+      _camera.dz += 0.1;
     }
 
     if (evt.target.id === 'zoomOut') {
-      _camera.d -= 0.1;
+      _camera.dz -= 0.1;
     }
 
-    console.dir(_camera);
+    console.log('=== END updateCamera: _camera = ' + JSON.stringify(_camera));
 
     _camera.modelViewMatrix = mult(
-      translate(0.0, 0.0, _camera.d),
+      translate(0.0, 0.0, _camera.dz),
       mult(rotateY(_camera.phi), rotateX(_camera.theta))
     );
 
@@ -175,6 +178,8 @@
   };
 
   var update = function(evt) {
+    console.log('=== BEGIN update: _camera = ' + JSON.stringify(_camera));
+
     var shapeSelect = document.getElementById('shape');
     var shapeType = shapeSelect.options[shapeSelect.selectedIndex].value;
 
@@ -232,6 +237,8 @@
       element.click();
       document.body.removeChild(element);
     }
+
+    console.log('=== END update: _camera = ' + JSON.stringify(_camera));
   };
 
   var edit = function() {
@@ -249,7 +256,8 @@
     _camera = {
       modelViewMatrix: mat4(),
       theta: 0,
-      phi: 0
+      phi: 0,
+      dz: 0
     };
 
     document.getElementById('shape').value = 'Sphere';
