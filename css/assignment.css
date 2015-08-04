@@ -235,6 +235,10 @@ input[type=button] {
 /* Side Controls  */
 /* ---------------------------------- */
 
+.assignment section.side-controls {
+  padding-right: 20px;
+}
+
 .side-controls {
   float: right;
   padding-left: 0;
@@ -361,17 +365,4 @@ input[type=button] {
   content: "";
   display: table;
   clear: both;
-}
-
-
-/* ---------------------------------- */
-/* Media Queries */
-/* ---------------------------------- */
-
-@media (min-width: 1920px) {
-
-  .side-controls {
-    padding-right: 700px;
-  }
-
 }
