@@ -211,24 +211,36 @@
     <!-- Drawing area -->
     <div class="drawing-area">
 
-      <canvas id="gl-canvas" width="700" height="700">
+      <canvas id="gl-canvas" width="800" height="700">
         Oops ... your browser doesn't support the HTML5 canvas element
       </canvas>
 
       <!-- Camera controls -->
       <div id="cameraControls" class="camera-controls toggle">
+        <!--  pan -->
         <div class="control-row">
-          <i id="cameraUp" class="control-icon fa fa-caret-up fa-2x"></i>
+          <i id="cameraUp" class="control-icon fa fa-caret-up fa-2x" title="rotate camera up"></i>
         </div>
         <div class="control-row">
-          <i id="cameraLeft" class="control-icon fa fa-caret-left fa-2x"></i>
-          <i id="cameraCenter" class="control-icon fa fa-square fa-2x"></i>
-          <i id="cameraRight" class="control-icon fa fa-caret-right fa-2x"></i>
+          <i id="cameraLeft" class="control-icon fa fa-caret-left fa-2x" title="rotate camera left"></i>
+          <i id="cameraCenter" class="control-icon fa fa-square fa-2x" title="center camera"></i>
+          <i id="cameraRight" class="control-icon fa fa-caret-right fa-2x" title="rotate camera right"></i>
         </div>
         <div class="control-row">
-          <i id="cameraDown" class="fa fa-caret-down fa-2x"></i>
+          <i id="cameraDown" class="fa fa-caret-down fa-2x" title="rotate camera down"></i>
+        </div>
+
+        <!-- zoom -->
+        <div class="camera-zoom">
+          <div class="box" title="move camera forward">
+            <i id="zoomIn" class="control-icon fa fa-plus"></i>
+          </div>
+          <div class="box" title="move camera back">
+            <i id="zoomOut" class="control-icon fa fa-minus"></i>
+          </div>
         </div>
       </div>
+
 
     </div>
   </section>

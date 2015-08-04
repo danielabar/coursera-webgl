@@ -11,7 +11,8 @@
     _camera = {
       modelViewMatrix: mat4(),
       theta: 0,
-      phi: 0
+      phi: 0,
+      dz: 0
     };
 
   var renderShape = function(shape, isBorder) {
@@ -137,6 +138,7 @@
       _camera.phi = 0;
     }
 
+    // TODO Rotations should cycle back to 0 after 360
     if (evt.target.id === 'cameraUp') {
       _camera.theta -= 15;
     }
@@ -153,7 +155,18 @@
       _camera.phi += 15;
     }
 
-    _camera.modelViewMatrix = mult(rotateY(_camera.phi), rotateX(_camera.theta));
+    if (evt.target.id === 'zoomIn') {
+      _camera.dz += 0.1;
+    }
+
+    if (evt.target.id === 'zoomOut') {
+      _camera.dz -= 0.1;
+    }
+
+    _camera.modelViewMatrix = mult(
+      translate(0.0, 0.0, _camera.dz),
+      mult(rotateY(_camera.phi), rotateX(_camera.theta))
+    );
 
     render(_shapes);
   };
@@ -233,7 +246,8 @@
     _camera = {
       modelViewMatrix: mat4(),
       theta: 0,
-      phi: 0
+      phi: 0,
+      dz: 0
     };
 
     document.getElementById('shape').value = 'Sphere';
