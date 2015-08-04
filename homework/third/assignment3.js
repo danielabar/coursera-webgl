@@ -13,8 +13,8 @@
       theta: 0,
       phi: 0,
       dz: 0.0,
-      sx: 0.0,
-      sy: 0.0
+      sx: 1.0,
+      sy: 1.0
     },
     _cameraRotateInc = 15,
     _cameraDZinc = 0.1,
@@ -162,14 +162,18 @@
 
     if (evt.target.id === 'zoomIn') {
       _camera.dz += 0.1;
+      _camera.sx += 0.1;
+      _camera.sy += 0.1;
     }
 
     if (evt.target.id === 'zoomOut') {
       _camera.dz -= 0.1;
+      _camera.sx -= 0.1;
+      _camera.sy -= 0.1;
     }
 
     _camera.modelViewMatrix = mult(
-      genScaleMatrix(_camera.dz, _camera.dz, 0.0),
+      genScaleMatrix(_camera.sx, _camera.sy, 0.0),
       mult(
         translate(0.0, 0.0, _camera.dz),
         mult(
