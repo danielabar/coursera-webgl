@@ -12,8 +12,13 @@
       modelViewMatrix: mat4(),
       theta: 0,
       phi: 0,
-      dz: 0
-    };
+      dz: 0.0,
+      sx: 0.0,
+      sy: 0.0
+    },
+    _cameraRotateInc = 15,
+    _cameraDZinc = 0.1,
+    _cameraSinc = 0.1;
 
   var renderShape = function(shape, isBorder) {
     var modelViewMatrix;
@@ -140,19 +145,19 @@
 
     // TODO Rotations should cycle back to 0 after 360
     if (evt.target.id === 'cameraUp') {
-      _camera.theta -= 15;
+      _camera.theta -= _cameraRotateInc;
     }
 
     if (evt.target.id === 'cameraDown') {
-      _camera.theta += 15;
+      _camera.theta += _cameraRotateInc;
     }
 
     if (evt.target.id === 'cameraLeft') {
-      _camera.phi -= 15;
+      _camera.phi -= _cameraRotateInc;
     }
 
     if (evt.target.id === 'cameraRight') {
-      _camera.phi += 15;
+      _camera.phi += _cameraRotateInc;
     }
 
     if (evt.target.id === 'zoomIn') {
@@ -164,8 +169,13 @@
     }
 
     _camera.modelViewMatrix = mult(
-      translate(0.0, 0.0, _camera.dz),
-      mult(rotateY(_camera.phi), rotateX(_camera.theta))
+      genScaleMatrix(_camera.dz, _camera.dz, 0.0),
+      mult(
+        translate(0.0, 0.0, _camera.dz),
+        mult(
+          rotateY(_camera.phi), rotateX(_camera.theta)
+        )
+      )
     );
 
     render(_shapes);
