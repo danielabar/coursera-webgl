@@ -289,12 +289,20 @@ input[type=button] {
 
 .control-icon:focus,
 .control-icons:active {
-  outline:none;
+  outline: none;
+}
+
+.control-row::selection {
+  background-color: #000;
 }
 
 .camera-zoom {
   margin-top: 20px;
 }
+
+/*.box::selection {
+  background-color: #322F2F;
+}*/
 
 .camera-zoom .box {
   background: #322F2F;
