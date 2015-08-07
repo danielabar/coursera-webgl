@@ -12,7 +12,10 @@
       modelViewMatrix: mat4(),
       theta: 0,
       phi: 0,
-      dz: 0
+      dz: 0,
+      sx: 1,
+      sy: 1,
+      sz: 1
     },
     _cameraRotationInc = 15,
     _cameraDZInc = 0.5;
@@ -134,6 +137,7 @@
   };
 
   var updateCamera = function(evt) {
+    var t, ry, rx, s, modelView;
 
     if (evt.target.id === 'cameraCenter') {
       _camera.theta = 0;
@@ -158,17 +162,37 @@
     }
 
     if (evt.target.id === 'zoomIn') {
-      _camera.dz += _cameraDZInc;
+      // _camera.dz += _cameraDZInc;
+      _camera.sx += _cameraDZInc;
+      _camera.sy += _cameraDZInc;
+      _camera.sz += _cameraDZInc;
     }
 
     if (evt.target.id === 'zoomOut') {
-      _camera.dz -= _cameraDZInc;
+      // _camera.dz -= _cameraDZInc;
+      _camera.sx -= _cameraDZInc;
+      _camera.sy -= _cameraDZInc;
+      _camera.sz -= _cameraDZInc;
     }
 
-    _camera.modelViewMatrix = mult(
-      translate(0.0, 0.0, _camera.dz),
-      mult(rotateY(_camera.phi), rotateX(_camera.theta))
-    );
+    // t = translate(0.0, 0.0, _camera.dz);
+    ry = rotateY(_camera.phi);
+    rx = rotateX(_camera.theta);
+    s = genScaleMatrix(_camera.sx, _camera.sy, _camera.sz);
+    // s = genScaleMatrix(_camera.sx, _camera.sy, 1.0);
+
+    modelView = mat4();
+    // modelView = mult(modelView, t);
+    modelView = mult(modelView, ry);
+    modelView = mult(modelView, rx);
+    modelView = mult(modelView, s);
+
+    _camera.modelViewMatrix = modelView;
+
+    // _camera.modelViewMatrix = mult(
+    //   translate(0.0, 0.0, _camera.dz),
+    //   mult(rotateY(_camera.phi), rotateX(_camera.theta))
+    // );
 
     render(_shapes);
   };
@@ -249,7 +273,10 @@
       modelViewMatrix: mat4(),
       theta: 0,
       phi: 0,
-      dz: 0
+      dz: 0,
+      sx: 1,
+      sy: 1,
+      sz: 1
     };
 
     document.getElementById('shape').value = 'Sphere';
