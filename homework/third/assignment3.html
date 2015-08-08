@@ -19,8 +19,9 @@
   uniform vec3 scale;
   uniform vec3 translate;
 
-  // camera view
+  // camera settings
   uniform mat4 modelViewMatrix;
+  uniform mat4 projectionMatrix;
 
   void main() {
 
@@ -70,7 +71,7 @@
     );
 
     // apply all matricies to the vertex
-    gl_Position = modelViewMatrix * tr * rz * ry * rx * sc * vPosition;
+    gl_Position = projectionMatrix * modelViewMatrix * tr * rz * ry * rx * sc * vPosition;
   }
   </script>
 

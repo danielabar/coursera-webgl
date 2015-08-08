@@ -4,21 +4,30 @@
 (function(window, ColorUtils, Shape, DomUtils) {
   'use strict';
 
+  const at = vec3(0.0, 0.0, 0.0);
+  const up = vec3(0.0, 1.0, 0.0);
+
   var gl,
     _canvas,
     _shapes = [],
     _editing = true,
     _camera = {
       modelViewMatrix: mat4(),
+      projectionMatrix: mat4(),
       theta: 0,
       phi: 0,
       dz: 0,
       sx: 1,
       sy: 1,
-      sz: 1
+      sz: 1,
+      fovy: 45.0
     },
     _cameraRotationInc = 15,
-    _cameraDZInc = 0.5;
+    _cameraDZInc = 0.5,
+    _near = 0.3,
+    _far = 3.0,
+    _radius = 1.0,
+    _aspect = 1.0;
 
   var renderShape = function(shape, isBorder) {
     var modelViewMatrix;
@@ -45,12 +54,15 @@
     gl.vertexAttribPointer( vPosition, 3, gl.FLOAT, false, 0, 0 );
     gl.enableVertexAttribArray( vPosition );
 
-    // Uniform vars for user specified parameters
+    // Uniform vars for shape settings
     var colorLoc = gl.getUniformLocation(shape.program, 'fColor');
     var thetaLoc = gl.getUniformLocation(shape.program, 'theta');
     var scaleLoc = gl.getUniformLocation(shape.program, 'scale');
     var translateLoc = gl.getUniformLocation(shape.program, 'translate');
+
+    // Uniform vars for camera settings
     var modelViewMatrixLoc = gl.getUniformLocation(shape.program, "modelViewMatrix" );
+    var projectionMatrixLoc = gl.getUniformLocation(shape.program, "projectionMatrix" );
 
     gl.uniform3fv(thetaLoc, shape.theta);
 
@@ -69,6 +81,7 @@
     }
 
     gl.uniformMatrix4fv( modelViewMatrixLoc, false, flatten(_camera.modelViewMatrix) );
+    gl.uniformMatrix4fv( projectionMatrixLoc, false, flatten(_camera.projectionMatrix) );
 
     if (isBorder) {
       gl.drawArrays( gl.LINE_LOOP, 0, shape.border.vertices.length/3 );
@@ -137,7 +150,8 @@
   };
 
   var updateCamera = function(evt) {
-    var t, ry, rx, s, modelView;
+    var t, ry, rx, s,
+      eye, modelViewMatrix, projectionMatrix;
 
     if (evt.target.id === 'cameraCenter') {
       _camera.theta = 0;
@@ -165,30 +179,45 @@
       _camera.sx = 1.0;
       _camera.sy = 1.0;
       _camera.sz = 1.0;
+
+      _camera.fovy = 45.0;
     }
 
     if (evt.target.id === 'zoomIn') {
       _camera.sx += _cameraDZInc;
       _camera.sy += _cameraDZInc;
       _camera.sz += _cameraDZInc;
+
+      _camera.fovy -= 10.0;
     }
 
     if (evt.target.id === 'zoomOut') {
       _camera.sx -= _cameraDZInc;
       _camera.sy -= _cameraDZInc;
       _camera.sz -= _cameraDZInc;
+
+      _camera.fovy += 10.0;
     }
 
-    ry = rotateY(_camera.phi);
-    rx = rotateX(_camera.theta);
-    s = genScaleMatrix(_camera.sx, _camera.sy, _camera.sz);
+    // ry = rotateY(_camera.phi);
+    // rx = rotateX(_camera.theta);
+    // s = genScaleMatrix(_camera.sx, _camera.sy, _camera.sz);
+    //
+    // modelView = mat4();
+    // modelView = mult(modelView, ry);
+    // modelView = mult(modelView, rx);
+    // modelView = mult(modelView, s);
 
-    modelView = mat4();
-    modelView = mult(modelView, ry);
-    modelView = mult(modelView, rx);
-    modelView = mult(modelView, s);
+    eye = vec3(
+        _radius*Math.sin(_camera.theta)*Math.cos(_camera.phi),
+        _radius*Math.sin(_camera.theta)*Math.sin(_camera.phi),
+        _radius*Math.cos(_camera.theta)
+      );
+    modelViewMatrix = lookAt(eye, at , up);
+    projectionMatrix = perspective(_camera.fovy, _aspect, _near, _far);
 
-    _camera.modelViewMatrix = modelView;
+    _camera.modelViewMatrix = modelViewMatrix;
+    _camera.projectionMatrix = projectionMatrix;
 
     render(_shapes);
   };
@@ -267,12 +296,14 @@
   var setDefaults = function() {
     _camera = {
       modelViewMatrix: mat4(),
+      projectionMatrix: mat4(),
       theta: 0,
       phi: 0,
       dz: 0,
       sx: 1,
       sy: 1,
-      sz: 1
+      sz: 1,
+      fovy: 45.0
     };
 
     document.getElementById('shape').value = 'Sphere';
@@ -319,6 +350,8 @@
       gl.clearColor(0.0, 0.0, 0.0, 1.0);
       gl.enable(gl.DEPTH_TEST);
       gl.enable(gl.CULL_FACE);
+
+      _aspect = _canvas.width / _canvas.height;
 
       // Seed the system with one shape
       setDefaults();
