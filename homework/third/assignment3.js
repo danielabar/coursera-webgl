@@ -20,12 +20,12 @@
       sx: 1,
       sy: 1,
       sz: 1,
-      fovy: 45.0
+      fovy: 120.0
     },
     _cameraRotationInc = 15,
     _cameraDZInc = 0.5,
-    _near = 0.3,
-    _far = 3.0,
+    _near = 0.2,
+    _far = 2.0,
     _radius = 1.0,
     _aspect = 1.0;
 
@@ -151,7 +151,7 @@
 
   var updateCamera = function(evt) {
     var t, ry, rx, s,
-      eye, modelViewMatrix, projectionMatrix;
+      eye, modelView, modelViewMatrix, projectionMatrix;
 
     if (evt.target.id === 'cameraCenter') {
       _camera.theta = 0;
@@ -180,7 +180,7 @@
       _camera.sy = 1.0;
       _camera.sz = 1.0;
 
-      _camera.fovy = 45.0;
+      _camera.fovy = 120.0;
     }
 
     if (evt.target.id === 'zoomIn') {
@@ -199,24 +199,32 @@
       _camera.fovy += 10.0;
     }
 
-    // ry = rotateY(_camera.phi);
-    // rx = rotateX(_camera.theta);
+    t = translate(0.0, 0.0, -1.0);
+    ry = rotateY(_camera.phi);
+    rx = rotateX(_camera.theta);
     // s = genScaleMatrix(_camera.sx, _camera.sy, _camera.sz);
     //
-    // modelView = mat4();
-    // modelView = mult(modelView, ry);
-    // modelView = mult(modelView, rx);
+    modelView = mat4();
+    modelView = mult(modelView, t);
+    modelView = mult(modelView, ry);
+    modelView = mult(modelView, rx);
     // modelView = mult(modelView, s);
 
     eye = vec3(
-        _radius*Math.sin(_camera.theta)*Math.cos(_camera.phi),
-        _radius*Math.sin(_camera.theta)*Math.sin(_camera.phi),
-        _radius*Math.cos(_camera.theta)
+        _radius * Math.sin(_camera.theta) * Math.cos(_camera.phi),
+        _radius * Math.sin(_camera.theta) * Math.sin(_camera.phi),
+        _radius
       );
-    modelViewMatrix = lookAt(eye, at , up);
+    // eye = vec3(
+    //     _radius * Math.sin(_camera.theta) * Math.cos(_camera.phi),
+    //     _radius * Math.sin(_camera.theta) * Math.sin(_camera.phi),
+    //     _radius * Math.cos(_camera.theta)
+    //   );
+    // modelViewMatrix = lookAt(eye, at , up);
     projectionMatrix = perspective(_camera.fovy, _aspect, _near, _far);
 
-    _camera.modelViewMatrix = modelViewMatrix;
+    _camera.modelViewMatrix = modelView;
+    // _camera.modelViewMatrix = modelViewMatrix;
     _camera.projectionMatrix = projectionMatrix;
 
     render(_shapes);
@@ -303,7 +311,7 @@
       sx: 1,
       sy: 1,
       sz: 1,
-      fovy: 45.0
+      fovy: 120.0
     };
 
     document.getElementById('shape').value = 'Sphere';
