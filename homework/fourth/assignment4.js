@@ -94,6 +94,8 @@
         var randColor = vec4(Math.random(), Math.random(), Math.random(), 1.0);
         gl.uniform4fv(colorLoc, flatten(randColor));
         gl.drawArrays( gl.TRIANGLES, i, 3 );
+        gl.uniform4fv(colorLoc, flatten(vec4(1.0, 1.0, 1.0, 1.0)));
+        gl.drawArrays( gl.LINE_LOOP, i, 3 );
       }
 
     }

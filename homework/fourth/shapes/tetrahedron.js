@@ -53,7 +53,7 @@
     generate: function() {
       var vertices = [],
         normals = [],
-        numTimesToSubdivide = 4,
+        numTimesToSubdivide = 5,
         va = vec4(0.0, 0.0, -1.0,1),
         vb = vec4(0.0, 0.942809, 0.333333, 1),
         vc = vec4(-0.816497, -0.471405, 0.333333, 1),
