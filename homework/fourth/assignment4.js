@@ -91,8 +91,9 @@
       //   gl.drawArrays( gl.LINE_LOOP, i, 4 );
       // }
       for( var i=0; i<shape.vertices.length; i+=3) {
-        var randColor = vec4(Math.random(), Math.random(), Math.random(), 1.0);
-        gl.uniform4fv(colorLoc, flatten(randColor));
+        // var randColor = vec4(Math.random(), Math.random(), Math.random(), 1.0);
+        // gl.uniform4fv(colorLoc, flatten(randColor));
+        gl.uniform4fv(colorLoc, flatten(shape.color));
         gl.drawArrays( gl.TRIANGLES, i, 3 );
         gl.uniform4fv(colorLoc, flatten(vec4(1.0, 1.0, 1.0, 1.0)));
         gl.drawArrays( gl.LINE_LOOP, i, 3 );
@@ -343,7 +344,7 @@
       gl.clearColor(0.0, 0.0, 0.0, 1.0);
       gl.enable(gl.DEPTH_TEST);
       gl.enable(gl.CULL_FACE);
-      gl.depthFunc(gl.LEQUAL);
+      // gl.depthFunc(gl.LEQUAL);
       gl.enable(gl.POLYGON_OFFSET_FILL);
       gl.polygonOffset(1.0, 2.0);
 
