@@ -10,6 +10,8 @@
     _editing = true,
     _camera = {
       modelViewMatrix: mat4(),
+      projectionMatrix: mat4(),
+      normalMatrix: mat4(),
       theta: 0,
       phi: 0,
       dz: 0,
@@ -19,6 +21,25 @@
     },
     _cameraRotationInc = 15,
     _cameraDZInc = 0.5;
+
+  // TODO User editable settings?
+  var lightPosition = vec4(1.0, 1.0, 1.0, 0.0 );
+  var lightAmbient = vec4(0.2, 0.2, 0.2, 1.0 );
+  var lightDiffuse = vec4( 1.0, 1.0, 1.0, 1.0 );
+  var lightSpecular = vec4( 1.0, 1.0, 1.0, 1.0 );
+
+  var materialAmbient = vec4( 1.0, 0.0, 1.0, 1.0 );
+  var materialDiffuse = vec4( 1.0, 0.8, 0.0, 1.0 );
+  var materialSpecular = vec4( 1.0, 1.0, 1.0, 1.0 );
+  var materialShininess = 20.0;
+
+  var ambientProduct = mult(lightAmbient, materialAmbient);
+  var diffuseProduct = mult(lightDiffuse, materialDiffuse);
+  var specularProduct = mult(lightSpecular, materialSpecular);
+
+  var ctm;
+  var ambientColor, diffuseColor, specularColor;
+
 
   var renderShape = function(shape, isBorder) {
     var modelViewMatrix;
@@ -51,11 +72,13 @@
     gl.enableVertexAttribArray( vPosition );
 
     // Uniform vars for user specified parameters
-    var colorLoc = gl.getUniformLocation(shape.program, 'fColor');
+    // var colorLoc = gl.getUniformLocation(shape.program, 'fColor');
     var thetaLoc = gl.getUniformLocation(shape.program, 'theta');
     var scaleLoc = gl.getUniformLocation(shape.program, 'scale');
     var translateLoc = gl.getUniformLocation(shape.program, 'translate');
     var modelViewMatrixLoc = gl.getUniformLocation(shape.program, "modelViewMatrix" );
+    var projectionMatrixLoc = gl.getUniformLocation( shape.program, "projectionMatrix" );
+    var normalMatrixLoc = gl.getUniformLocation( shape.program, "normalMatrix" );
 
     gl.uniform3fv(thetaLoc, shape.theta);
 
@@ -74,6 +97,14 @@
     // }
 
     gl.uniformMatrix4fv( modelViewMatrixLoc, false, flatten(_camera.modelViewMatrix) );
+    gl.uniformMatrix4fv( projectionMatrixLoc, false, flatten(_camera.projectionMatrix) );
+    gl.uniformMatrix3fv(normalMatrixLoc, false, flatten(_camera.normalMatrix) );
+
+    gl.uniform4fv( gl.getUniformLocation(shape.program, "ambientProduct"),flatten(ambientProduct) );
+    gl.uniform4fv( gl.getUniformLocation(shape.program, "diffuseProduct"),flatten(diffuseProduct) );
+    gl.uniform4fv( gl.getUniformLocation(shape.program, "specularProduct"),flatten(specularProduct) );
+    gl.uniform4fv( gl.getUniformLocation(shape.program, "lightPosition"),flatten(lightPosition) );
+    gl.uniform1f( gl.getUniformLocation(shape.program, "shininess"),materialShininess );
 
     if (isBorder) {
       gl.drawArrays( gl.LINE_LOOP, 0, shape.border.vertices.length/3 );
@@ -93,10 +124,10 @@
       for( var i=0; i<shape.vertices.length; i+=3) {
         // var randColor = vec4(Math.random(), Math.random(), Math.random(), 1.0);
         // gl.uniform4fv(colorLoc, flatten(randColor));
-        gl.uniform4fv(colorLoc, flatten(shape.color));
+        // gl.uniform4fv(colorLoc, flatten(shape.color));
         gl.drawArrays( gl.TRIANGLES, i, 3 );
-        gl.uniform4fv(colorLoc, flatten(vec4(1.0, 1.0, 1.0, 1.0)));
-        gl.drawArrays( gl.LINE_LOOP, i, 3 );
+        // gl.uniform4fv(colorLoc, flatten(vec4(1.0, 1.0, 1.0, 1.0)));
+        // gl.drawArrays( gl.LINE_LOOP, i, 3 );
       }
 
     }
@@ -290,15 +321,15 @@
   };
 
   var setDefaults = function() {
-    _camera = {
-      modelViewMatrix: mat4(),
-      theta: 0,
-      phi: 0,
-      dz: 0,
-      sx: 1,
-      sy: 1,
-      sz: 1
-    };
+    // _camera = {
+    //   modelViewMatrix: mat4(),
+    //   theta: 0,
+    //   phi: 0,
+    //   dz: 0,
+    //   sx: 1,
+    //   sy: 1,
+    //   sz: 1
+    // };
 
     document.getElementById('shape').value = 'Tetrahedron';
     document.getElementById('shapeColor').value = '#ff0000';
@@ -347,6 +378,32 @@
       // gl.depthFunc(gl.LEQUAL);
       gl.enable(gl.POLYGON_OFFSET_FILL);
       gl.polygonOffset(1.0, 2.0);
+
+      // For now construct this one time
+      var at = vec3(0.0, 0.0, 0.0);
+      var up = vec3(0.0, 1.0, 0.0);
+      var near = -10;
+      var far = 10;
+      var radius = 1.5;
+      var theta  = 0.0;
+      var phi    = 0.0;
+      var dr = 5.0 * Math.PI/180.0;
+      var left = -3.0;
+      var right = 3.0;
+      var ytop =3.0;
+      var bottom = -3.0;
+      var eye = vec3(
+        radius*Math.sin(theta) * Math.cos(phi),
+        radius*Math.sin(theta) * Math.sin(phi),
+        radius*Math.cos(theta)
+      );
+      _camera.modelViewMatrix = lookAt(eye, at , up);
+      _camera.projectionMatrix = ortho(left, right, bottom, ytop, near, far);
+      _camera.normalMatrix = [
+        vec3(_camera.modelViewMatrix[0][0], _camera.modelViewMatrix[0][1], _camera.modelViewMatrix[0][2]),
+        vec3(_camera.modelViewMatrix[1][0], _camera.modelViewMatrix[1][1], _camera.modelViewMatrix[1][2]),
+        vec3(_camera.modelViewMatrix[2][0], _camera.modelViewMatrix[2][1], _camera.modelViewMatrix[2][2])
+      ];
 
       // Seed the system with one shape
       setDefaults();

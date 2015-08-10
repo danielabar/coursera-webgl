@@ -20,10 +20,25 @@
   uniform vec3 scale;
   uniform vec3 translate;
 
-  // camera view
+  // camera settings
   uniform mat4 modelViewMatrix;
+  uniform mat4 projectionMatrix;
+  uniform vec4 lightPosition;
+  uniform mat3 normalMatrix;
+
+  // lighting
+  varying vec3 N, L, E;
 
   void main() {
+
+    // lighting
+    vec3 light;
+    vec3 pos = (modelViewMatrix * vPosition).xyz;
+    if(lightPosition.z == 0.0)  L = normalize(lightPosition.xyz);
+    else  L = normalize(lightPosition).xyz - pos;
+
+    E =  -normalize(pos);
+    N = normalize( normalMatrix*vNormal.xyz);
 
     // trig
     vec3 angles = radians( theta );
@@ -71,16 +86,37 @@
     );
 
     // apply all matricies to the vertex
-    gl_Position = modelViewMatrix * tr * rz * ry * rx * sc * vPosition;
+    gl_Position = projectionMatrix * modelViewMatrix * tr * rz * ry * rx * sc * vPosition;
   }
   </script>
 
   <script id="fragment-shader" type="x-shader/x-fragment">
   precision mediump float;
 
-  uniform vec4 fColor;
+  // uniform vec4 fColor;
+  uniform vec4 ambientProduct;
+  uniform vec4 diffuseProduct;
+  uniform vec4 specularProduct;
+  uniform float shininess;
+  varying vec3 N, L, E;
 
   void main() {
+    vec4 fColor;
+
+    vec3 H = normalize( L + E );
+    vec4 ambient = ambientProduct;
+
+    float Kd = max( dot(L, N), 0.0 );
+    vec4  diffuse = Kd*diffuseProduct;
+
+    float Ks = pow( max(dot(N, H), 0.0), shininess );
+    vec4  specular = Ks * specularProduct;
+
+    if( dot(L, N) < 0.0 ) specular = vec4(0.0, 0.0, 0.0, 1.0);
+
+    fColor = ambient + diffuse +specular;
+    fColor.a = 1.0;
+
     gl_FragColor = fColor;
   }
   </script>
