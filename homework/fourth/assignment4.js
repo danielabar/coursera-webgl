@@ -28,12 +28,10 @@
   var lightDiffuse = vec4( 1.0, 1.0, 1.0, 1.0 );
   var lightSpecular = vec4( 1.0, 1.0, 1.0, 1.0 );
 
-  var materialAmbient = vec4( 1.0, 0.0, 1.0, 1.0 );
   var materialDiffuse = vec4( 1.0, 0.8, 0.0, 1.0 );
   var materialSpecular = vec4( 1.0, 1.0, 1.0, 1.0 );
-  var materialShininess = 20.0;
+  var materialShininess = 40.0;
 
-  var ambientProduct = mult(lightAmbient, materialAmbient);
   var diffuseProduct = mult(lightDiffuse, materialDiffuse);
   var specularProduct = mult(lightSpecular, materialSpecular);
 
@@ -336,19 +334,19 @@
     document.getElementById('shape').value = 'Tetrahedron';
     document.getElementById('shapeColor').value = '#ff0000';
 
-    document.getElementById('rotateX').value = 60;
-    document.getElementById('rxv').value = 60;
+    document.getElementById('rotateX').value = 0;
+    document.getElementById('rxv').value = 0;
     document.getElementById('rotateY').value = 0;
     document.getElementById('ryv').value = 0;
     document.getElementById('rotateZ').value = 0;
     document.getElementById('rzv').value = 0;
 
-    document.getElementById('scaleX').value = 0.2;
-    document.getElementById('sxv').value = 0.2;
-    document.getElementById('scaleY').value = 0.2;
-    document.getElementById('syv').value = 0.2;
-    document.getElementById('scaleZ').value = 0.2;
-    document.getElementById('szv').value = 0.2;
+    document.getElementById('scaleX').value = 1.0;
+    document.getElementById('sxv').value = 1.0;
+    document.getElementById('scaleY').value = 1.0;
+    document.getElementById('syv').value = 1.0;
+    document.getElementById('scaleZ').value = 1.0;
+    document.getElementById('szv').value = 1.0;
 
     document.getElementById('translateX').value = 0;
     document.getElementById('txv').value = 0;
@@ -377,7 +375,6 @@
       gl.clearColor(0.0, 0.0, 0.0, 1.0);
       gl.enable(gl.DEPTH_TEST);
       gl.enable(gl.CULL_FACE);
-      // gl.depthFunc(gl.LEQUAL);
       gl.enable(gl.POLYGON_OFFSET_FILL);
       gl.polygonOffset(1.0, 2.0);
 
