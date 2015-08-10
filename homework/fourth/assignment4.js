@@ -100,7 +100,7 @@
     gl.uniformMatrix4fv( projectionMatrixLoc, false, flatten(_camera.projectionMatrix) );
     gl.uniformMatrix3fv(normalMatrixLoc, false, flatten(_camera.normalMatrix) );
 
-    gl.uniform4fv( gl.getUniformLocation(shape.program, "ambientProduct"),flatten(ambientProduct) );
+    gl.uniform4fv( gl.getUniformLocation(shape.program, "ambientProduct"),flatten(shape.ambientProduct) );
     gl.uniform4fv( gl.getUniformLocation(shape.program, "diffuseProduct"),flatten(diffuseProduct) );
     gl.uniform4fv( gl.getUniformLocation(shape.program, "specularProduct"),flatten(specularProduct) );
     gl.uniform4fv( gl.getUniformLocation(shape.program, "lightPosition"),flatten(lightPosition) );
@@ -149,7 +149,8 @@
 
   var addShape = function(shapeType, editing) {
     var shape = {type: shapeType},
-      shapeVI;
+      shapeVI,
+      materialAmbient;
 
     shape.program = initShaders( gl, 'vertex-shader', 'fragment-shader' );
 
@@ -161,7 +162,8 @@
     shape.vertices = shapeVI.v;
     shape.normals = shapeVI.n;
 
-    shape.color = ColorUtils.hexToGLvec4(document.getElementById('shapeColor').value);
+    materialAmbient = ColorUtils.hexToGLvec4(document.getElementById('shapeColor').value);
+    shape.ambientProduct = mult(lightAmbient, materialAmbient);
 
     shape.theta = [
       document.getElementById('rotateX').valueAsNumber,
