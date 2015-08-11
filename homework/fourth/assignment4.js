@@ -232,7 +232,7 @@
       var near = -10;
       var far = 10;
       var radius = 1.5;
-      var theta  = 0.0;
+      var theta  = 15.0;
       var phi    = 0.0;
       var dr = 5.0 * Math.PI/180.0;
       var left = -3.0;
