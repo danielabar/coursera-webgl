@@ -163,10 +163,6 @@
 
   <section id="settings" class="settings side-controls">
 
-    <!-- messages -->
-    <div id="editMessage" class="message">Now editing, click commit to save</div>
-    <div id="addMessage" class="message toggle">Now viewing, click add for new shape</div>
-
     <!-- shape -->
     <div class="form-group">
       <label for="shape">Shape</label>
@@ -204,41 +200,40 @@
     <!-- scale -->
     <div class="form-group">
       <label for="scaleX">Scale X</label>
-      <input type=range id=scaleX min=0.1 value=0.2 max=2.0 step=0.1 oninput="outputSX(value)">
+      <input type=range id=scaleX min=0.1 value=0.2 max=5.0 step=0.1 oninput="outputSX(value)">
       <output for=scaleX id=sxv>0.2</output>
     </div>
     <div class="form-group">
       <label for="scaleY">Scale Y</label>
-      <input type=range id=scaleY min=0.1 value=0.2 max=2.0 step=0.1 oninput="outputSY(value)">
+      <input type=range id=scaleY min=0.1 value=0.2 max=5.0 step=0.1 oninput="outputSY(value)">
       <output for=scaleY id=syv>0.2</output>
     </div>
     <div class="form-group">
       <label for="scaleZ">Scale Z</label>
-      <input type=range id=scaleZ min=0.1 value=0.2 max=2.0 step=0.1 oninput="outputSZ(value)">
+      <input type=range id=scaleZ min=0.1 value=0.2 max=5.0 step=0.1 oninput="outputSZ(value)">
       <output for=scaleZ id=szv>0.2</output>
     </div>
 
     <!-- translate -->
     <div class="form-group">
       <label for="translateX">Translate X</label>
-      <input type=range id=translateX min=-1.0 value=0 max=1.0 step=0.1 oninput="outputTX(value)">
+      <input type=range id=translateX min=-3.0 value=0 max=3.0 step=0.1 oninput="outputTX(value)">
       <output for=translateX id=txv>0</output>
     </div>
     <div class="form-group">
       <label for="translateY">Translate Y</label>
-      <input type=range id=translateY min=-1.0 value=0 max=1.0 step=0.1 oninput="outputTY(value)">
+      <input type=range id=translateY min=-3.0 value=0 max=3.0 step=0.1 oninput="outputTY(value)">
       <output for=translateY id=tyv>0</output>
     </div>
     <div class="form-group">
       <label for="translateZ">Translate Z</label>
-      <input type=range id=translateZ min=-1.0 value=0 max=1.0 step=0.1 oninput="outputTZ(value)">
+      <input type=range id=translateZ min=-3.0 value=0 max=3.0 step=0.1 oninput="outputTZ(value)">
       <output for=translateZ id=tzv>0</output>
     </div>
 
     <!--  actions -->
     <div class="form-group actions">
-      <button id="commitShape" title="save the current shape" class="button button-small"><i id="commitShapeIcon" class="fa fa-check icon"></i>Commit</button>
-      <button id="newShape" title="create a new shape" class="button button-small toggle"><i id="newShapeIcon" class="fa fa-plus icon"></i>Add</button>
+      <button id="newShape" title="create a new shape" class="button button-small"><i id="newShapeIcon" class="fa fa-plus icon"></i>Add</button>
       <button id="clear" class="button button-small"><i id="clearIcon" class="fa fa-refresh icon"></i>Reset</button>
       <button id="downloadShapeData" title="download shape data in JSON format" class="button button-small"><i id="downloadShapeDataIcon" class="fa fa-download icon"></i>JSON</button>
     </div>
@@ -253,36 +248,6 @@
       <canvas id="gl-canvas" width="800" height="700">
         Oops ... your browser doesn't support the HTML5 canvas element
       </canvas>
-
-      <!-- Camera controls -->
-      <div id="cameraControls" class="camera-controls toggle">
-        <!--  pan -->
-        <div class="control-row">
-          <i id="cameraUp" class="control-icon fa fa-caret-up fa-2x" title="rotate camera up"></i>
-        </div>
-        <div class="control-row">
-          <i id="cameraLeft" class="control-icon fa fa-caret-left fa-2x" title="rotate camera left"></i>
-          <i id="cameraCenter" class="control-icon fa fa-square fa-2x" title="center camera"></i>
-          <i id="cameraRight" class="control-icon fa fa-caret-right fa-2x" title="rotate camera right"></i>
-        </div>
-        <div class="control-row">
-          <i id="cameraDown" class="fa fa-caret-down fa-2x" title="rotate camera down"></i>
-        </div>
-
-        <!-- zoom -->
-        <div class="camera-zoom">
-          <div class="box" title="move camera forward">
-            <i id="zoomIn" class="control-icon fa fa-plus"></i>
-          </div>
-          <div class="box" title="return to default zoom">
-            <i id="zoomHome" class="control-icon fa fa-home"></i>
-          </div>
-          <div class="box" title="move camera back">
-            <i id="zoomOut" class="control-icon fa fa-minus"></i>
-          </div>
-        </div>
-      </div>
-
 
     </div>
   </section>
