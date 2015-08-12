@@ -11,7 +11,8 @@
       modelViewMatrix: mat4(),
       projectionMatrix: mat4(),
       normalMatrix: mat4(),
-    };
+    },
+    _lighting = true;
 
   var lightPosition = vec4(1.0, 1.0, 1.0, 0.0 );
   var lightAmbient = vec4(0.7, 0.6, 0.7, 1.0);
@@ -71,11 +72,15 @@
     gl.uniformMatrix4fv( projectionMatrixLoc, false, flatten(_camera.projectionMatrix) );
     gl.uniformMatrix3fv(normalMatrixLoc, false, flatten(_camera.normalMatrix) );
 
-    gl.uniform4fv( gl.getUniformLocation(shape.program, "ambientProduct"),flatten(shape.ambientProduct) );
-    gl.uniform4fv( gl.getUniformLocation(shape.program, "diffuseProduct"),flatten(diffuseProduct) );
-    gl.uniform4fv( gl.getUniformLocation(shape.program, "specularProduct"),flatten(specularProduct) );
-    gl.uniform4fv( gl.getUniformLocation(shape.program, "lightPosition"),flatten(lightPosition) );
-    gl.uniform1f( gl.getUniformLocation(shape.program, "shininess"),materialShininess );
+    if (_lighting) {
+      gl.uniform4fv( gl.getUniformLocation(shape.program, "ambientProduct"),flatten(shape.ambientProduct) );
+      gl.uniform4fv( gl.getUniformLocation(shape.program, "diffuseProduct"),flatten(diffuseProduct) );
+      gl.uniform4fv( gl.getUniformLocation(shape.program, "specularProduct"),flatten(specularProduct) );
+      gl.uniform4fv( gl.getUniformLocation(shape.program, "lightPosition"),flatten(lightPosition) );
+      gl.uniform1f( gl.getUniformLocation(shape.program, "shininess"),materialShininess );
+    } else {
+      gl.uniform4fv(gl.getUniformLocation(shape.program, 'fColor'), shape.color);
+    }
 
     // draw
     for( var i=0; i<shape.vertices.length; i+=3) {
@@ -101,7 +106,12 @@
     shapeVI = Shape.generate(shapeType);
     shape.normals = shapeVI.n;
     shape.vertices = shapeVI.v;
-    shape.program = initShaders( gl, 'vertex-shader', 'fragment-shader' );
+
+    if (_lighting) {
+      shape.program = initShaders( gl, 'vertex-shader', 'fragment-shader' );
+    } else {
+      shape.program = initShaders( gl, 'vertex-shader', 'fragment-shader-simple' );
+    }
 
     updateShapeWithUserSettings(shape);
 
@@ -162,6 +172,21 @@
       element.click();
       document.body.removeChild(element);
     }
+
+    if (evt.target.id === 'lightSwitch') {
+      if (document.getElementById('lightSwitch').checked) {
+        _lighting = true;
+        _shapes.forEach(function(shape) {
+          shape.program = initShaders( gl, 'vertex-shader', 'fragment-shader' );
+        });
+      } else {
+        _lighting = false;
+        _shapes.forEach(function(shape) {
+          shape.program = initShaders( gl, 'vertex-shader', 'fragment-shader-simple' );
+        });
+      }
+      render(_shapes);
+    }
   };
 
   // always edit the most recently added shape, would be nice to have picking and able to edit any older one
@@ -205,6 +230,8 @@
     document.getElementById('tyv').value = 0;
     document.getElementById('translateZ').value = 0;
     document.getElementById('tzv').value = 0;
+
+    // document.getElementById('lightSwtich').checked = true;
   };
 
   var App = {
