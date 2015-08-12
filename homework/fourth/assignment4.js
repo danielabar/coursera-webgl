@@ -109,8 +109,10 @@
   };
 
   var updateShapeWithUserSettings = function(shape) {
-    var materialAmbient = ColorUtils.hexToGLvec4(document.getElementById('shapeColor').value);
-    shape.ambientProduct = mult(lightAmbient, materialAmbient);
+    // Store the plain old color plus lit color in case user turns off lighting
+    var selectedColor = ColorUtils.hexToGLvec4(document.getElementById('shapeColor').value);
+    shape.color = selectedColor;
+    shape.ambientProduct = mult(lightAmbient, selectedColor);
 
     shape.theta = [
       document.getElementById('rotateX').valueAsNumber,
