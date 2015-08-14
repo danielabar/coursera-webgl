@@ -56,21 +56,15 @@
     gl.vertexAttribPointer( vPosition, 4, gl.FLOAT, false, 0, 0 );
     gl.enableVertexAttribArray( vPosition );
 
-    // Uniform vars for user specified parameters
-    var thetaLoc = gl.getUniformLocation(shape.program, 'theta');
-    var scaleLoc = gl.getUniformLocation(shape.program, 'scale');
-    var translateLoc = gl.getUniformLocation(shape.program, 'translate');
-    var modelViewMatrixLoc = gl.getUniformLocation(shape.program, "modelViewMatrix" );
-    var projectionMatrixLoc = gl.getUniformLocation( shape.program, "projectionMatrix" );
-    var normalMatrixLoc = gl.getUniformLocation( shape.program, "normalMatrix" );
+    // Uniform vars for shape settings
+    gl.uniform3fv(gl.getUniformLocation(shape.program, 'theta'), shape.theta);
+    gl.uniform3fv(gl.getUniformLocation(shape.program, 'scale'), shape.scale);
+    gl.uniform3fv(gl.getUniformLocation(shape.program, 'translate'), shape.translate);
 
-    gl.uniform3fv(thetaLoc, shape.theta);
-    gl.uniform3fv(scaleLoc, shape.scale);
-    gl.uniform3fv(translateLoc, shape.translate);
-
-    gl.uniformMatrix4fv( modelViewMatrixLoc, false, flatten(_camera.modelViewMatrix) );
-    gl.uniformMatrix4fv( projectionMatrixLoc, false, flatten(_camera.projectionMatrix) );
-    gl.uniformMatrix3fv(normalMatrixLoc, false, flatten(_camera.normalMatrix) );
+    // Uniform vars for camera settings
+    gl.uniformMatrix4fv(gl.getUniformLocation(shape.program, "modelViewMatrix" ), false, flatten(_camera.modelViewMatrix) );
+    gl.uniformMatrix4fv(gl.getUniformLocation( shape.program, "projectionMatrix" ), false, flatten(_camera.projectionMatrix) );
+    gl.uniformMatrix3fv(gl.getUniformLocation( shape.program, "normalMatrix" ), false, flatten(_camera.normalMatrix) );
 
     if (_lighting) {
       gl.uniform4fv( gl.getUniformLocation(shape.program, "ambientProduct"),flatten(shape.ambientProduct) );
@@ -252,8 +246,8 @@
       gl.clearColor(0.0, 0.0, 0.0, 1.0);
       gl.enable(gl.DEPTH_TEST);
       gl.enable(gl.CULL_FACE);
-      // gl.enable(gl.POLYGON_OFFSET_FILL);
-      // gl.polygonOffset(1.0, 2.0);
+      gl.enable(gl.POLYGON_OFFSET_FILL);
+      gl.polygonOffset(1.0, 2.0);
 
       // TODO Somehow user should be able to manipulate at least some of these
       var at = vec3(0.0, 0.0, 0.0);
@@ -275,11 +269,9 @@
       );
       _camera.modelViewMatrix = lookAt(eye, at , up);
       _camera.projectionMatrix = ortho(left, right, bottom, ytop, near, far);
-      _camera.normalMatrix = [
-        vec3(_camera.modelViewMatrix[0][0], _camera.modelViewMatrix[0][1], _camera.modelViewMatrix[0][2]),
-        vec3(_camera.modelViewMatrix[1][0], _camera.modelViewMatrix[1][1], _camera.modelViewMatrix[1][2]),
-        vec3(_camera.modelViewMatrix[2][0], _camera.modelViewMatrix[2][1], _camera.modelViewMatrix[2][2])
-      ];
+      var normalMatrix = inverseMat3(flatten(_camera.modelViewMatrix));
+      normalMatrix = transpose(normalMatrix);
+      _camera.normalMatrix = normalMatrix;
 
       // Seed the system with one shape
       setDefaults();

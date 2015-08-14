@@ -11,7 +11,8 @@
         longs = 30,
         radius = 1,
         vertices = [],
-        indices = [];
+        indices = [],
+        normals = [];
 
       for (var latNumber = 0; latNumber <= lats; ++latNumber) {
         for (var longNumber = 0; longNumber <= longs; ++longNumber) {
@@ -29,6 +30,10 @@
           vertices.push(radius * x);
           vertices.push(radius * y);
           vertices.push(radius * z);
+
+          normals.push(x);
+          normals.push(y);
+          normals.push(z);
         }
       }
 
@@ -48,7 +53,8 @@
 
       return {
         v: vertices,
-        i: indices
+        i: indices,
+        n: normals
       };
     }
 
