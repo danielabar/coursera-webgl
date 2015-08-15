@@ -10,7 +10,6 @@
       normal = normalize(cross(t2, t1));
 
     normal = vec3(normal);
-    // normal[3] = 0.0;
 
     normalsArray.push(normal);
     normalsArray.push(normal);
@@ -60,6 +59,8 @@
         vd = vec4(0.816497, -0.471405, 0.333333,1);
 
       tetrahedron(va, vb, vc, vd, numTimesToSubdivide, normals, vertices);
+
+      // console.dir(vertices);
 
       return {
         v: vertices,

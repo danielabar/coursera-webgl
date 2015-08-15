@@ -41,7 +41,6 @@
 
     // Associate shader variables with normal data buffer
     var vNormal = gl.getAttribLocation( shape.program, "vNormal" );
-    // gl.vertexAttribPointer( vNormal, 4, gl.FLOAT, false, 0, 0 );
     gl.vertexAttribPointer( vNormal, 3, gl.FLOAT, false, 0, 0 );
     gl.enableVertexAttribArray( vNormal);
 
@@ -94,6 +93,8 @@
     shapeVI = Shape.generate(shapeType);
     shape.normals = shapeVI.n;
     shape.vertices = shapeVI.v;
+
+    console.dir(shape.vertices);
 
     if (_lighting) {
       shape.program = initShaders( gl, 'vertex-shader', 'fragment-shader' );
