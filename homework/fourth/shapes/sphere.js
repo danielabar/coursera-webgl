@@ -29,20 +29,8 @@
           var y = cosTheta;
           var z = sinPhi * sinTheta;
 
-          // uniqueVertices.push(radius * x);
-          // uniqueVertices.push(radius * y);
-          // uniqueVertices.push(radius * z);
-
           uniqueVertices.push(vec4(radius * x, radius * y, radius * z, 1.0));
-
-          // uniqueNormals.push(x);
-          // uniqueNormals.push(y);
-          // uniqueNormals.push(z);
-
           uniqueNormals.push(vec3(x, y, z));
-          // normals.push(x);
-          // normals.push(y);
-          // normals.push(z);
         }
       }
 
@@ -76,16 +64,6 @@
           normals.push(uniqueNormals[first+1]);
         }
       }
-
-      // for (var j=0; j<indices.length; j++) {
-      //   var cur = indices[j];
-      //   vertices.push(uniqueVertices[cur][0]);
-      //   vertices.push(uniqueVertices[cur][1]);
-      //   vertices.push(uniqueVertices[cur][2]);
-      //   vertices.push(uniqueVertices[cur][3]);
-      // }
-
-      // console.dir(vertices);
 
       return {
         v: vertices,
