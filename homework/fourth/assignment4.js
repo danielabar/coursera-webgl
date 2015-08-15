@@ -119,10 +119,10 @@
     // }
 
     var modelView = mat4(),
+      normalMat = mat4(),
       thetaOpts = [],
       scaleOpts = [],
-      translateOpts = [],
-      normalMatrix;
+      translateOpts = [];
 
     // Store the plain old color plus lit color in case user turns off lighting
     var selectedColor = ColorUtils.hexToGLvec4(document.getElementById('shapeColor').value);
@@ -147,18 +147,20 @@
       document.getElementById('translateZ').valueAsNumber
     ];
 
+    // Calculate model view based on Translate, Rotate, Scale
     modelView = mult(modelView, translate(translateOpts[0], translateOpts[1], translateOpts[2]));
-    modelView = mult(modelView, genScaleMatrix(scaleOpts[0], scaleOpts[1], scaleOpts[2]));
-
-    normalMatrix = inverseMat3(flatten(modelView));
-    normalMatrix = transpose(normalMatrix);
-
     modelView = mult(modelView, rotate(thetaOpts[0], [1, 0, 0] ));
     modelView = mult(modelView, rotate(thetaOpts[1], [0, 1, 0] ));
     modelView = mult(modelView, rotate(thetaOpts[2], [0, 0, 1] ));
-
+    modelView = mult(modelView, genScaleMatrix(scaleOpts[0], scaleOpts[1], scaleOpts[2]));
     shape.modelViewMatrix = modelView;
-    shape.normalMatrix = normalMatrix;
+
+    // Calculate normal matrix based on Translate and Scale (but not Rotate) 
+    normalMat = mult(normalMat, translate(translateOpts[0], translateOpts[1], translateOpts[2]));
+    normalMat = mult(normalMat, genScaleMatrix(scaleOpts[0], scaleOpts[1], scaleOpts[2]));
+    normalMat = inverseMat3(flatten(normalMat));
+    normalMat = transpose(normalMat);
+    shape.normalMatrix = normalMat;
   };
 
   var seedOneShape = function() {
