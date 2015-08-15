@@ -14,7 +14,8 @@
     },
     _lighting = true;
 
-  var lightPosition = vec4(1.0, 1.0, 1.0, 0.0 );
+  // var lightPosition = vec4(1.0, 1.0, 1.0, 0.0 );
+  var lightPosition = vec4(1.0, 1.0, 0.0, 0.0 );
   var lightAmbient = vec4(0.7, 0.6, 0.7, 1.0);
   var lightDiffuse = vec4( 1.0, 1.0, 1.0, 1.0 );
   var lightSpecular = vec4( 1.0, 1.0, 1.0, 1.0 );
@@ -56,21 +57,10 @@
     gl.vertexAttribPointer( vPosition, 4, gl.FLOAT, false, 0, 0 );
     gl.enableVertexAttribArray( vPosition );
 
-    // Uniform vars for user specified parameters
-    var thetaLoc = gl.getUniformLocation(shape.program, 'theta');
-    var scaleLoc = gl.getUniformLocation(shape.program, 'scale');
-    var translateLoc = gl.getUniformLocation(shape.program, 'translate');
-    var modelViewMatrixLoc = gl.getUniformLocation(shape.program, "modelViewMatrix" );
-    var projectionMatrixLoc = gl.getUniformLocation( shape.program, "projectionMatrix" );
-    var normalMatrixLoc = gl.getUniformLocation( shape.program, "normalMatrix" );
-
-    gl.uniform3fv(thetaLoc, shape.theta);
-    gl.uniform3fv(scaleLoc, shape.scale);
-    gl.uniform3fv(translateLoc, shape.translate);
-
-    gl.uniformMatrix4fv( modelViewMatrixLoc, false, flatten(_camera.modelViewMatrix) );
-    gl.uniformMatrix4fv( projectionMatrixLoc, false, flatten(_camera.projectionMatrix) );
-    gl.uniformMatrix3fv(normalMatrixLoc, false, flatten(_camera.normalMatrix) );
+    // Uniform vars
+    gl.uniformMatrix4fv(gl.getUniformLocation(shape.program, "modelViewMatrix" ), false, flatten(shape.modelViewMatrix) );
+    gl.uniformMatrix3fv(gl.getUniformLocation( shape.program, "normalMatrix" ), false, flatten(shape.normalMatrix) );
+    gl.uniformMatrix4fv(gl.getUniformLocation( shape.program, "projectionMatrix" ), false, flatten(_camera.projectionMatrix) );
 
     if (_lighting) {
       gl.uniform4fv( gl.getUniformLocation(shape.program, "ambientProduct"),flatten(shape.ambientProduct) );
@@ -98,7 +88,7 @@
 
   };
 
-  var generateShape = function(shapeType) {
+  var generateShape = function(shapeType, update) {
     var shape = {type: shapeType},
       shapeVI,
       materialAmbient;
@@ -113,40 +103,69 @@
       shape.program = initShaders( gl, 'vertex-shader', 'fragment-shader-simple' );
     }
 
-    updateShapeWithUserSettings(shape);
+    if (update) {
+      updateShapeWithUserSettings(shape);
+    }
 
     return shape;
   };
 
   var updateShapeWithUserSettings = function(shape) {
+    // var shapeSelect = document.getElementById('shape');
+    // var shapeType = shapeSelect.options[shapeSelect.selectedIndex].value;
+    // if (shape.type !== shapeType) {
+    //   console.log('generating shapeType: ' + shapeType);
+    //   shape = generateShape(shapeType, false);
+    //   console.dir(shape);
+    // }
+
+    var modelViewMatrix = mat4(),
+      normalMatrix = mat4(),
+      thetaOpts = [],
+      scaleOpts = [],
+      translateOpts = [];
+
     // Store the plain old color plus lit color in case user turns off lighting
     var selectedColor = ColorUtils.hexToGLvec4(document.getElementById('shapeColor').value);
     shape.color = selectedColor;
     shape.ambientProduct = mult(lightAmbient, selectedColor);
 
-    shape.theta = [
+    thetaOpts = [
       document.getElementById('rotateX').valueAsNumber,
       document.getElementById('rotateY').valueAsNumber,
       document.getElementById('rotateZ').valueAsNumber
     ];
 
-    shape.scale = [
+    scaleOpts = [
       document.getElementById('scaleX').valueAsNumber,
       document.getElementById('scaleY').valueAsNumber,
       document.getElementById('scaleZ').valueAsNumber
     ];
 
-    shape.translate = [
+    translateOpts = [
       document.getElementById('translateX').valueAsNumber,
       document.getElementById('translateY').valueAsNumber,
       document.getElementById('translateZ').valueAsNumber
     ];
+
+    // Calculate model view matrix based on Translate, Rotate, Scale
+    modelViewMatrix = mult(modelViewMatrix, translate(translateOpts[0], translateOpts[1], translateOpts[2]));
+    modelViewMatrix = mult(modelViewMatrix, rotate(thetaOpts[0], [1, 0, 0] ));
+    modelViewMatrix = mult(modelViewMatrix, rotate(thetaOpts[1], [0, 1, 0] ));
+    modelViewMatrix = mult(modelViewMatrix, rotate(thetaOpts[2], [0, 0, 1] ));
+    modelViewMatrix = mult(modelViewMatrix, genScaleMatrix(scaleOpts[0], scaleOpts[1], scaleOpts[2]));
+    shape.modelViewMatrix = modelViewMatrix;
+
+    // Calculate normal matrix
+    normalMatrix = inverseMat3(flatten(shape.modelViewMatrix));
+    normalMatrix = transpose(normalMatrix);
+    shape.normalMatrix = normalMatrix;
   };
 
   var seedOneShape = function() {
     var shapeSelect = document.getElementById('shape');
     var shapeType = shapeSelect.options[shapeSelect.selectedIndex].value;
-    _shapes.push(generateShape(shapeType));
+    _shapes.push(generateShape(shapeType, true));
     render(_shapes);
   };
 
@@ -189,6 +208,7 @@
     }
   };
 
+  // TODO: Handle shape selection dropdown separately and make that generate a new shape
   // always edit the most recently added shape, would be nice to have picking and able to edit any older one
   var changeHandler = function() {
     var currentShape = _shapes[_shapes.length-1];
@@ -197,17 +217,8 @@
   };
 
   var setDefaults = function() {
-    // _camera = {
-    //   modelViewMatrix: mat4(),
-    //   theta: 0,
-    //   phi: 0,
-    //   dz: 0,
-    //   sx: 1,
-    //   sy: 1,
-    //   sz: 1
-    // };
-
     document.getElementById('shape').value = 'Tetrahedron';
+    // document.getElementById('shape').value = 'Sphere';
     document.getElementById('shapeColor').value = '#ff0000';
 
     document.getElementById('rotateX').value = 0;
@@ -252,34 +263,17 @@
       gl.clearColor(0.0, 0.0, 0.0, 1.0);
       gl.enable(gl.DEPTH_TEST);
       gl.enable(gl.CULL_FACE);
-      // gl.enable(gl.POLYGON_OFFSET_FILL);
-      // gl.polygonOffset(1.0, 2.0);
+      gl.enable(gl.POLYGON_OFFSET_FILL);
+      gl.polygonOffset(1.0, 2.0);
 
       // TODO Somehow user should be able to manipulate at least some of these
-      var at = vec3(0.0, 0.0, 0.0);
-      var up = vec3(0.0, 1.0, 0.0);
-      var near = -10;
       var far = 10;
-      var radius = 1.5;
-      var theta  = 15.0;
-      var phi    = 0.0;
-      var dr = 5.0 * Math.PI/180.0;
       var left = -3.0;
       var right = 3.0;
-      var ytop =3.0;
       var bottom = -3.0;
-      var eye = vec3(
-        radius*Math.sin(theta) * Math.cos(phi),
-        radius*Math.sin(theta) * Math.sin(phi),
-        radius*Math.cos(theta)
-      );
-      _camera.modelViewMatrix = lookAt(eye, at , up);
+      var ytop =3.0;
+      var near = -10;
       _camera.projectionMatrix = ortho(left, right, bottom, ytop, near, far);
-      _camera.normalMatrix = [
-        vec3(_camera.modelViewMatrix[0][0], _camera.modelViewMatrix[0][1], _camera.modelViewMatrix[0][2]),
-        vec3(_camera.modelViewMatrix[1][0], _camera.modelViewMatrix[1][1], _camera.modelViewMatrix[1][2]),
-        vec3(_camera.modelViewMatrix[2][0], _camera.modelViewMatrix[2][1], _camera.modelViewMatrix[2][2])
-      ];
 
       // Seed the system with one shape
       setDefaults();
