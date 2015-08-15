@@ -121,9 +121,9 @@
           normals.push(ftn);
 
           // second triangle
-          stn = triangleNormal(uniqueVertices[k], uniqueVertices[1+offset], uniqueVertices[k+offset]);
-          indices.push(k);
-          vertices.push(uniqueVertices[k]);
+          stn = triangleNormal(uniqueVertices[1], uniqueVertices[1+offset], uniqueVertices[k+offset]);
+          indices.push(1);
+          vertices.push(uniqueVertices[1]);
           normals.push(stn);
 
           indices.push(1 + offset);
@@ -151,17 +151,17 @@
           normals.push(ftn);
 
           // second triangle
-          stn = triangleNormal(uniqueVertices[k], uniqueVertices[k+offset], uniqueVertices[k+1+offset]);
+          stn = triangleNormal(uniqueVertices[k], uniqueVertices[k+1+offset], uniqueVertices[k+offset]);
           indices.push(k);
           vertices.push(uniqueVertices[k]);
           normals.push(stn);
 
-          indices.push(k + offset);
-          vertices.push(uniqueVertices[k+offset]);
-          normals.push(stn);
-
           indices.push(k + 1 + offset);
           vertices.push(uniqueVertices[k+1+offset]);
+          normals.push(stn);
+
+          indices.push(k + offset);
+          vertices.push(uniqueVertices[k+offset]);
           normals.push(stn);
         }
 
