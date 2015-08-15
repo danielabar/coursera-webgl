@@ -56,15 +56,10 @@
     gl.vertexAttribPointer( vPosition, 4, gl.FLOAT, false, 0, 0 );
     gl.enableVertexAttribArray( vPosition );
 
-    // Uniform vars for shape settings
-    // gl.uniform3fv(gl.getUniformLocation(shape.program, 'theta'), shape.theta);
-    // gl.uniform3fv(gl.getUniformLocation(shape.program, 'scale'), shape.scale);
-    // gl.uniform3fv(gl.getUniformLocation(shape.program, 'translate'), shape.translate);
-
     // Uniform vars
     gl.uniformMatrix4fv(gl.getUniformLocation(shape.program, "modelViewMatrix" ), false, flatten(shape.modelViewMatrix) );
-    gl.uniformMatrix4fv(gl.getUniformLocation( shape.program, "projectionMatrix" ), false, flatten(_camera.projectionMatrix) );
     gl.uniformMatrix3fv(gl.getUniformLocation( shape.program, "normalMatrix" ), false, flatten(shape.normalMatrix) );
+    gl.uniformMatrix4fv(gl.getUniformLocation( shape.program, "projectionMatrix" ), false, flatten(_camera.projectionMatrix) );
 
     if (_lighting) {
       gl.uniform4fv( gl.getUniformLocation(shape.program, "ambientProduct"),flatten(shape.ambientProduct) );
@@ -124,6 +119,9 @@
     // }
 
     var modelView = mat4(),
+      thetaOpts = [],
+      scaleOpts = [],
+      translateOpts = [],
       normalMatrix;
 
     // Store the plain old color plus lit color in case user turns off lighting
@@ -131,33 +129,33 @@
     shape.color = selectedColor;
     shape.ambientProduct = mult(lightAmbient, selectedColor);
 
-    shape.theta = [
+    thetaOpts = [
       document.getElementById('rotateX').valueAsNumber,
       document.getElementById('rotateY').valueAsNumber,
       document.getElementById('rotateZ').valueAsNumber
     ];
 
-    shape.scale = [
+    scaleOpts = [
       document.getElementById('scaleX').valueAsNumber,
       document.getElementById('scaleY').valueAsNumber,
       document.getElementById('scaleZ').valueAsNumber
     ];
 
-    shape.translate = [
+    translateOpts = [
       document.getElementById('translateX').valueAsNumber,
       document.getElementById('translateY').valueAsNumber,
       document.getElementById('translateZ').valueAsNumber
     ];
 
-    modelView = mult(modelView, translate(shape.translate[0], shape.translate[1], shape.translate[2]));
-    modelView = mult(modelView, genScaleMatrix(shape.scale[0], shape.scale[1], shape.scale[2]));
+    modelView = mult(modelView, translate(translateOpts[0], translateOpts[1], translateOpts[2]));
+    modelView = mult(modelView, genScaleMatrix(scaleOpts[0], scaleOpts[1], scaleOpts[2]));
 
     normalMatrix = inverseMat3(flatten(modelView));
     normalMatrix = transpose(normalMatrix);
 
-    modelView = mult(modelView, rotate(shape.theta[0], [1, 0, 0] ));
-    modelView = mult(modelView, rotate(shape.theta[1], [0, 1, 0] ));
-    modelView = mult(modelView, rotate(shape.theta[2], [0, 0, 1] ));
+    modelView = mult(modelView, rotate(thetaOpts[0], [1, 0, 0] ));
+    modelView = mult(modelView, rotate(thetaOpts[1], [0, 1, 0] ));
+    modelView = mult(modelView, rotate(thetaOpts[2], [0, 0, 1] ));
 
     shape.modelViewMatrix = modelView;
     shape.normalMatrix = normalMatrix;

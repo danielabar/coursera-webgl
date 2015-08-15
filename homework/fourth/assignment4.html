@@ -15,11 +15,6 @@
   attribute vec4 vPosition;
   attribute vec4 vNormal;
 
-  // shape settings
-  // uniform vec3 theta;
-  // uniform vec3 scale;
-  // uniform vec3 translate;
-
   // camera settings
   uniform mat4 modelViewMatrix;
   uniform mat4 projectionMatrix;
@@ -40,55 +35,8 @@
     E =  -normalize(pos);
     N = normalize( normalMatrix*vNormal.xyz);
 
-    // trig
-    // vec3 angles = radians( theta );
-    // vec3 c = cos( angles );
-    // vec3 s = sin( angles );
-
-    // rotation matrix for x axis (column major)
-    // mat4 rx = mat4(
-    //   1.0,  0.0,  0.0, 0.0,
-	  //   0.0,  c.x,  s.x, 0.0,
-	  //   0.0, -s.x,  c.x, 0.0,
-	  //   0.0,  0.0,  0.0, 1.0
-    // );
-
-    // rotation matrix for y axis (column major)
-    // mat4 ry = mat4(
-    //   c.y, 0.0, -s.y, 0.0,
-	  //   0.0, 1.0,  0.0, 0.0,
-	  //   s.y, 0.0,  c.y, 0.0,
-	  //   0.0, 0.0,  0.0, 1.0
-    // );
-
-    // rotation matrix for z axis (column major)
-    // mat4 rz = mat4(
-    //   c.z, -s.z, 0.0, 0.0,
-	  //   s.z,  c.z, 0.0, 0.0,
-	  //   0.0,  0.0, 1.0, 0.0,
-	  //   0.0,  0.0, 0.0, 1.0
-    // );
-
-    // scale matrix (column major)
-    // mat4 sc = mat4(
-    //   scale.x, 0.0, 0.0, 0.0,
-    //   0.0, scale.y, 0.0, 0.0,
-    //   0.0, 0.0, scale.z, 0.0,
-    //   0.0, 0.0, 0.0, 1.0
-    // );
-
-    // translate matrix (column major)
-    // mat4 tr = mat4(
-    //   1.0, 0.0, 0.0, 0.0,
-    //   0.0, 1.0, 0.0, 0.0,
-    //   0.0, 0.0, 1.0, 0.0,
-    //   translate.x, translate.y, translate.z, 1.0
-    // );
-
-    // apply all matricies to the vertex
-    // gl_Position = projectionMatrix * modelViewMatrix * tr * rz * ry * rx * sc * vPosition;
+    // apply matricies to the vertex
     gl_Position = projectionMatrix * modelViewMatrix * vPosition;
-    // gl_Position =  modelViewMatrix * vPosition;
   }
   </script>
 
