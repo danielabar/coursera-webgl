@@ -31,7 +31,7 @@
     vec3 pos = (modelViewMatrix * vPosition).xyz;
 
     if(lightPosition.w == 0.0)  L = normalize(lightPosition.xyz);
-    else  L = normalize(lightPosition.xyz - pos).xyz;
+    else  L = normalize(lightPosition.xyz - pos);
 
     E =  -normalize(pos);
     N = normalize( normalMatrix*vNormal.xyz);
@@ -135,7 +135,7 @@
         <option value="Tetrahedron">Tetrahedron</option>
         <option value="Cube">Cube</option>
         <option value="Cylinder">Cylinder</option>
-        <!-- <option value="Cone">Cone</option> -->
+        <option value="Cone">Cone</option>
       </select>
     </div>
 

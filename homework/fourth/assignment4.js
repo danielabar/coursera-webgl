@@ -263,7 +263,6 @@
       gl.polygonOffset(1.0, 2.0);
 
       // Camera view
-      var dr = 1.0 * Math.PI/180.0;
       var radius = 0.0;
       var theta  = radians(1.0);
       var phi    = radians(1.0);
