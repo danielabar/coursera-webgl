@@ -41,7 +41,8 @@
 
     // Associate shader variables with normal data buffer
     var vNormal = gl.getAttribLocation( shape.program, "vNormal" );
-    gl.vertexAttribPointer( vNormal, 4, gl.FLOAT, false, 0, 0 );
+    // gl.vertexAttribPointer( vNormal, 4, gl.FLOAT, false, 0, 0 );
+    gl.vertexAttribPointer( vNormal, 3, gl.FLOAT, false, 0, 0 );
     gl.enableVertexAttribArray( vNormal);
 
     // Load vertex buffer onto GPU

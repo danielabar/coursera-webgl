@@ -8,8 +8,8 @@
     var t1 = subtract(vertices[b], vertices[a]);
     var t2 = subtract(vertices[c], vertices[b]);
     var normal = cross(t1, t2);
-    normal = vec4(normal);
-    normal[3] = 0.0;
+    normal = vec3(normal);
+    // normal[3] = 0.0;
     normal = normalize(normal);
 
 

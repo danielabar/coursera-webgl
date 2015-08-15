@@ -9,8 +9,8 @@
       t2 = subtract(c, a),
       normal = normalize(cross(t2, t1));
 
-    normal = vec4(normal);
-    normal[3] = 0.0;
+    normal = vec3(normal);
+    // normal[3] = 0.0;
 
     normalsArray.push(normal);
     normalsArray.push(normal);
