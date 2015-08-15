@@ -8,6 +8,7 @@
     _canvas,
     _shapes = [],
     _camera = {
+      viewMatrix: mat4(),
       projectionMatrix: mat4(),
     },
     _lighting = true;
@@ -143,6 +144,9 @@
     modelViewMatrix = mult(modelViewMatrix, rotate(thetaOpts[1], [0, 1, 0] ));
     modelViewMatrix = mult(modelViewMatrix, rotate(thetaOpts[2], [0, 0, 1] ));
     modelViewMatrix = mult(modelViewMatrix, genScaleMatrix(scaleOpts[0], scaleOpts[1], scaleOpts[2]));
+
+    modelViewMatrix = mult(modelViewMatrix, _camera.viewMatrix);
+
     shape.modelViewMatrix = modelViewMatrix;
 
     // Calculate normal matrix
@@ -258,7 +262,21 @@
       gl.enable(gl.POLYGON_OFFSET_FILL);
       gl.polygonOffset(1.0, 2.0);
 
-      // Camera
+      // Camera view
+      var dr = 1.0 * Math.PI/180.0;
+      var radius = 1.0;
+      var theta  = 0.0 + dr;
+      var phi    = 0.0 + dr;
+      var at = vec3(0.0, 0.0, 0.0);
+      var up = vec3(0.0, 1.0, 0.0);
+      var eye = vec3(
+        radius*Math.sin(theta)*Math.cos(phi),
+        radius*Math.sin(theta)*Math.sin(phi),
+        radius*Math.cos(theta)
+      );
+      _camera.viewMatrix = lookAt(eye, at , up);
+
+      // Camera projection
       var far = 10;
       var left = -3.0;
       var right = 3.0;
