@@ -1,41 +1,85 @@
 /**
  * Cylinder
+ *
+ * Normals:
+ * https://class.coursera.org/webgl-001/forum/thread?thread_id=342
  */
 (function(window, ShapeCommon) {
   'use strict';
 
+  var triangleNormal = function(a, b, c) {
+    var t1 = subtract(b, a),
+      t2 = subtract(c, a),
+      normal = normalize(cross(t2, t1));
+
+    normal = vec3(normal);
+    return normal;
+  };
+
   var Cylinder = {
 
     generate: function() {
-      var vertices = [],
+      var uniqueVertices = [],
+        vertices = [],
+        uniqueNormals = [],
         indices = [],
+        normals = [],
         bottomCap = [],
         topCap = [],
         n = 30,
-        startAngle = 0;
+        startAngle = 0,
+        ftn, stn;
 
-      bottomCap.push(0.0);
-      bottomCap.push(0.0);
-      bottomCap.push(0.0);
+      bottomCap.push(vec4(0.0, 0.0, 0.0, 1.0));
+      uniqueNormals.push(vec3(0.0, -1.0, 0.0));
       bottomCap = bottomCap.concat(ShapeCommon.createNgon(n, startAngle, 0.0));
+      for (var q=0; q<n; q++) {
+        uniqueNormals.push(vec3(0.0, -1.0, 0.0));
+      }
 
-      topCap.push(0.0);
-      topCap.push(0.0);
-      topCap.push(-1.9);
+      topCap.push(vec4(0.0, 0.0, -1.9, 1.0));
+      uniqueNormals.push(vec3(0.0, 1.0, 0.0));
       topCap = topCap.concat(ShapeCommon.createNgon(n, startAngle, -1.9));
+      for (var p=0; p<n; p++) {
+        uniqueNormals.push(vec3(0.0, 1.0, 0.0));
+      }
 
-      vertices = bottomCap.concat(topCap);
+      uniqueVertices = bottomCap.concat(topCap);
 
       // Index bottom cap
       for (var i=0; i<n; i++) {
         if (i === n-1) {
+
           indices.push(0);
+          vertices.push(uniqueVertices[0]);
+          // normals.push(uniqueNormals[0]);
+          normals.push(vec3(0.0, -1.0, 0.0));
+
           indices.push(n);
+          vertices.push(uniqueVertices[n]);
+          // normals.push(uniqueNormals[n]);
+          normals.push(vec3(0.0, -1.0, 0.0));
+
           indices.push(1);
+          vertices.push(uniqueVertices[1]);
+          // normals.push(uniqueNormals[1]);
+          normals.push(vec3(0.0, -1.0, 0.0));
+
         } else {
           indices.push(0);
+          vertices.push(uniqueVertices[0]);
+          // normals.push(uniqueNormals[0]);
+          normals.push(vec3(0.0, -1.0, 0.0));
+
           indices.push(i+1);
+          vertices.push(uniqueVertices[i+1]);
+          // normals.push(uniqueNormals[i+1]);
+          normals.push(vec3(0.0, -1.0, 0.0));
+
           indices.push(i+2);
+          vertices.push(uniqueVertices[i+2]);
+          // normals.push(uniqueNormals[i+2]);
+          normals.push(vec3(0.0, -1.0, 0.0));
         }
       }
 
@@ -44,12 +88,35 @@
       for (var j=0; j<n; j++) {
         if (j === n-1) {
           indices.push(offset);
+          vertices.push(uniqueVertices[offset]);
+          // normals.push(uniqueNormals[offset]);
+          normals.push(vec3(0.0, 1.0, 0.0));
+
           indices.push(n + offset);
+          vertices.push(uniqueVertices[n + offset]);
+          // normals.push(uniqueNormals[n + offset]);
+          normals.push(vec3(0.0, 1.0, 0.0));
+
           indices.push(1 + offset);
+          vertices.push(uniqueVertices[1 + offset]);
+          // normals.push(uniqueNormals[1 + offset]);
+          normals.push(vec3(0.0, 1.0, 0.0));
+
         } else {
           indices.push(offset);
+          vertices.push(uniqueVertices[offset]);
+          // normals.push(uniqueNormals[offset]);
+          normals.push(vec3(0.0, 1.0, 0.0));
+
           indices.push(j+1 + offset);
+          vertices.push(uniqueVertices[j+1 + offset]);
+          // normals.push(uniqueNormals[j+1 + offset]);
+          normals.push(vec3(0.0, 1.0, 0.0));
+
           indices.push(j+2 + offset);
+          vertices.push(uniqueVertices[j+2 + offset]);
+          // normals.push(uniqueNormals[j+2 + offset]);
+          normals.push(vec3(0.0, 1.0, 0.0));
         }
       }
 
@@ -60,33 +127,70 @@
         if (k === n-1) {
 
           // first triangle
+          ftn = triangleNormal(uniqueVertices[k], uniqueVertices[1], uniqueVertices[k + offset]);
           indices.push(k);
+          vertices.push(uniqueVertices[k]);
+          normals.push(ftn);
+
           indices.push(1);
+          vertices.push(uniqueVertices[1]);
+          normals.push(ftn);
+
           indices.push(k + offset);
+          vertices.push(uniqueVertices[k + offset]);
+          normals.push(ftn);
 
           // second triangle
+          stn = triangleNormal(uniqueVertices[k], uniqueVertices[1+offset], uniqueVertices[k+offset]);
           indices.push(k);
+          vertices.push(uniqueVertices[k]);
+          normals.push(stn);
+
           indices.push(1 + offset);
+          vertices.push(uniqueVertices[1+offset]);
+          normals.push(stn);
+
           indices.push(k + offset);
+          vertices.push(uniqueVertices[k+offset]);
+          normals.push(stn);
 
         } else {
 
           // first triangle
+          ftn = triangleNormal(uniqueVertices[k], uniqueVertices[k+1], uniqueVertices[k + 1 + offset]);
           indices.push(k);
+          vertices.push(uniqueVertices[k]);
+          normals.push(ftn);
+
           indices.push(k+1);
+          vertices.push(uniqueVertices[k+1]);
+          normals.push(ftn);
+
           indices.push(k + 1 + offset);
+          vertices.push(uniqueVertices[k+1+offset]);
+          normals.push(ftn);
 
           // second triangle
+          stn = triangleNormal(uniqueVertices[k], uniqueVertices[k+offset], uniqueVertices[k+1+offset]);
           indices.push(k);
+          vertices.push(uniqueVertices[k]);
+          normals.push(stn);
+
           indices.push(k + offset);
+          vertices.push(uniqueVertices[k+offset]);
+          normals.push(stn);
+
           indices.push(k + 1 + offset);
+          vertices.push(uniqueVertices[k+1+offset]);
+          normals.push(stn);
         }
 
       }
 
       return {
         v: vertices,
-        i: indices
+        i: indices,
+        n: normals
       };
     }
 
