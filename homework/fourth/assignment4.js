@@ -14,7 +14,8 @@
     },
     _lighting = true;
 
-  var lightPosition = vec4(1.0, 1.0, 1.0, 0.0 );
+  // var lightPosition = vec4(1.0, 1.0, 1.0, 0.0 );
+  var lightPosition = vec4(1.0, 1.0, 0.0, 0.0 );
   var lightAmbient = vec4(0.7, 0.6, 0.7, 1.0);
   var lightDiffuse = vec4( 1.0, 1.0, 1.0, 1.0 );
   var lightSpecular = vec4( 1.0, 1.0, 1.0, 1.0 );
@@ -118,8 +119,8 @@
     //   console.dir(shape);
     // }
 
-    var modelView = mat4(),
-      normalMat = mat4(),
+    var modelViewMatrix = mat4(),
+      normalMatrix = mat4(),
       thetaOpts = [],
       scaleOpts = [],
       translateOpts = [];
@@ -147,20 +148,18 @@
       document.getElementById('translateZ').valueAsNumber
     ];
 
-    // Calculate model view based on Translate, Rotate, Scale
-    modelView = mult(modelView, translate(translateOpts[0], translateOpts[1], translateOpts[2]));
-    modelView = mult(modelView, rotate(thetaOpts[0], [1, 0, 0] ));
-    modelView = mult(modelView, rotate(thetaOpts[1], [0, 1, 0] ));
-    modelView = mult(modelView, rotate(thetaOpts[2], [0, 0, 1] ));
-    modelView = mult(modelView, genScaleMatrix(scaleOpts[0], scaleOpts[1], scaleOpts[2]));
-    shape.modelViewMatrix = modelView;
+    // Calculate model view matrix based on Translate, Rotate, Scale
+    modelViewMatrix = mult(modelViewMatrix, translate(translateOpts[0], translateOpts[1], translateOpts[2]));
+    modelViewMatrix = mult(modelViewMatrix, rotate(thetaOpts[0], [1, 0, 0] ));
+    modelViewMatrix = mult(modelViewMatrix, rotate(thetaOpts[1], [0, 1, 0] ));
+    modelViewMatrix = mult(modelViewMatrix, rotate(thetaOpts[2], [0, 0, 1] ));
+    modelViewMatrix = mult(modelViewMatrix, genScaleMatrix(scaleOpts[0], scaleOpts[1], scaleOpts[2]));
+    shape.modelViewMatrix = modelViewMatrix;
 
-    // Calculate normal matrix based on Translate and Scale (but not Rotate) 
-    normalMat = mult(normalMat, translate(translateOpts[0], translateOpts[1], translateOpts[2]));
-    normalMat = mult(normalMat, genScaleMatrix(scaleOpts[0], scaleOpts[1], scaleOpts[2]));
-    normalMat = inverseMat3(flatten(normalMat));
-    normalMat = transpose(normalMat);
-    shape.normalMatrix = normalMat;
+    // Calculate normal matrix
+    normalMatrix = inverseMat3(flatten(shape.modelViewMatrix));
+    normalMatrix = transpose(normalMatrix);
+    shape.normalMatrix = normalMatrix;
   };
 
   var seedOneShape = function() {
@@ -267,19 +266,6 @@
       gl.enable(gl.POLYGON_OFFSET_FILL);
       gl.polygonOffset(1.0, 2.0);
 
-      // var at = vec3(0.0, 0.0, 0.0);
-      // var up = vec3(0.0, 1.0, 0.0);
-      // var radius = 1.5;
-      // var theta  = 15.0;
-      // var phi    = 0.0;
-      // var dr = 5.0 * Math.PI/180.0;
-      // var eye = vec3(
-      //   radius*Math.sin(theta) * Math.cos(phi),
-      //   radius*Math.sin(theta) * Math.sin(phi),
-      //   radius*Math.cos(theta)
-      // );
-      // _camera.modelViewMatrix = lookAt(eye, at , up);
-
       // TODO Somehow user should be able to manipulate at least some of these
       var far = 10;
       var left = -3.0;
@@ -288,10 +274,6 @@
       var ytop =3.0;
       var near = -10;
       _camera.projectionMatrix = ortho(left, right, bottom, ytop, near, far);
-
-      // var normalMatrix = inverseMat3(flatten(_camera.modelViewMatrix));
-      // normalMatrix = transpose(normalMatrix);
-      // _camera.normalMatrix = normalMatrix;
 
       // Seed the system with one shape
       setDefaults();
