@@ -57,14 +57,14 @@
     gl.enableVertexAttribArray( vPosition );
 
     // Uniform vars for shape settings
-    gl.uniform3fv(gl.getUniformLocation(shape.program, 'theta'), shape.theta);
-    gl.uniform3fv(gl.getUniformLocation(shape.program, 'scale'), shape.scale);
-    gl.uniform3fv(gl.getUniformLocation(shape.program, 'translate'), shape.translate);
+    // gl.uniform3fv(gl.getUniformLocation(shape.program, 'theta'), shape.theta);
+    // gl.uniform3fv(gl.getUniformLocation(shape.program, 'scale'), shape.scale);
+    // gl.uniform3fv(gl.getUniformLocation(shape.program, 'translate'), shape.translate);
 
-    // Uniform vars for camera settings
-    gl.uniformMatrix4fv(gl.getUniformLocation(shape.program, "modelViewMatrix" ), false, flatten(_camera.modelViewMatrix) );
+    // Uniform vars
+    gl.uniformMatrix4fv(gl.getUniformLocation(shape.program, "modelViewMatrix" ), false, flatten(shape.modelViewMatrix) );
     gl.uniformMatrix4fv(gl.getUniformLocation( shape.program, "projectionMatrix" ), false, flatten(_camera.projectionMatrix) );
-    gl.uniformMatrix3fv(gl.getUniformLocation( shape.program, "normalMatrix" ), false, flatten(_camera.normalMatrix) );
+    gl.uniformMatrix3fv(gl.getUniformLocation( shape.program, "normalMatrix" ), false, flatten(shape.normalMatrix) );
 
     if (_lighting) {
       gl.uniform4fv( gl.getUniformLocation(shape.program, "ambientProduct"),flatten(shape.ambientProduct) );
@@ -92,7 +92,7 @@
 
   };
 
-  var generateShape = function(shapeType) {
+  var generateShape = function(shapeType, update) {
     var shape = {type: shapeType},
       shapeVI,
       materialAmbient;
@@ -107,12 +107,25 @@
       shape.program = initShaders( gl, 'vertex-shader', 'fragment-shader-simple' );
     }
 
-    updateShapeWithUserSettings(shape);
+    if (update) {
+      updateShapeWithUserSettings(shape);
+    }
 
     return shape;
   };
 
   var updateShapeWithUserSettings = function(shape) {
+    // var shapeSelect = document.getElementById('shape');
+    // var shapeType = shapeSelect.options[shapeSelect.selectedIndex].value;
+    // if (shape.type !== shapeType) {
+    //   console.log('generating shapeType: ' + shapeType);
+    //   shape = generateShape(shapeType, false);
+    //   console.dir(shape);
+    // }
+
+    var modelView = mat4(),
+      normalMatrix;
+
     // Store the plain old color plus lit color in case user turns off lighting
     var selectedColor = ColorUtils.hexToGLvec4(document.getElementById('shapeColor').value);
     shape.color = selectedColor;
@@ -135,12 +148,25 @@
       document.getElementById('translateY').valueAsNumber,
       document.getElementById('translateZ').valueAsNumber
     ];
+
+    modelView = mult(modelView, translate(shape.translate[0], shape.translate[1], shape.translate[2]));
+    modelView = mult(modelView, genScaleMatrix(shape.scale[0], shape.scale[1], shape.scale[2]));
+
+    normalMatrix = inverseMat3(flatten(modelView));
+    normalMatrix = transpose(normalMatrix);
+
+    modelView = mult(modelView, rotate(shape.theta[0], [1, 0, 0] ));
+    modelView = mult(modelView, rotate(shape.theta[1], [0, 1, 0] ));
+    modelView = mult(modelView, rotate(shape.theta[2], [0, 0, 1] ));
+
+    shape.modelViewMatrix = modelView;
+    shape.normalMatrix = normalMatrix;
   };
 
   var seedOneShape = function() {
     var shapeSelect = document.getElementById('shape');
     var shapeType = shapeSelect.options[shapeSelect.selectedIndex].value;
-    _shapes.push(generateShape(shapeType));
+    _shapes.push(generateShape(shapeType, true));
     render(_shapes);
   };
 
@@ -183,6 +209,7 @@
     }
   };
 
+  // TODO: Handle shape selection dropdown separately and make that generate a new shape
   // always edit the most recently added shape, would be nice to have picking and able to edit any older one
   var changeHandler = function() {
     var currentShape = _shapes[_shapes.length-1];
@@ -191,17 +218,8 @@
   };
 
   var setDefaults = function() {
-    // _camera = {
-    //   modelViewMatrix: mat4(),
-    //   theta: 0,
-    //   phi: 0,
-    //   dz: 0,
-    //   sx: 1,
-    //   sy: 1,
-    //   sz: 1
-    // };
-
     document.getElementById('shape').value = 'Tetrahedron';
+    // document.getElementById('shape').value = 'Sphere';
     document.getElementById('shapeColor').value = '#ff0000';
 
     document.getElementById('rotateX').value = 0;
@@ -249,29 +267,31 @@
       gl.enable(gl.POLYGON_OFFSET_FILL);
       gl.polygonOffset(1.0, 2.0);
 
+      // var at = vec3(0.0, 0.0, 0.0);
+      // var up = vec3(0.0, 1.0, 0.0);
+      // var radius = 1.5;
+      // var theta  = 15.0;
+      // var phi    = 0.0;
+      // var dr = 5.0 * Math.PI/180.0;
+      // var eye = vec3(
+      //   radius*Math.sin(theta) * Math.cos(phi),
+      //   radius*Math.sin(theta) * Math.sin(phi),
+      //   radius*Math.cos(theta)
+      // );
+      // _camera.modelViewMatrix = lookAt(eye, at , up);
+
       // TODO Somehow user should be able to manipulate at least some of these
-      var at = vec3(0.0, 0.0, 0.0);
-      var up = vec3(0.0, 1.0, 0.0);
-      var near = -10;
       var far = 10;
-      var radius = 1.5;
-      var theta  = 15.0;
-      var phi    = 0.0;
-      var dr = 5.0 * Math.PI/180.0;
       var left = -3.0;
       var right = 3.0;
-      var ytop =3.0;
       var bottom = -3.0;
-      var eye = vec3(
-        radius*Math.sin(theta) * Math.cos(phi),
-        radius*Math.sin(theta) * Math.sin(phi),
-        radius*Math.cos(theta)
-      );
-      _camera.modelViewMatrix = lookAt(eye, at , up);
+      var ytop =3.0;
+      var near = -10;
       _camera.projectionMatrix = ortho(left, right, bottom, ytop, near, far);
-      var normalMatrix = inverseMat3(flatten(_camera.modelViewMatrix));
-      normalMatrix = transpose(normalMatrix);
-      _camera.normalMatrix = normalMatrix;
+
+      // var normalMatrix = inverseMat3(flatten(_camera.modelViewMatrix));
+      // normalMatrix = transpose(normalMatrix);
+      // _camera.normalMatrix = normalMatrix;
 
       // Seed the system with one shape
       setDefaults();
