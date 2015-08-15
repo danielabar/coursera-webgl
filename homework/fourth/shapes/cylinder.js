@@ -21,7 +21,6 @@
     generate: function() {
       var uniqueVertices = [],
         vertices = [],
-        uniqueNormals = [],
         indices = [],
         normals = [],
         bottomCap = [],
@@ -31,18 +30,10 @@
         ftn, stn;
 
       bottomCap.push(vec4(0.0, 0.0, 0.0, 1.0));
-      uniqueNormals.push(vec3(0.0, -1.0, 0.0));
       bottomCap = bottomCap.concat(ShapeCommon.createNgon(n, startAngle, 0.0));
-      for (var q=0; q<n; q++) {
-        uniqueNormals.push(vec3(0.0, -1.0, 0.0));
-      }
 
       topCap.push(vec4(0.0, 0.0, -1.9, 1.0));
-      uniqueNormals.push(vec3(0.0, 1.0, 0.0));
       topCap = topCap.concat(ShapeCommon.createNgon(n, startAngle, -1.9));
-      for (var p=0; p<n; p++) {
-        uniqueNormals.push(vec3(0.0, 1.0, 0.0));
-      }
 
       uniqueVertices = bottomCap.concat(topCap);
 
@@ -52,33 +43,27 @@
 
           indices.push(0);
           vertices.push(uniqueVertices[0]);
-          // normals.push(uniqueNormals[0]);
           normals.push(vec3(0.0, -1.0, 0.0));
 
           indices.push(n);
           vertices.push(uniqueVertices[n]);
-          // normals.push(uniqueNormals[n]);
           normals.push(vec3(0.0, -1.0, 0.0));
 
           indices.push(1);
           vertices.push(uniqueVertices[1]);
-          // normals.push(uniqueNormals[1]);
           normals.push(vec3(0.0, -1.0, 0.0));
 
         } else {
           indices.push(0);
           vertices.push(uniqueVertices[0]);
-          // normals.push(uniqueNormals[0]);
           normals.push(vec3(0.0, -1.0, 0.0));
 
           indices.push(i+1);
           vertices.push(uniqueVertices[i+1]);
-          // normals.push(uniqueNormals[i+1]);
           normals.push(vec3(0.0, -1.0, 0.0));
 
           indices.push(i+2);
           vertices.push(uniqueVertices[i+2]);
-          // normals.push(uniqueNormals[i+2]);
           normals.push(vec3(0.0, -1.0, 0.0));
         }
       }
@@ -89,37 +74,32 @@
         if (j === n-1) {
           indices.push(offset);
           vertices.push(uniqueVertices[offset]);
-          // normals.push(uniqueNormals[offset]);
           normals.push(vec3(0.0, 1.0, 0.0));
 
           indices.push(n + offset);
           vertices.push(uniqueVertices[n + offset]);
-          // normals.push(uniqueNormals[n + offset]);
           normals.push(vec3(0.0, 1.0, 0.0));
 
           indices.push(1 + offset);
           vertices.push(uniqueVertices[1 + offset]);
-          // normals.push(uniqueNormals[1 + offset]);
           normals.push(vec3(0.0, 1.0, 0.0));
 
         } else {
           indices.push(offset);
           vertices.push(uniqueVertices[offset]);
-          // normals.push(uniqueNormals[offset]);
           normals.push(vec3(0.0, 1.0, 0.0));
 
           indices.push(j+1 + offset);
           vertices.push(uniqueVertices[j+1 + offset]);
-          // normals.push(uniqueNormals[j+1 + offset]);
           normals.push(vec3(0.0, 1.0, 0.0));
 
           indices.push(j+2 + offset);
           vertices.push(uniqueVertices[j+2 + offset]);
-          // normals.push(uniqueNormals[j+2 + offset]);
           normals.push(vec3(0.0, 1.0, 0.0));
         }
       }
 
+      // FIXME Normals are incorrect
       // Index tube connecting top and bottom
       for (var k=1; k<=n-1; k++) {
 

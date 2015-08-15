@@ -168,7 +168,7 @@
     if (evt.target.id === 'clear' || evt.target.id === 'clearIcon') {
       _shapes = [];
       setDefaults();
-      seedOneShape();
+      render(_shapes);
     }
 
     if (evt.target.id === 'downloadShapeData' || evt.target.id === 'downloadShapeDataIcon') {
@@ -199,7 +199,7 @@
 
   var changeHandler = function(evt) {
 
-    if (evt.target.id === 'shape') {
+    if (evt.target.id !== 'lightSwitch' && (evt.target.id === 'shape' || _shapes.length === 0)) {
       seedOneShape();
     } else {
       var currentShape = _shapes[_shapes.length-1];
@@ -210,8 +210,7 @@
   };
 
   var setDefaults = function() {
-    document.getElementById('shape').value = 'Tetrahedron';
-    // document.getElementById('shape').value = 'Sphere';
+    document.getElementById('shape').value = 'Sphere';
     document.getElementById('shapeColor').value = '#ff0000';
 
     document.getElementById('rotateX').value = 0;
@@ -268,9 +267,8 @@
       var near = -10;
       _camera.projectionMatrix = ortho(left, right, bottom, ytop, near, far);
 
-      // Seed the system with one shape
       setDefaults();
-      seedOneShape();
+      render(_shapes);
     }
 
   };
