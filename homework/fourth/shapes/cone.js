@@ -7,12 +7,15 @@
   var Cone = {
 
     generate: function() {
-      var vertices = [],
+      var uniqueVertices = [],
+        vertices = [],
         indices = [],
+        normals = [],
         bottomCap = [],
         topPoint = [],
         n = 30,
-        startAngle = 1;
+        startAngle = 1,
+        ftn, stn;
 
       bottomCap.push(0.0);
       bottomCap.push(0.0);
@@ -23,7 +26,7 @@
       topPoint.push(0.0);
       topPoint.push(1.9);
 
-      vertices = bottomCap.concat(topPoint);
+      uniqueVertices = bottomCap.concat(topPoint);
 
       // Index bottom cap
       for (var i=0; i<n; i++) {
@@ -52,7 +55,7 @@
       }
 
       return {
-        v: vertices,
+        v: uniqueVertices,
         i: indices
       };
 

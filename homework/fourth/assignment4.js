@@ -264,9 +264,9 @@
 
       // Camera view
       var dr = 1.0 * Math.PI/180.0;
-      var radius = 1.0;
-      var theta  = 0.0 + dr;
-      var phi    = 0.0 + dr;
+      var radius = 0.0;
+      var theta  = radians(1.0);
+      var phi    = radians(1.0);
       var at = vec3(0.0, 0.0, 0.0);
       var up = vec3(0.0, 1.0, 0.0);
       var eye = vec3(
@@ -274,7 +274,7 @@
         radius*Math.sin(theta)*Math.sin(phi),
         radius*Math.cos(theta)
       );
-      _camera.viewMatrix = lookAt(eye, at , up);
+      _camera.viewMatrix = lookAt(eye, at, up);
 
       // Camera projection
       var far = 10;
