@@ -25,7 +25,7 @@
         normals = [],
         bottomCap = [],
         topCap = [],
-        n = 30,
+        n = 40,
         startAngle = 0,
         ftn, stn;
 
@@ -99,7 +99,6 @@
         }
       }
 
-      // FIXME Normals are incorrect
       // Index tube connecting top and bottom
       for (var k=1; k<=n-1; k++) {
 
