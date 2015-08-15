@@ -29,13 +29,8 @@
           var y = cosTheta;
           var z = sinPhi * sinTheta;
 
-          uniqueVertices.push(radius * x);
-          uniqueVertices.push(radius * y);
-          uniqueVertices.push(radius * z);
-
-          uniqueNormals.push(x);
-          uniqueNormals.push(y);
-          uniqueNormals.push(z);
+          uniqueVertices.push(vec4(radius * x, radius * y, radius * z, 1.0));
+          uniqueNormals.push(vec3(x, y, z));
         }
       }
 
@@ -46,19 +41,27 @@
 
           indices.push(first);
           vertices.push(uniqueVertices[first]);
-          indices.push(second);
-          vertices.push(uniqueVertices[second]);
-          indices.push(first+1);
-          vertices.push(uniqueVertices[first+1]);
           normals.push(uniqueNormals[first]);
 
           indices.push(second);
           vertices.push(uniqueVertices[second]);
-          indices.push(second+1);
-          vertices.push(uniqueVertices[second+1]);
+          normals.push(uniqueNormals[second]);
+
           indices.push(first+1);
           vertices.push(uniqueVertices[first+1]);
+          normals.push(uniqueNormals[first+1]);
+
+          indices.push(second);
+          vertices.push(uniqueVertices[second]);
           normals.push(uniqueNormals[second]);
+
+          indices.push(second+1);
+          vertices.push(uniqueVertices[second+1]);
+          normals.push(uniqueNormals[second+1]);
+
+          indices.push(first+1);
+          vertices.push(uniqueVertices[first+1]);
+          normals.push(uniqueNormals[first+1]);
         }
       }
 

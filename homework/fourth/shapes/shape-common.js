@@ -17,11 +17,18 @@
         angle = startAngle + dA*i;
         x = r * Math.cos(angle);
         y = r * Math.sin(angle);
-        vertices.push(x);
-        vertices.push(y);
-        vertices.push(z);
+        vertices.push(vec4(x, y, z, 1.0));
       }
       return vertices;
+    },
+
+    triangleNormal: function(a, b, c) {
+      var t1 = subtract(b, a),
+        t2 = subtract(c, a),
+        normal = normalize(cross(t2, t1));
+
+      normal = vec3(normal);
+      return normal;
     }
 
   };

@@ -8,11 +8,12 @@
     _canvas,
     _shapes = [],
     _camera = {
+      viewMatrix: mat4(),
       projectionMatrix: mat4(),
     },
     _lighting = true;
 
-  var lightPosition = vec4(1.0, 1.0, 0.0, 0.0 );
+  var lightPosition = vec4(1.0, 1.0, 1.0, 0.0 );
   var lightAmbient = vec4(0.7, 0.6, 0.7, 1.0);
   var lightDiffuse = vec4( 1.0, 1.0, 1.0, 1.0 );
   var lightSpecular = vec4( 1.0, 1.0, 1.0, 1.0 );
@@ -41,7 +42,7 @@
 
     // Associate shader variables with normal data buffer
     var vNormal = gl.getAttribLocation( shape.program, "vNormal" );
-    gl.vertexAttribPointer( vNormal, 4, gl.FLOAT, false, 0, 0 );
+    gl.vertexAttribPointer( vNormal, 3, gl.FLOAT, false, 0, 0 );
     gl.enableVertexAttribArray( vNormal);
 
     // Load vertex buffer onto GPU
@@ -94,6 +95,8 @@
     shape.normals = shapeVI.n;
     shape.vertices = shapeVI.v;
 
+    console.dir(shape.vertices);
+
     if (_lighting) {
       shape.program = initShaders( gl, 'vertex-shader', 'fragment-shader' );
     } else {
@@ -141,6 +144,9 @@
     modelViewMatrix = mult(modelViewMatrix, rotate(thetaOpts[1], [0, 1, 0] ));
     modelViewMatrix = mult(modelViewMatrix, rotate(thetaOpts[2], [0, 0, 1] ));
     modelViewMatrix = mult(modelViewMatrix, genScaleMatrix(scaleOpts[0], scaleOpts[1], scaleOpts[2]));
+
+    modelViewMatrix = mult(modelViewMatrix, _camera.viewMatrix);
+
     shape.modelViewMatrix = modelViewMatrix;
 
     // Calculate normal matrix
@@ -166,7 +172,7 @@
     if (evt.target.id === 'clear' || evt.target.id === 'clearIcon') {
       _shapes = [];
       setDefaults();
-      seedOneShape();
+      render(_shapes);
     }
 
     if (evt.target.id === 'downloadShapeData' || evt.target.id === 'downloadShapeDataIcon') {
@@ -197,7 +203,7 @@
 
   var changeHandler = function(evt) {
 
-    if (evt.target.id === 'shape') {
+    if (evt.target.id !== 'lightSwitch' && (evt.target.id === 'shape' || _shapes.length === 0)) {
       seedOneShape();
     } else {
       var currentShape = _shapes[_shapes.length-1];
@@ -208,8 +214,7 @@
   };
 
   var setDefaults = function() {
-    document.getElementById('shape').value = 'Tetrahedron';
-    // document.getElementById('shape').value = 'Sphere';
+    document.getElementById('shape').value = 'Sphere';
     document.getElementById('shapeColor').value = '#ff0000';
 
     document.getElementById('rotateX').value = 0;
@@ -257,7 +262,20 @@
       gl.enable(gl.POLYGON_OFFSET_FILL);
       gl.polygonOffset(1.0, 2.0);
 
-      // Camera
+      // Camera view
+      var radius = 0.0;
+      var theta  = radians(1.0);
+      var phi    = radians(1.0);
+      var at = vec3(0.0, 0.0, 0.0);
+      var up = vec3(0.0, 1.0, 0.0);
+      var eye = vec3(
+        radius*Math.sin(theta)*Math.cos(phi),
+        radius*Math.sin(theta)*Math.sin(phi),
+        radius*Math.cos(theta)
+      );
+      _camera.viewMatrix = lookAt(eye, at, up);
+
+      // Camera projection
       var far = 10;
       var left = -3.0;
       var right = 3.0;
@@ -266,9 +284,8 @@
       var near = -10;
       _camera.projectionMatrix = ortho(left, right, bottom, ytop, near, far);
 
-      // Seed the system with one shape
       setDefaults();
-      seedOneShape();
+      render(_shapes);
     }
 
   };

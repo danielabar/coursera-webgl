@@ -9,8 +9,7 @@
       t2 = subtract(c, a),
       normal = normalize(cross(t2, t1));
 
-    normal = vec4(normal);
-    normal[3] = 0.0;
+    normal = vec3(normal);
 
     normalsArray.push(normal);
     normalsArray.push(normal);
@@ -53,13 +52,15 @@
     generate: function() {
       var vertices = [],
         normals = [],
-        numTimesToSubdivide = 7,
+        numTimesToSubdivide = 3,
         va = vec4(0.0, 0.0, -1.0,1),
         vb = vec4(0.0, 0.942809, 0.333333, 1),
         vc = vec4(-0.816497, -0.471405, 0.333333, 1),
         vd = vec4(0.816497, -0.471405, 0.333333,1);
 
       tetrahedron(va, vb, vc, vd, numTimesToSubdivide, normals, vertices);
+
+      // console.dir(vertices);
 
       return {
         v: vertices,
