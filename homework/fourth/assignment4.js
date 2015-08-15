@@ -8,13 +8,10 @@
     _canvas,
     _shapes = [],
     _camera = {
-      modelViewMatrix: mat4(),
       projectionMatrix: mat4(),
-      normalMatrix: mat4(),
     },
     _lighting = true;
 
-  // var lightPosition = vec4(1.0, 1.0, 1.0, 0.0 );
   var lightPosition = vec4(1.0, 1.0, 0.0, 0.0 );
   var lightAmbient = vec4(0.7, 0.6, 0.7, 1.0);
   var lightDiffuse = vec4( 1.0, 1.0, 1.0, 1.0 );
@@ -88,7 +85,7 @@
 
   };
 
-  var generateShape = function(shapeType, update) {
+  var generateShape = function(shapeType) {
     var shape = {type: shapeType},
       shapeVI,
       materialAmbient;
@@ -103,22 +100,12 @@
       shape.program = initShaders( gl, 'vertex-shader', 'fragment-shader-simple' );
     }
 
-    if (update) {
-      updateShapeWithUserSettings(shape);
-    }
+    updateShapeWithUserSettings(shape);
 
     return shape;
   };
 
   var updateShapeWithUserSettings = function(shape) {
-    // var shapeSelect = document.getElementById('shape');
-    // var shapeType = shapeSelect.options[shapeSelect.selectedIndex].value;
-    // if (shape.type !== shapeType) {
-    //   console.log('generating shapeType: ' + shapeType);
-    //   shape = generateShape(shapeType, false);
-    //   console.dir(shape);
-    // }
-
     var modelViewMatrix = mat4(),
       normalMatrix = mat4(),
       thetaOpts = [],
@@ -208,12 +195,16 @@
     }
   };
 
-  // TODO: Handle shape selection dropdown separately and make that generate a new shape
-  // always edit the most recently added shape, would be nice to have picking and able to edit any older one
-  var changeHandler = function() {
-    var currentShape = _shapes[_shapes.length-1];
-    updateShapeWithUserSettings(currentShape);
-    render(_shapes);
+  var changeHandler = function(evt) {
+
+    if (evt.target.id === 'shape') {
+      seedOneShape();
+    } else {
+      var currentShape = _shapes[_shapes.length-1];
+      updateShapeWithUserSettings(currentShape);
+      render(_shapes);
+    }
+
   };
 
   var setDefaults = function() {
@@ -266,7 +257,7 @@
       gl.enable(gl.POLYGON_OFFSET_FILL);
       gl.polygonOffset(1.0, 2.0);
 
-      // TODO Somehow user should be able to manipulate at least some of these
+      // Camera
       var far = 10;
       var left = -3.0;
       var right = 3.0;

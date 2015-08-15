@@ -1,5 +1,5 @@
 /**
- * Cone
+ * Tetrahedron
  */
 (function(window) {
   'use strict';
