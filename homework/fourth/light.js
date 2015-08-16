@@ -18,7 +18,8 @@
         lightAmbient: vec4(0.7, 0.6, 0.7, 1.0),
         materialShininess: 10.0,
         diffuseProduct: mult(lightDiffuse, materialDiffuse),
-        specularProduct: mult(lightSpecular, materialSpecular)
+        specularProduct: mult(lightSpecular, materialSpecular),
+        theta: 0.0
       };
     },
 
@@ -34,7 +35,8 @@
         lightAmbient: vec4(0.7, 0.6, 0.7, 1.0),
         materialShininess: 40.0,
         diffuseProduct: mult(lightDiffuse, materialDiffuse),
-        specularProduct: mult(lightSpecular, materialSpecular)
+        specularProduct: mult(lightSpecular, materialSpecular),
+        theta: 0.0
       };
     }
 

@@ -62,13 +62,36 @@
 
   };
 
-  var render = function(shapes) {
+  var render = function() {
     gl.clear( gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-    shapes.forEach(function(shape) {
+    _shapes.forEach(function(shape) {
       renderShape(shape);
     });
 
+    updateLightPosition();
+
+    setTimeout(
+        function () {requestAnimFrame( render );},
+        2000
+    );
+
+  };
+
+  var rotatePoint = function(vec2Point, theta) {
+    var originalX = vec2Point[0];
+    var originalY = vec2Point[1];
+    var newX = (originalX * Math.cos(theta)) - (originalY * Math.sin(theta));
+    var newY = (originalX * Math.sin(theta)) + (originalY * Math.cos(theta));
+    return vec2(newX, newY);
+  };
+
+  var updateLightPosition = function() {
+    var curPos = vec2(_lightSource.lightPosition[0], _lightSource.lightPosition[1]);
+    _lightSource.theta += 15;
+    var rp = rotatePoint(curPos, radians(_lightSource.theta));
+    _lightSource.lightPosition[0] = rp[0];
+    _lightSource.lightPosition[1] = rp[1];
   };
 
   var generateShape = function(shapeType) {
@@ -142,7 +165,7 @@
     var shapeSelect = document.getElementById('shape');
     var shapeType = shapeSelect.options[shapeSelect.selectedIndex].value;
     _shapes.push(generateShape(shapeType, true));
-    render(_shapes);
+    render();
   };
 
   var actionHandler = function(evt) {
@@ -155,7 +178,7 @@
     if (evt.target.id === 'clear' || evt.target.id === 'clearIcon') {
       _shapes = [];
       setDefaults();
-      render(_shapes);
+      render();
     }
 
     if (evt.target.id === 'downloadShapeData' || evt.target.id === 'downloadShapeDataIcon') {
@@ -180,7 +203,7 @@
           shape.program = initShaders( gl, 'vertex-shader', 'fragment-shader-simple' );
         });
       }
-      render(_shapes);
+      render();
     }
   };
 
@@ -190,7 +213,7 @@
     } else {
       var currentShape = _shapes[_shapes.length-1];
       updateShapeWithUserSettings(currentShape);
-      render(_shapes);
+      render();
     }
   };
 
@@ -201,7 +224,7 @@
         shape.color
       );
     });
-    render(_shapes);
+    render();
   };
 
   var lightHandler = function(evt) {
