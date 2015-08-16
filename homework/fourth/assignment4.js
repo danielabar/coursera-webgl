@@ -12,7 +12,7 @@
       projectionMatrix: mat4(),
     },
     _lighting = true,
-    _lightSource = Light.middaySun();
+    _lightSource = Light.defaultSource();
 
   var renderShape = function(shape) {
     var modelViewMatrix;
@@ -284,7 +284,17 @@
     document.getElementById('translateZ').value = 0;
     document.getElementById('tzv').value = 0;
 
-    // document.getElementById('lightSwtich').checked = true;
+    document.getElementById('lightSwitch').checked = true;
+
+    document.getElementById('lightDiffuse').value = '#ffffff';
+    document.getElementById('materialDiffuse').value = '#ffffff';
+    document.getElementById('lightSpecular').value = '#ffffff';
+    document.getElementById('materialSpecular').value = '#ffffff';
+    document.getElementById('lightAmbient').value = '#ffffff';
+    document.getElementById('sunlight').checked = true;
+    document.getElementById('lightDistance').value = 1.0;
+    document.getElementById('materialShininess').value = 10.0;
+    _lightSource = Light.defaultSource();
   };
 
   var App = {
