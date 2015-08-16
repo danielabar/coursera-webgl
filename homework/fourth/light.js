@@ -6,6 +6,11 @@
 
   var Light = {
 
+    initPosition: function(distance, type) {
+      var w = (type === 'sunlight') ? 0.0 : 0.1;
+      return vec4(1.0, 1.0, distance, w);
+    },
+
     // TODO: overhead natural sunlight
     middaySun: function() {
       var lightDiffuse = vec4( 1.0, 1.0, 1.0, 1.0 ),

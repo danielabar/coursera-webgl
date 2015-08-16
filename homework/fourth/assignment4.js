@@ -86,12 +86,14 @@
     return vec2(newX, newY);
   };
 
+  // should this be calculated in vertex shader?
   var updateLightPosition = function() {
     var curPos = vec2(_lightSource.lightPosition[0], _lightSource.lightPosition[1]);
-    _lightSource.theta += 15;
+    _lightSource.theta += 1;
     var rp = rotatePoint(curPos, radians(_lightSource.theta));
     _lightSource.lightPosition[0] = rp[0];
     _lightSource.lightPosition[1] = rp[1];
+    // console.log('=== _lightSource\n' + JSON.stringify(_lightSource));
   };
 
   var generateShape = function(shapeType) {
@@ -165,7 +167,7 @@
     var shapeSelect = document.getElementById('shape');
     var shapeType = shapeSelect.options[shapeSelect.selectedIndex].value;
     _shapes.push(generateShape(shapeType, true));
-    render();
+    // render();
   };
 
   var actionHandler = function(evt) {
@@ -178,7 +180,7 @@
     if (evt.target.id === 'clear' || evt.target.id === 'clearIcon') {
       _shapes = [];
       setDefaults();
-      render();
+      // render();
     }
 
     if (evt.target.id === 'downloadShapeData' || evt.target.id === 'downloadShapeDataIcon') {
@@ -203,7 +205,7 @@
           shape.program = initShaders( gl, 'vertex-shader', 'fragment-shader-simple' );
         });
       }
-      render();
+      // render();
     }
   };
 
@@ -213,7 +215,7 @@
     } else {
       var currentShape = _shapes[_shapes.length-1];
       updateShapeWithUserSettings(currentShape);
-      render();
+      // render();
     }
   };
 
@@ -224,17 +226,37 @@
         shape.color
       );
     });
-    render();
+    // do we need to call render if its already in animFrame loop?
+    // render();
+  };
+
+  var updateLightSource = function() {
+    var lightDiffuse = ColorUtils.hexToGLvec4(document.getElementById('lightDiffuse').value),
+      materialDiffuse = ColorUtils.hexToGLvec4(document.getElementById('materialDiffuse').value),
+      lightSpecular = ColorUtils.hexToGLvec4(document.getElementById('lightSpecular').value),
+      materialSpecular = ColorUtils.hexToGLvec4(document.getElementById('materialSpecular').value),
+      lightAmbient = ColorUtils.hexToGLvec4(document.getElementById('lightAmbient').value),
+      lightType = DomUtils.getCheckedValue('lightType'),
+      lightDistance = document.getElementById('lightDistance').valueAsNumber,
+      materialShininess = document.getElementById('materialShininess').valueAsNumber,
+      curentLightAmbient = _lightSource.lightAmbient;
+
+    _lightSource.lightPosition = Light.initPosition(lightDistance, lightType);
+    _lightSource.lightAmbient = lightAmbient;
+    _lightSource.materialShininess = materialShininess;
+    _lightSource.diffuseProduct = mult(lightDiffuse, materialDiffuse);
+    _lightSource.specularProduct = mult(lightSpecular, materialSpecular);
+
+    console.log('updated _lightSource\n' + JSON.stringify(_lightSource));
+
+    // TODO: only if lightAmbient has changed, update all shapes
+    updateShapesWithLightSource(_lightSource);
   };
 
   var lightHandler = function(evt) {
-    var ls;
-
-    if (evt.target.name === 'lightSource') {
-      ls = DomUtils.getCheckedValue('lightSource');
-      _lightSource = Light[ls].call();
-      updateShapesWithLightSource(_lightSource);
-    }
+    updateLightSource();
+    // do we need to call render if its already in animFrame loop?
+    // render();
   };
 
   var setDefaults = function() {
@@ -310,7 +332,7 @@
       _camera.projectionMatrix = ortho(left, right, bottom, ytop, near, far);
 
       setDefaults();
-      render(_shapes);
+      render();
     }
 
   };
