@@ -1,7 +1,7 @@
 /**
  * App
  */
-(function(window, ColorUtils, Shape, DomUtils) {
+(function(window, ColorUtils, Shape, DomUtils, Light) {
   'use strict';
 
   var gl,
@@ -11,23 +11,8 @@
       viewMatrix: mat4(),
       projectionMatrix: mat4(),
     },
-    _lighting = true;
-
-  var lightPosition = vec4(1.0, 1.0, 1.0, 0.0 );
-  var lightAmbient = vec4(0.7, 0.6, 0.7, 1.0);
-  var lightDiffuse = vec4( 1.0, 1.0, 1.0, 1.0 );
-  var lightSpecular = vec4( 1.0, 1.0, 1.0, 1.0 );
-
-  var materialDiffuse = vec4( 1.0, 0.8, 0.0, 1.0 );
-  var materialSpecular = vec4( 1.0, 1.0, 1.0, 1.0 );
-  var materialShininess = 40.0;
-
-  var diffuseProduct = mult(lightDiffuse, materialDiffuse);
-  var specularProduct = mult(lightSpecular, materialSpecular);
-
-  var ctm;
-  var ambientColor, diffuseColor, specularColor;
-
+    _lighting = true,
+    _lightSource = Light.middaySun();
 
   var renderShape = function(shape) {
     var modelViewMatrix;
@@ -61,11 +46,11 @@
     gl.uniformMatrix4fv(gl.getUniformLocation( shape.program, "projectionMatrix" ), false, flatten(_camera.projectionMatrix) );
 
     if (_lighting) {
-      gl.uniform4fv( gl.getUniformLocation(shape.program, "ambientProduct"),flatten(shape.ambientProduct) );
-      gl.uniform4fv( gl.getUniformLocation(shape.program, "diffuseProduct"),flatten(diffuseProduct) );
-      gl.uniform4fv( gl.getUniformLocation(shape.program, "specularProduct"),flatten(specularProduct) );
-      gl.uniform4fv( gl.getUniformLocation(shape.program, "lightPosition"),flatten(lightPosition) );
-      gl.uniform1f( gl.getUniformLocation(shape.program, "shininess"),materialShininess );
+      gl.uniform4fv( gl.getUniformLocation(shape.program, "ambientProduct"), flatten(shape.ambientProduct) );
+      gl.uniform4fv( gl.getUniformLocation(shape.program, "diffuseProduct"), flatten(_lightSource.diffuseProduct) );
+      gl.uniform4fv( gl.getUniformLocation(shape.program, "specularProduct"), flatten(_lightSource.specularProduct) );
+      gl.uniform4fv( gl.getUniformLocation(shape.program, "lightPosition"), flatten(_lightSource.lightPosition) );
+      gl.uniform1f( gl.getUniformLocation(shape.program, "shininess"), _lightSource.materialShininess );
     } else {
       gl.uniform4fv(gl.getUniformLocation(shape.program, 'fColor'), shape.color);
     }
@@ -77,13 +62,38 @@
 
   };
 
-  var render = function(shapes) {
+  var render = function() {
     gl.clear( gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-    shapes.forEach(function(shape) {
+    _shapes.forEach(function(shape) {
       renderShape(shape);
     });
 
+    updateLightPosition();
+
+    setTimeout(
+        function () {requestAnimFrame( render );},
+        2000
+    );
+
+  };
+
+  var rotatePoint = function(vec2Point, theta) {
+    var originalX = vec2Point[0];
+    var originalY = vec2Point[1];
+    var newX = (originalX * Math.cos(theta)) - (originalY * Math.sin(theta));
+    var newY = (originalX * Math.sin(theta)) + (originalY * Math.cos(theta));
+    return vec2(newX, newY);
+  };
+
+  // should this be calculated in vertex shader?
+  var updateLightPosition = function() {
+    var curPos = vec2(_lightSource.lightPosition[0], _lightSource.lightPosition[1]);
+    _lightSource.theta += 1;
+    var rp = rotatePoint(curPos, radians(_lightSource.theta));
+    _lightSource.lightPosition[0] = rp[0];
+    _lightSource.lightPosition[1] = rp[1];
+    // console.log('=== _lightSource\n' + JSON.stringify(_lightSource));
   };
 
   var generateShape = function(shapeType) {
@@ -94,8 +104,6 @@
     shapeVI = Shape.generate(shapeType);
     shape.normals = shapeVI.n;
     shape.vertices = shapeVI.v;
-
-    console.dir(shape.vertices);
 
     if (_lighting) {
       shape.program = initShaders( gl, 'vertex-shader', 'fragment-shader' );
@@ -118,7 +126,7 @@
     // Store the plain old color plus lit color in case user turns off lighting
     var selectedColor = ColorUtils.hexToGLvec4(document.getElementById('shapeColor').value);
     shape.color = selectedColor;
-    shape.ambientProduct = mult(lightAmbient, selectedColor);
+    shape.ambientProduct = mult(_lightSource.lightAmbient, selectedColor);
 
     thetaOpts = [
       document.getElementById('rotateX').valueAsNumber,
@@ -138,7 +146,7 @@
       document.getElementById('translateZ').valueAsNumber
     ];
 
-    // Calculate model view matrix based on Translate, Rotate, Scale
+    // Calculate model matrix based on Translate, Rotate, Scale
     modelViewMatrix = mult(modelViewMatrix, translate(translateOpts[0], translateOpts[1], translateOpts[2]));
     modelViewMatrix = mult(modelViewMatrix, rotate(thetaOpts[0], [1, 0, 0] ));
     modelViewMatrix = mult(modelViewMatrix, rotate(thetaOpts[1], [0, 1, 0] ));
@@ -159,7 +167,7 @@
     var shapeSelect = document.getElementById('shape');
     var shapeType = shapeSelect.options[shapeSelect.selectedIndex].value;
     _shapes.push(generateShape(shapeType, true));
-    render(_shapes);
+    // render();
   };
 
   var actionHandler = function(evt) {
@@ -172,7 +180,7 @@
     if (evt.target.id === 'clear' || evt.target.id === 'clearIcon') {
       _shapes = [];
       setDefaults();
-      render(_shapes);
+      // render();
     }
 
     if (evt.target.id === 'downloadShapeData' || evt.target.id === 'downloadShapeDataIcon') {
@@ -197,24 +205,62 @@
           shape.program = initShaders( gl, 'vertex-shader', 'fragment-shader-simple' );
         });
       }
-      render(_shapes);
+      // render();
     }
   };
 
   var changeHandler = function(evt) {
-
     if (evt.target.id !== 'lightSwitch' && (evt.target.id === 'shape' || _shapes.length === 0)) {
       seedOneShape();
     } else {
       var currentShape = _shapes[_shapes.length-1];
       updateShapeWithUserSettings(currentShape);
-      render(_shapes);
+      // render();
     }
+  };
 
+  var updateShapesWithLightSource = function(lightSource) {
+    _shapes.forEach(function(shape) {
+      shape.ambientProduct = mult(
+        _lightSource.lightAmbient,
+        shape.color
+      );
+    });
+    // do we need to call render if its already in animFrame loop?
+    // render();
+  };
+
+  var updateLightSource = function() {
+    var lightDiffuse = ColorUtils.hexToGLvec4(document.getElementById('lightDiffuse').value),
+      materialDiffuse = ColorUtils.hexToGLvec4(document.getElementById('materialDiffuse').value),
+      lightSpecular = ColorUtils.hexToGLvec4(document.getElementById('lightSpecular').value),
+      materialSpecular = ColorUtils.hexToGLvec4(document.getElementById('materialSpecular').value),
+      lightAmbient = ColorUtils.hexToGLvec4(document.getElementById('lightAmbient').value),
+      lightType = DomUtils.getCheckedValue('lightType'),
+      lightDistance = document.getElementById('lightDistance').valueAsNumber,
+      materialShininess = document.getElementById('materialShininess').valueAsNumber,
+      curentLightAmbient = _lightSource.lightAmbient;
+
+    _lightSource.lightPosition = Light.initPosition(lightDistance, lightType);
+    _lightSource.lightAmbient = lightAmbient;
+    _lightSource.materialShininess = materialShininess;
+    _lightSource.diffuseProduct = mult(lightDiffuse, materialDiffuse);
+    _lightSource.specularProduct = mult(lightSpecular, materialSpecular);
+
+    console.log('updated _lightSource\n' + JSON.stringify(_lightSource));
+
+    // TODO: only if lightAmbient has changed, update all shapes
+    updateShapesWithLightSource(_lightSource);
+  };
+
+  var lightHandler = function(evt) {
+    updateLightSource();
+    // do we need to call render if its already in animFrame loop?
+    // render();
   };
 
   var setDefaults = function() {
-    document.getElementById('shape').value = 'Sphere';
+    // document.getElementById('shape').value = 'Sphere';
     document.getElementById('shapeColor').value = '#ff0000';
 
     document.getElementById('rotateX').value = 0;
@@ -251,8 +297,9 @@
       if ( !gl ) { alert( 'WebGL isn\'t available' ); }
 
       // Register event handlers
-      document.getElementById('settings').addEventListener('click', actionHandler);
-      document.getElementById('settings').addEventListener('change', changeHandler);
+      document.getElementById('shapeSettings').addEventListener('click', actionHandler);
+      document.getElementById('shapeSettings').addEventListener('change', changeHandler);
+      document.getElementById('lightSettings').addEventListener('click', lightHandler);
 
       // Configure WebGL
       gl.viewport( 0, 0, _canvas.width, _canvas.height );
@@ -285,14 +332,14 @@
       _camera.projectionMatrix = ortho(left, right, bottom, ytop, near, far);
 
       setDefaults();
-      render(_shapes);
+      render();
     }
 
   };
 
   window.App = App;
 
-}(window, window.ColorUtils, window.Shape, window.DomUtils));
+}(window, window.ColorUtils, window.Shape, window.DomUtils, window.Light));
 
 
 /**
