@@ -60,8 +60,6 @@
 
       tetrahedron(va, vb, vc, vd, numTimesToSubdivide, normals, vertices);
 
-      // console.dir(vertices);
-
       return {
         v: vertices,
         n: normals

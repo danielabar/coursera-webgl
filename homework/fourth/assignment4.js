@@ -100,10 +100,9 @@
     return vec4(newX, newY, newZ, origW);
   };
 
-  // TODO should lightsource also have phi?
   var updateLightPosition = function() {
     _lightSource.theta += 1;
-    _lightSource.lightPosition = rotatePoint3D(_lightSource.lightPosition, 1, _lightSource.theta);
+    _lightSource.lightPosition = rotatePoint3D(_lightSource.lightPosition, 0, _lightSource.theta);
   };
 
   var generateShape = function(shapeType) {
@@ -225,13 +224,13 @@
     }
   };
 
-  var updateShapesWithLightSource = function(lightSource) {
-    _shapes.forEach(function(shape) {
-      shape.ambientProduct = mult(
+  var updateShapesWithLightSource = function() {
+    for (var i=0; i<_shapes.length; i++) {
+      _shapes[i].ambientProduct = mult(
         _lightSource.lightAmbient,
-        shape.color
+        _shapes[i].color
       );
-    });
+    }
   };
 
   var updateLightSource = function() {
@@ -245,24 +244,23 @@
       materialShininess = document.getElementById('materialShininess').valueAsNumber,
       curentLightAmbient = _lightSource.lightAmbient;
 
+    if (!equal(curentLightAmbient, lightAmbient)) {
+      updateShapesWithLightSource();
+    }
+
     _lightSource.lightPosition = Light.initPosition(lightDistance, lightType);
     _lightSource.lightAmbient = lightAmbient;
     _lightSource.materialShininess = materialShininess;
     _lightSource.diffuseProduct = mult(lightDiffuse, materialDiffuse);
     _lightSource.specularProduct = mult(lightSpecular, materialSpecular);
 
-    // TODO: only if lightAmbient has changed, update all shapes
-    updateShapesWithLightSource(_lightSource);
   };
 
   var lightHandler = function(evt) {
     updateLightSource();
-    // do we need to call render if its already in animFrame loop?
-    // render();
   };
 
   var setDefaults = function() {
-    // document.getElementById('shape').value = 'Sphere';
     document.getElementById('shapeColor').value = '#ff0000';
 
     document.getElementById('rotateX').value = 0;
@@ -301,7 +299,7 @@
       // Register event handlers
       document.getElementById('shapeSettings').addEventListener('click', actionHandler);
       document.getElementById('shapeSettings').addEventListener('change', changeHandler);
-      document.getElementById('lightSettings').addEventListener('click', lightHandler);
+      document.getElementById('lightSettings').addEventListener('change', lightHandler);
 
       // Configure WebGL
       gl.viewport( 0, 0, _canvas.width, _canvas.height );
