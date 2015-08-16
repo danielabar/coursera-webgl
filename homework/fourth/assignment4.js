@@ -50,7 +50,7 @@
       gl.uniform4fv( gl.getUniformLocation(shape.program, "diffuseProduct"), flatten(_lightSource.diffuseProduct) );
       gl.uniform4fv( gl.getUniformLocation(shape.program, "specularProduct"), flatten(_lightSource.specularProduct) );
       gl.uniform4fv( gl.getUniformLocation(shape.program, "lightPosition"), flatten(_lightSource.lightPosition) );
-      gl.uniform1f( gl.getUniformLocation(shape.program, "shininess"), _lightSource.materialShininess );
+      gl.uniform1f( gl.getUniformLocation(shape.program, "shininess"), shape.materialShininess );
     } else {
       gl.uniform4fv(gl.getUniformLocation(shape.program, 'fColor'), shape.color);
     }
@@ -65,15 +65,15 @@
   var render = function() {
     gl.clear( gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-    _shapes.forEach(function(shape) {
-      renderShape(shape);
-    });
+    for (var i=0; i<_shapes.length; i++) {
+      renderShape(_shapes[i]);
+    }
 
     updateLightPosition();
 
     setTimeout(
         function () {requestAnimFrame( render );},
-        500
+        300
     );
 
   };
@@ -136,6 +136,7 @@
     var selectedColor = ColorUtils.hexToGLvec4(document.getElementById('shapeColor').value);
     shape.color = selectedColor;
     shape.ambientProduct = mult(_lightSource.lightAmbient, selectedColor);
+    shape.materialShininess = document.getElementById('materialShininess').valueAsNumber;
 
     thetaOpts = [
       document.getElementById('rotateX').valueAsNumber,
@@ -241,7 +242,7 @@
       lightAmbient = ColorUtils.hexToGLvec4(document.getElementById('lightAmbient').value),
       lightType = DomUtils.getCheckedValue('lightType'),
       lightDistance = document.getElementById('lightDistance').valueAsNumber,
-      materialShininess = document.getElementById('materialShininess').valueAsNumber,
+      // materialShininess = document.getElementById('materialShininess').valueAsNumber,
       curentLightAmbient = _lightSource.lightAmbient;
 
     if (!equal(curentLightAmbient, lightAmbient)) {
@@ -250,7 +251,7 @@
 
     _lightSource.lightPosition = Light.initPosition(lightDistance, lightType);
     _lightSource.lightAmbient = lightAmbient;
-    _lightSource.materialShininess = materialShininess;
+    // _lightSource.materialShininess = materialShininess;
     _lightSource.diffuseProduct = mult(lightDiffuse, materialDiffuse);
     _lightSource.specularProduct = mult(lightSpecular, materialSpecular);
 
@@ -284,6 +285,7 @@
     document.getElementById('translateZ').value = 0;
     document.getElementById('tzv').value = 0;
 
+    document.getElementById('materialShininess').value = 10.0;
     document.getElementById('lightSwitch').checked = true;
 
     document.getElementById('lightDiffuse').value = '#ffffff';
@@ -293,7 +295,6 @@
     document.getElementById('lightAmbient').value = '#ffffff';
     document.getElementById('sunlight').checked = true;
     document.getElementById('lightDistance').value = 1.0;
-    document.getElementById('materialShininess').value = 10.0;
     _lightSource = Light.defaultSource();
   };
 
@@ -309,7 +310,7 @@
       // Register event handlers
       document.getElementById('shapeSettings').addEventListener('click', actionHandler);
       document.getElementById('shapeSettings').addEventListener('change', changeHandler);
-      document.getElementById('lightSettings').addEventListener('change', lightHandler);
+      document.getElementById('lightSettings1').addEventListener('change', lightHandler);
 
       // Configure WebGL
       gl.viewport( 0, 0, _canvas.width, _canvas.height );

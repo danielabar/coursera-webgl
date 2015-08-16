@@ -21,7 +21,6 @@
         // lightPosition: vec4(0.0, 1.0, 1.0, 0.0 ),
         lightPosition: vec4(1.0, 1.0, 1.0, 0.0 ),
         lightAmbient: vec4( 1.0, 1.0, 1.0, 1.0 ),
-        materialShininess: 10.0,
         diffuseProduct: mult(lightDiffuse, materialDiffuse),
         specularProduct: mult(lightSpecular, materialSpecular),
         theta: 0.0
