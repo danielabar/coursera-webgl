@@ -1,7 +1,7 @@
 /**
  * App
  */
-(function(window, ColorUtils, Shape, DomUtils) {
+(function(window, ColorUtils, Shape, DomUtils, Light) {
   'use strict';
 
   var gl,
@@ -11,23 +11,8 @@
       viewMatrix: mat4(),
       projectionMatrix: mat4(),
     },
-    _lighting = true;
-
-  var lightPosition = vec4(1.0, 1.0, 1.0, 0.0 );
-  var lightAmbient = vec4(0.7, 0.6, 0.7, 1.0);
-  var lightDiffuse = vec4( 1.0, 1.0, 1.0, 1.0 );
-  var lightSpecular = vec4( 1.0, 1.0, 1.0, 1.0 );
-
-  var materialDiffuse = vec4( 1.0, 0.8, 0.0, 1.0 );
-  var materialSpecular = vec4( 1.0, 1.0, 1.0, 1.0 );
-  var materialShininess = 40.0;
-
-  var diffuseProduct = mult(lightDiffuse, materialDiffuse);
-  var specularProduct = mult(lightSpecular, materialSpecular);
-
-  var ctm;
-  var ambientColor, diffuseColor, specularColor;
-
+    _lighting = true,
+    _lightSource = Light.shinyHappy();
 
   var renderShape = function(shape) {
     var modelViewMatrix;
@@ -61,11 +46,11 @@
     gl.uniformMatrix4fv(gl.getUniformLocation( shape.program, "projectionMatrix" ), false, flatten(_camera.projectionMatrix) );
 
     if (_lighting) {
-      gl.uniform4fv( gl.getUniformLocation(shape.program, "ambientProduct"),flatten(shape.ambientProduct) );
-      gl.uniform4fv( gl.getUniformLocation(shape.program, "diffuseProduct"),flatten(diffuseProduct) );
-      gl.uniform4fv( gl.getUniformLocation(shape.program, "specularProduct"),flatten(specularProduct) );
-      gl.uniform4fv( gl.getUniformLocation(shape.program, "lightPosition"),flatten(lightPosition) );
-      gl.uniform1f( gl.getUniformLocation(shape.program, "shininess"),materialShininess );
+      gl.uniform4fv( gl.getUniformLocation(shape.program, "ambientProduct"), flatten(shape.ambientProduct) );
+      gl.uniform4fv( gl.getUniformLocation(shape.program, "diffuseProduct"), flatten(_lightSource.diffuseProduct) );
+      gl.uniform4fv( gl.getUniformLocation(shape.program, "specularProduct"), flatten(_lightSource.specularProduct) );
+      gl.uniform4fv( gl.getUniformLocation(shape.program, "lightPosition"), flatten(_lightSource.lightPosition) );
+      gl.uniform1f( gl.getUniformLocation(shape.program, "shininess"), _lightSource.materialShininess );
     } else {
       gl.uniform4fv(gl.getUniformLocation(shape.program, 'fColor'), shape.color);
     }
@@ -95,8 +80,6 @@
     shape.normals = shapeVI.n;
     shape.vertices = shapeVI.v;
 
-    console.dir(shape.vertices);
-
     if (_lighting) {
       shape.program = initShaders( gl, 'vertex-shader', 'fragment-shader' );
     } else {
@@ -118,7 +101,7 @@
     // Store the plain old color plus lit color in case user turns off lighting
     var selectedColor = ColorUtils.hexToGLvec4(document.getElementById('shapeColor').value);
     shape.color = selectedColor;
-    shape.ambientProduct = mult(lightAmbient, selectedColor);
+    shape.ambientProduct = mult(_lightSource.lightAmbient, selectedColor);
 
     thetaOpts = [
       document.getElementById('rotateX').valueAsNumber,
@@ -138,7 +121,7 @@
       document.getElementById('translateZ').valueAsNumber
     ];
 
-    // Calculate model view matrix based on Translate, Rotate, Scale
+    // Calculate model matrix based on Translate, Rotate, Scale
     modelViewMatrix = mult(modelViewMatrix, translate(translateOpts[0], translateOpts[1], translateOpts[2]));
     modelViewMatrix = mult(modelViewMatrix, rotate(thetaOpts[0], [1, 0, 0] ));
     modelViewMatrix = mult(modelViewMatrix, rotate(thetaOpts[1], [0, 1, 0] ));
@@ -292,7 +275,7 @@
 
   window.App = App;
 
-}(window, window.ColorUtils, window.Shape, window.DomUtils));
+}(window, window.ColorUtils, window.Shape, window.DomUtils, window.Light));
 
 
 /**

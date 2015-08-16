@@ -56,6 +56,8 @@
         }
       }
 
+      // TODO: for each vertex we calculate normal as the average of normals of the faces to which the vertex belongs.
+
       // Join top point to bottom cap
       for (var j=1; j<=n; j++) {
         if (j === n) {
@@ -87,6 +89,11 @@
           normals.push(tn);
         }
       }
+
+      console.log('vertices');
+      console.dir(vertices);
+      console.log('indices');
+      console.dir(indices);
 
       return {
         v: vertices,
