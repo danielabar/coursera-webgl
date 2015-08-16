@@ -12,7 +12,7 @@
       projectionMatrix: mat4(),
     },
     _lighting = true,
-    _lightSource = Light.middaySun();
+    _lightSource = Light.defaultSource();
 
   var renderShape = function(shape) {
     var modelViewMatrix;
@@ -73,27 +73,36 @@
 
     setTimeout(
         function () {requestAnimFrame( render );},
-        2000
+        500
     );
 
   };
 
-  var rotatePoint = function(vec2Point, theta) {
-    var originalX = vec2Point[0];
-    var originalY = vec2Point[1];
-    var newX = (originalX * Math.cos(theta)) - (originalY * Math.sin(theta));
-    var newY = (originalX * Math.sin(theta)) + (originalY * Math.cos(theta));
-    return vec2(newX, newY);
+  /**
+   *
+   https://www.opengl.org/discussion_boards/showthread.php/139444-Easiest-way-to-rotate-point-in-3d-using-trig
+   x= cos(yangle)* x + sin(yangle)*sin(xangle)*y - sin(yangle)*cos(xangle)*z
+   y = 0 + cos(xangle)*y + sin(xangle)*z
+   z= sin(yangle)*x + cos(yangle)*-sin(xangle) *y + cos(yangle)*cos(xangle)*z
+   */
+  var rotatePoint3D = function(vec4Point, xAngle, yAngle) {
+    var origX = vec4Point[0];
+    var origY = vec4Point[1];
+    var origZ = vec4Point[2];
+    var origW = vec4Point[3];
+    var xAngleRad = radians(xAngle);
+    var yAngleRad = radians(yAngle);
+
+    var newX = (Math.cos(yAngleRad) * origX) + (Math.sin(yAngleRad) * Math.sin(xAngleRad) * origY) - (Math.sin(yAngleRad) * Math.cos(xAngleRad) * origZ);
+    var newY = (Math.cos(xAngleRad) * origY) + (Math.sin(xAngleRad) * origZ);
+    var newZ = (Math.sin(yAngleRad) * origX) + (Math.cos(yAngleRad) * origY) + (Math.cos(yAngleRad) * Math.cos(xAngleRad) * origZ);
+
+    return vec4(newX, newY, newZ, origW);
   };
 
-  // should this be calculated in vertex shader?
   var updateLightPosition = function() {
-    var curPos = vec2(_lightSource.lightPosition[0], _lightSource.lightPosition[1]);
     _lightSource.theta += 1;
-    var rp = rotatePoint(curPos, radians(_lightSource.theta));
-    _lightSource.lightPosition[0] = rp[0];
-    _lightSource.lightPosition[1] = rp[1];
-    // console.log('=== _lightSource\n' + JSON.stringify(_lightSource));
+    _lightSource.lightPosition = rotatePoint3D(_lightSource.lightPosition, 0, _lightSource.theta);
   };
 
   var generateShape = function(shapeType) {
@@ -167,7 +176,6 @@
     var shapeSelect = document.getElementById('shape');
     var shapeType = shapeSelect.options[shapeSelect.selectedIndex].value;
     _shapes.push(generateShape(shapeType, true));
-    // render();
   };
 
   var actionHandler = function(evt) {
@@ -180,7 +188,6 @@
     if (evt.target.id === 'clear' || evt.target.id === 'clearIcon') {
       _shapes = [];
       setDefaults();
-      // render();
     }
 
     if (evt.target.id === 'downloadShapeData' || evt.target.id === 'downloadShapeDataIcon') {
@@ -205,7 +212,6 @@
           shape.program = initShaders( gl, 'vertex-shader', 'fragment-shader-simple' );
         });
       }
-      // render();
     }
   };
 
@@ -215,19 +221,16 @@
     } else {
       var currentShape = _shapes[_shapes.length-1];
       updateShapeWithUserSettings(currentShape);
-      // render();
     }
   };
 
-  var updateShapesWithLightSource = function(lightSource) {
-    _shapes.forEach(function(shape) {
-      shape.ambientProduct = mult(
+  var updateShapesWithLightSource = function() {
+    for (var i=0; i<_shapes.length; i++) {
+      _shapes[i].ambientProduct = mult(
         _lightSource.lightAmbient,
-        shape.color
+        _shapes[i].color
       );
-    });
-    // do we need to call render if its already in animFrame loop?
-    // render();
+    }
   };
 
   var updateLightSource = function() {
@@ -241,26 +244,23 @@
       materialShininess = document.getElementById('materialShininess').valueAsNumber,
       curentLightAmbient = _lightSource.lightAmbient;
 
+    if (!equal(curentLightAmbient, lightAmbient)) {
+      updateShapesWithLightSource();
+    }
+
     _lightSource.lightPosition = Light.initPosition(lightDistance, lightType);
     _lightSource.lightAmbient = lightAmbient;
     _lightSource.materialShininess = materialShininess;
     _lightSource.diffuseProduct = mult(lightDiffuse, materialDiffuse);
     _lightSource.specularProduct = mult(lightSpecular, materialSpecular);
 
-    console.log('updated _lightSource\n' + JSON.stringify(_lightSource));
-
-    // TODO: only if lightAmbient has changed, update all shapes
-    updateShapesWithLightSource(_lightSource);
   };
 
   var lightHandler = function(evt) {
     updateLightSource();
-    // do we need to call render if its already in animFrame loop?
-    // render();
   };
 
   var setDefaults = function() {
-    // document.getElementById('shape').value = 'Sphere';
     document.getElementById('shapeColor').value = '#ff0000';
 
     document.getElementById('rotateX').value = 0;
@@ -284,7 +284,17 @@
     document.getElementById('translateZ').value = 0;
     document.getElementById('tzv').value = 0;
 
-    // document.getElementById('lightSwtich').checked = true;
+    document.getElementById('lightSwitch').checked = true;
+
+    document.getElementById('lightDiffuse').value = '#ffffff';
+    document.getElementById('materialDiffuse').value = '#ffffff';
+    document.getElementById('lightSpecular').value = '#ffffff';
+    document.getElementById('materialSpecular').value = '#ffffff';
+    document.getElementById('lightAmbient').value = '#ffffff';
+    document.getElementById('sunlight').checked = true;
+    document.getElementById('lightDistance').value = 1.0;
+    document.getElementById('materialShininess').value = 10.0;
+    _lightSource = Light.defaultSource();
   };
 
   var App = {
@@ -299,7 +309,7 @@
       // Register event handlers
       document.getElementById('shapeSettings').addEventListener('click', actionHandler);
       document.getElementById('shapeSettings').addEventListener('change', changeHandler);
-      document.getElementById('lightSettings').addEventListener('click', lightHandler);
+      document.getElementById('lightSettings').addEventListener('change', lightHandler);
 
       // Configure WebGL
       gl.viewport( 0, 0, _canvas.width, _canvas.height );

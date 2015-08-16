@@ -23,7 +23,7 @@
 .assignment section {
   padding-top: 20px;
   padding-bottom: 1px;
-  background: rgba(81, 78, 78, 1);
+  background: #524f4f;
   color: #fff;
 }
 
@@ -316,6 +316,17 @@ input[type=button] {
   padding-bottom: 10px;
 }
 
+
+/* ---------------------------------- */
+/* Light Settings */
+/* ---------------------------------- */
+
+.light-settings {
+  padding-left: 10px;
+  padding-right: 10px;
+  border: 1px solid #636161;
+  border-radius: 3px;
+}
 
 /* ---------------------------------- */
 /* Button Toggle */
