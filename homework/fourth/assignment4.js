@@ -73,7 +73,7 @@
 
     setTimeout(
         function () {requestAnimFrame( render );},
-        300
+        60
     );
 
   };
@@ -101,8 +101,16 @@
   };
 
   var updateLightPosition = function() {
-    _lightSource.theta += 1;
-    _lightSource.lightPosition = rotatePoint3D(_lightSource.lightPosition, 0, _lightSource.theta);
+    _lightSource.theta += 0.1;
+    var rotatedPoint = Light.rotatePoint2D(_lightSource.theta, 16);
+
+    _lightSource.lightPosition[0] = rotatedPoint[0];
+    _lightSource.lightPosition[1] = rotatedPoint[1];
+
+    if (_lightSource.theta >= 2*Math.PI) {
+      _lightSource.theta = 0.0;
+    }
+    // _lightSource.lightPosition = rotatePoint3D(_lightSource.lightPosition, 0, _lightSource.theta);
   };
 
   var generateShape = function(shapeType) {
@@ -242,7 +250,6 @@
       lightAmbient = ColorUtils.hexToGLvec4(document.getElementById('lightAmbient').value),
       lightType = DomUtils.getCheckedValue('lightType'),
       lightDistance = document.getElementById('lightDistance').valueAsNumber,
-      // materialShininess = document.getElementById('materialShininess').valueAsNumber,
       curentLightAmbient = _lightSource.lightAmbient;
 
     if (!equal(curentLightAmbient, lightAmbient)) {
@@ -251,7 +258,6 @@
 
     _lightSource.lightPosition = Light.initPosition(lightDistance, lightType);
     _lightSource.lightAmbient = lightAmbient;
-    // _lightSource.materialShininess = materialShininess;
     _lightSource.diffuseProduct = mult(lightDiffuse, materialDiffuse);
     _lightSource.specularProduct = mult(lightSpecular, materialSpecular);
 
@@ -286,6 +292,7 @@
     document.getElementById('tzv').value = 0;
 
     document.getElementById('materialShininess').value = 10.0;
+    document.getElementById('mshiny').value = 10.0;
     document.getElementById('lightSwitch').checked = true;
 
     document.getElementById('lightDiffuse').value = '#ffffff';
