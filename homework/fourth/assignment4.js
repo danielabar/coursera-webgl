@@ -100,6 +100,7 @@
     return vec4(newX, newY, newZ, origW);
   };
 
+  // TODO should lightsource also have phi?
   var updateLightPosition = function() {
     _lightSource.theta += 1;
     _lightSource.lightPosition = rotatePoint3D(_lightSource.lightPosition, 1, _lightSource.theta);
@@ -176,7 +177,6 @@
     var shapeSelect = document.getElementById('shape');
     var shapeType = shapeSelect.options[shapeSelect.selectedIndex].value;
     _shapes.push(generateShape(shapeType, true));
-    // render();
   };
 
   var actionHandler = function(evt) {
@@ -189,7 +189,6 @@
     if (evt.target.id === 'clear' || evt.target.id === 'clearIcon') {
       _shapes = [];
       setDefaults();
-      // render();
     }
 
     if (evt.target.id === 'downloadShapeData' || evt.target.id === 'downloadShapeDataIcon') {
@@ -214,7 +213,6 @@
           shape.program = initShaders( gl, 'vertex-shader', 'fragment-shader-simple' );
         });
       }
-      // render();
     }
   };
 
@@ -224,7 +222,6 @@
     } else {
       var currentShape = _shapes[_shapes.length-1];
       updateShapeWithUserSettings(currentShape);
-      // render();
     }
   };
 
@@ -235,8 +232,6 @@
         shape.color
       );
     });
-    // do we need to call render if its already in animFrame loop?
-    // render();
   };
 
   var updateLightSource = function() {
@@ -255,8 +250,6 @@
     _lightSource.materialShininess = materialShininess;
     _lightSource.diffuseProduct = mult(lightDiffuse, materialDiffuse);
     _lightSource.specularProduct = mult(lightSpecular, materialSpecular);
-
-    console.log('updated _lightSource\n' + JSON.stringify(_lightSource));
 
     // TODO: only if lightAmbient has changed, update all shapes
     updateShapesWithLightSource(_lightSource);

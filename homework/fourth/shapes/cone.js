@@ -90,11 +90,6 @@
         }
       }
 
-      console.log('vertices');
-      console.dir(vertices);
-      console.log('indices');
-      console.dir(indices);
-
       return {
         v: vertices,
         i: indices,
