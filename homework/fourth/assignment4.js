@@ -12,7 +12,7 @@
       projectionMatrix: mat4(),
     },
     _lighting = true,
-    _lightSource = Light.shinyHappy();
+    _lightSource = Light.middaySun();
 
   var renderShape = function(shape) {
     var modelViewMatrix;
@@ -185,7 +185,6 @@
   };
 
   var changeHandler = function(evt) {
-
     if (evt.target.id !== 'lightSwitch' && (evt.target.id === 'shape' || _shapes.length === 0)) {
       seedOneShape();
     } else {
@@ -193,11 +192,30 @@
       updateShapeWithUserSettings(currentShape);
       render(_shapes);
     }
+  };
 
+  var updateShapesWithLightSource = function(lightSource) {
+    _shapes.forEach(function(shape) {
+      shape.ambientProduct = mult(
+        _lightSource.lightAmbient,
+        shape.color
+      );
+    });
+    render(_shapes);
+  };
+
+  var lightHandler = function(evt) {
+    var ls;
+
+    if (evt.target.name === 'lightSource') {
+      ls = DomUtils.getCheckedValue('lightSource');
+      _lightSource = Light[ls].call();
+      updateShapesWithLightSource(_lightSource);
+    }
   };
 
   var setDefaults = function() {
-    document.getElementById('shape').value = 'Sphere';
+    // document.getElementById('shape').value = 'Sphere';
     document.getElementById('shapeColor').value = '#ff0000';
 
     document.getElementById('rotateX').value = 0;
@@ -234,8 +252,9 @@
       if ( !gl ) { alert( 'WebGL isn\'t available' ); }
 
       // Register event handlers
-      document.getElementById('settings').addEventListener('click', actionHandler);
-      document.getElementById('settings').addEventListener('change', changeHandler);
+      document.getElementById('shapeSettings').addEventListener('click', actionHandler);
+      document.getElementById('shapeSettings').addEventListener('change', changeHandler);
+      document.getElementById('lightSettings').addEventListener('click', lightHandler);
 
       // Configure WebGL
       gl.viewport( 0, 0, _canvas.width, _canvas.height );
