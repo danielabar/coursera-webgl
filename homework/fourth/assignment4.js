@@ -73,27 +73,36 @@
 
     setTimeout(
         function () {requestAnimFrame( render );},
-        2000
+        500
     );
 
   };
 
-  var rotatePoint = function(vec2Point, theta) {
-    var originalX = vec2Point[0];
-    var originalY = vec2Point[1];
-    var newX = (originalX * Math.cos(theta)) - (originalY * Math.sin(theta));
-    var newY = (originalX * Math.sin(theta)) + (originalY * Math.cos(theta));
-    return vec2(newX, newY);
+  /**
+   *
+   https://www.opengl.org/discussion_boards/showthread.php/139444-Easiest-way-to-rotate-point-in-3d-using-trig
+   x= cos(yangle)* x + sin(yangle)*sin(xangle)*y - sin(yangle)*cos(xangle)*z
+   y = 0 + cos(xangle)*y + sin(xangle)*z
+   z= sin(yangle)*x + cos(yangle)*-sin(xangle) *y + cos(yangle)*cos(xangle)*z
+   */
+  var rotatePoint3D = function(vec4Point, xAngle, yAngle) {
+    var origX = vec4Point[0];
+    var origY = vec4Point[1];
+    var origZ = vec4Point[2];
+    var origW = vec4Point[3];
+    var xAngleRad = radians(xAngle);
+    var yAngleRad = radians(yAngle);
+
+    var newX = (Math.cos(yAngleRad) * origX) + (Math.sin(yAngleRad) * Math.sin(xAngleRad) * origY) - (Math.sin(yAngleRad) * Math.cos(xAngleRad) * origZ);
+    var newY = (Math.cos(xAngleRad) * origY) + (Math.sin(xAngleRad) * origZ);
+    var newZ = (Math.sin(yAngleRad) * origX) + (Math.cos(yAngleRad) * origY) + (Math.cos(yAngleRad) * Math.cos(xAngleRad) * origZ);
+
+    return vec4(newX, newY, newZ, origW);
   };
 
-  // should this be calculated in vertex shader?
   var updateLightPosition = function() {
-    var curPos = vec2(_lightSource.lightPosition[0], _lightSource.lightPosition[1]);
     _lightSource.theta += 1;
-    var rp = rotatePoint(curPos, radians(_lightSource.theta));
-    _lightSource.lightPosition[0] = rp[0];
-    _lightSource.lightPosition[1] = rp[1];
-    // console.log('=== _lightSource\n' + JSON.stringify(_lightSource));
+    _lightSource.lightPosition = rotatePoint3D(_lightSource.lightPosition, 1, _lightSource.theta);
   };
 
   var generateShape = function(shapeType) {
