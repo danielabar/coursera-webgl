@@ -46,10 +46,10 @@
 
     if (_lightSource.enabled) {
       // experiment multiple light sources
-      var lightPosition1 = vec4(1.0, 1.0, 1.0, 0.0 );
-      var lightPosition2 = vec4(0.5, 0.5, 0.5, 0.0 );
-      var lightPosArr = [lightPosition1, lightPosition2];
-      gl.uniform4fv( gl.getUniformLocation(shape.program, "lightPositionTest"), flatten(lightPosArr) );
+      // var lightPosition1 = vec4(1.0, 1.0, 1.0, 0.0 );
+      // var lightPosition2 = vec4(0.5, 0.5, 0.5, 0.0 );
+      // var lightPosArr = [lightPosition1, lightPosition2];
+      // gl.uniform4fv( gl.getUniformLocation(shape.program, "lightPositionTest"), flatten(lightPosArr) );
 
       gl.uniform4fv( gl.getUniformLocation(shape.program, "ambientProduct"), flatten(shape.ambientProduct) );
       gl.uniform4fv( gl.getUniformLocation(shape.program, "diffuseProduct"), flatten(_lightSource.diffuseProduct) );

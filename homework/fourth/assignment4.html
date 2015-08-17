@@ -24,25 +24,50 @@
   uniform vec4 lightPosition;
   varying vec3 N, L, E;
 
-  // Experiment with multiple light sources
-  const int cNumLight = 2;
-  uniform vec4 lightPositionTest[cNumLight];
-
   void main() {
-
 
     // lighting
     vec3 light;
     vec3 pos = (modelViewMatrix * vPosition).xyz;
 
-    // Experiment with multiple light sources
-    vec3 Ltest;
-    for (int i=0; i < cNumLight; i++) {
-        Ltest = normalize(lightPositionTest[i].xyz - pos);
-    }
-
     if(lightPosition.w == 0.0)  L = normalize(lightPosition.xyz);
     else  L = normalize(lightPosition.xyz - pos);
+
+    E =  -normalize(pos);
+    N = normalize( normalMatrix*vNormal.xyz);
+
+    // apply matricies to the vertex
+    gl_Position = projectionMatrix * modelViewMatrix * vPosition;
+  }
+  </script>
+
+  <script id="vertex-shader-dual" type="x-shader/x-vertex">
+
+  // vertex data
+  attribute vec4 vPosition;
+  attribute vec3 vNormal;
+
+  // camera settings
+  uniform mat4 modelViewMatrix;
+  uniform mat4 projectionMatrix;
+  uniform mat3 normalMatrix;
+
+  // lighting
+  const int cNumLight = 2;
+  uniform vec4 lightPosition[cNumLight];
+  varying vec3 N, E;
+  varying vec3 L[cNumLight];
+
+  void main() {
+
+    // lighting
+    vec3 light;
+    vec3 pos = (modelViewMatrix * vPosition).xyz;
+
+    for (int i=0; i < cNumLight; i++) {
+      if(lightPosition.w == 0.0)  L = normalize(lightPosition.xyz);
+      else  L[i] = normalize(lightPosition[i].xyz - pos);
+    }
 
     E =  -normalize(pos);
     N = normalize( normalMatrix*vNormal.xyz);
@@ -56,12 +81,15 @@
   precision mediump float;
 
   // uniform vec4 fColor;
-  uniform vec4 ambientProduct;
-  uniform vec4 diffuseProduct;
-  uniform vec4 specularProduct;
+  uniform vec4 ambientProduct[cNumLight];
+  uniform vec4 diffuseProduct[cNumLight];
+  uniform vec4 specularProduct[cNumLight];
   uniform float shininess;
-  varying vec3 N, L, E;
 
+  varying vec3 N, E;
+  varying vec3 L[cNumLight];
+
+  // TODO work in arrays
   void main() {
     vec4 fColor;
 
