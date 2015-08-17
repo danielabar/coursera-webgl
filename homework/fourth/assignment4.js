@@ -79,26 +79,31 @@
   };
 
   // 3D Rotation
-  var updateLightPosition = function() {
-    _lightSource.theta += 0.1;
-    _lightSource.lightPosition = Light.rotatePoint3D(_lightSource.lightPosition, 0, _lightSource.theta);
-    if (_lightSource.theta >= 2*Math.PI) {
-      _lightSource.theta = 0.0;
-    }
-  };
-
-  // 2D Rotation
   // var updateLightPosition = function() {
   //   _lightSource.theta += 0.1;
-  //   var rotatedPoint = Light.rotatePoint2D(_lightSource.theta, 16);
+  //   var rotatedPoint = Light.rotatePoint3D(_lightSource.lightPosition, 0, _lightSource.theta);
   //
   //   _lightSource.lightPosition[0] = rotatedPoint[0];
   //   _lightSource.lightPosition[1] = rotatedPoint[1];
+  //   _lightSource.lightPosition[2] = rotatedPoint[2];
   //
   //   if (_lightSource.theta >= 2*Math.PI) {
   //     _lightSource.theta = 0.0;
   //   }
   // };
+
+  // 2D Rotation
+  var updateLightPosition = function() {
+    _lightSource.theta += 0.1;
+    var rotatedPoint = Light.rotatePoint2D(_lightSource.theta, 16);
+
+    _lightSource.lightPosition[0] = rotatedPoint[0];
+    _lightSource.lightPosition[1] = rotatedPoint[1];
+
+    if (_lightSource.theta >= 2*Math.PI) {
+      _lightSource.theta = 0.0;
+    }
+  };
 
   var generateShape = function(shapeType) {
     var shape = {type: shapeType},
