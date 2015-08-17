@@ -50,7 +50,7 @@
       gl.uniform4fv( gl.getUniformLocation(shape.program, "diffuseProduct"), flatten(_lightSource.diffuseProduct) );
       gl.uniform4fv( gl.getUniformLocation(shape.program, "specularProduct"), flatten(_lightSource.specularProduct) );
       gl.uniform4fv( gl.getUniformLocation(shape.program, "lightPosition"), flatten(_lightSource.lightPosition) );
-      gl.uniform1f( gl.getUniformLocation(shape.program, "shininess"), _lightSource.materialShininess );
+      gl.uniform1f( gl.getUniformLocation(shape.program, "shininess"), shape.materialShininess );
     } else {
       gl.uniform4fv(gl.getUniformLocation(shape.program, 'fColor'), shape.color);
     }
@@ -65,44 +65,44 @@
   var render = function() {
     gl.clear( gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-    _shapes.forEach(function(shape) {
-      renderShape(shape);
-    });
+    for (var i=0; i<_shapes.length; i++) {
+      renderShape(_shapes[i]);
+    }
 
     updateLightPosition();
 
     setTimeout(
         function () {requestAnimFrame( render );},
-        500
+        60
     );
 
   };
 
-  /**
-   *
-   https://www.opengl.org/discussion_boards/showthread.php/139444-Easiest-way-to-rotate-point-in-3d-using-trig
-   x= cos(yangle)* x + sin(yangle)*sin(xangle)*y - sin(yangle)*cos(xangle)*z
-   y = 0 + cos(xangle)*y + sin(xangle)*z
-   z= sin(yangle)*x + cos(yangle)*-sin(xangle) *y + cos(yangle)*cos(xangle)*z
-   */
-  var rotatePoint3D = function(vec4Point, xAngle, yAngle) {
-    var origX = vec4Point[0];
-    var origY = vec4Point[1];
-    var origZ = vec4Point[2];
-    var origW = vec4Point[3];
-    var xAngleRad = radians(xAngle);
-    var yAngleRad = radians(yAngle);
+  // 3D Rotation
+  // var updateLightPosition = function() {
+  //   _lightSource.theta += 0.1;
+  //   var rotatedPoint = Light.rotatePoint3D(_lightSource.lightPosition, 0, _lightSource.theta);
+  //
+  //   _lightSource.lightPosition[0] = rotatedPoint[0];
+  //   _lightSource.lightPosition[1] = rotatedPoint[1];
+  //   _lightSource.lightPosition[2] = rotatedPoint[2];
+  //
+  //   if (_lightSource.theta >= 2*Math.PI) {
+  //     _lightSource.theta = 0.0;
+  //   }
+  // };
 
-    var newX = (Math.cos(yAngleRad) * origX) + (Math.sin(yAngleRad) * Math.sin(xAngleRad) * origY) - (Math.sin(yAngleRad) * Math.cos(xAngleRad) * origZ);
-    var newY = (Math.cos(xAngleRad) * origY) + (Math.sin(xAngleRad) * origZ);
-    var newZ = (Math.sin(yAngleRad) * origX) + (Math.cos(yAngleRad) * origY) + (Math.cos(yAngleRad) * Math.cos(xAngleRad) * origZ);
-
-    return vec4(newX, newY, newZ, origW);
-  };
-
+  // 2D Rotation
   var updateLightPosition = function() {
-    _lightSource.theta += 1;
-    _lightSource.lightPosition = rotatePoint3D(_lightSource.lightPosition, 0, _lightSource.theta);
+    _lightSource.theta += 0.1;
+    var rotatedPoint = Light.rotatePoint2D(_lightSource.theta, 16);
+
+    _lightSource.lightPosition[0] = rotatedPoint[0];
+    _lightSource.lightPosition[1] = rotatedPoint[1];
+
+    if (_lightSource.theta >= 2*Math.PI) {
+      _lightSource.theta = 0.0;
+    }
   };
 
   var generateShape = function(shapeType) {
@@ -136,6 +136,7 @@
     var selectedColor = ColorUtils.hexToGLvec4(document.getElementById('shapeColor').value);
     shape.color = selectedColor;
     shape.ambientProduct = mult(_lightSource.lightAmbient, selectedColor);
+    shape.materialShininess = document.getElementById('materialShininess').valueAsNumber;
 
     thetaOpts = [
       document.getElementById('rotateX').valueAsNumber,
@@ -241,7 +242,6 @@
       lightAmbient = ColorUtils.hexToGLvec4(document.getElementById('lightAmbient').value),
       lightType = DomUtils.getCheckedValue('lightType'),
       lightDistance = document.getElementById('lightDistance').valueAsNumber,
-      materialShininess = document.getElementById('materialShininess').valueAsNumber,
       curentLightAmbient = _lightSource.lightAmbient;
 
     if (!equal(curentLightAmbient, lightAmbient)) {
@@ -250,7 +250,6 @@
 
     _lightSource.lightPosition = Light.initPosition(lightDistance, lightType);
     _lightSource.lightAmbient = lightAmbient;
-    _lightSource.materialShininess = materialShininess;
     _lightSource.diffuseProduct = mult(lightDiffuse, materialDiffuse);
     _lightSource.specularProduct = mult(lightSpecular, materialSpecular);
 
@@ -284,6 +283,8 @@
     document.getElementById('translateZ').value = 0;
     document.getElementById('tzv').value = 0;
 
+    document.getElementById('materialShininess').value = 10.0;
+    document.getElementById('mshiny').value = 10.0;
     document.getElementById('lightSwitch').checked = true;
 
     document.getElementById('lightDiffuse').value = '#ffffff';
@@ -293,7 +294,6 @@
     document.getElementById('lightAmbient').value = '#ffffff';
     document.getElementById('sunlight').checked = true;
     document.getElementById('lightDistance').value = 1.0;
-    document.getElementById('materialShininess').value = 10.0;
     _lightSource = Light.defaultSource();
   };
 
@@ -309,7 +309,7 @@
       // Register event handlers
       document.getElementById('shapeSettings').addEventListener('click', actionHandler);
       document.getElementById('shapeSettings').addEventListener('change', changeHandler);
-      document.getElementById('lightSettings').addEventListener('change', lightHandler);
+      document.getElementById('lightSettings1').addEventListener('change', lightHandler);
 
       // Configure WebGL
       gl.viewport( 0, 0, _canvas.width, _canvas.height );

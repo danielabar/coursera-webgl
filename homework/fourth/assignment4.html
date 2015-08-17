@@ -199,6 +199,13 @@
         <output for=translateZ id=tzv>0</output>
       </div>
 
+      <!--  material -->
+      <div class="form-group">
+        <label for="materialShininess">Shininess</label>
+        <input type=range id=materialShininess min=1.0 value=10.0 max=50.0 step=1.0 oninput="outputMaterialShininess(value)">
+        <output for=materialShininess id=mshiny>10.0</output>
+      </div>
+
       <!--  actions -->
       <div class="form-group actions">
         <button id="newShape" title="create a new shape" class="button button-small"><i id="newShapeIcon" class="fa fa-plus icon"></i>Add</button>
@@ -212,7 +219,8 @@
       </div>
     </div><!--//shape settings-->
 
-    <div id="lightSettings" class="light-settings">
+    <div id="lightSettings1" class="light-settings">
+      <div class="form-sub-header">Light Source 1</div>
       <div class="form-group">
         <label for="lightDiffuse">Light Diffuse</label>
         <input type="color" name="lightDiffuse" id="lightDiffuse" value="#ffffff">
@@ -239,12 +247,36 @@
         <input type=range id=lightDistance min=0.1 value=1.0 max=10.0 step=0.1 oninput="outputLightDistance(value)">
         <output for=lightDistance id=ldz>1.0</output>
       </div>
+    </div><!--//lightSettings1-->
+
+    <div id="lightSettings2" class="light-settings">
       <div class="form-group">
-        <label for="materialShininess">Shininess</label>
-        <input type=range id=materialShininess min=1.0 value=10.0 max=50.0 step=1.0 oninput="outputMaterialShininess(value)">
-        <output for=materialShininess id=mshiny>10.0</output>
+        <label for="lightDiffuse">Light Diffuse</label>
+        <input type="color" name="lightDiffuse" id="lightDiffuse2" value="#ffffff">
+        <label for="materialDiffuse">Material Diffuse</label>
+        <input type="color" name="materialDiffuse" id="materialDiffuse2" value="#ffffff">
       </div>
-    </div><!--//lightSettings-->
+      <div class="form-group">
+        <label for="lightSpecular">Light Specular</label>
+        <input type="color" name="lightSpecular2" id="lightSpecular2" value="#ffffff">
+        <label for="materialSpecular2">Material Specular</label>
+        <input type="color" name="materialSpecular2" id="materialSpecular2" value="#ffffff">
+      </div>
+      <div class="form-group">
+        <label for="lightAmbient">Light Ambient</label>
+        <input type="color" name="lightAmbient2" id="lightAmbient2" value="#ffffff">
+      </div>
+      <div class="form-group">
+        <label for="lightType2">Type</label>
+        <input type="radio" id="sunlight2" name="lightType2" value="sunlight" checked>Sunlight
+        <input type="radio" id="spotlight2" name="lightType2" value="spotlight">Spotlight
+      </div>
+      <div class="form-group">
+        <label for="lightDistance2">Distance</label>
+        <input type=range id=lightDistance2 min=0.1 value=1.0 max=10.0 step=0.1 oninput="outputLightDistance(value)">
+        <output for=lightDistance2 id=ldz>1.0</output>
+      </div>
+    </div><!--//lightSettings2-->
 
   </section><!--//side-controls-->
 
