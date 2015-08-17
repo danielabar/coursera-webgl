@@ -18,17 +18,28 @@
   // camera settings
   uniform mat4 modelViewMatrix;
   uniform mat4 projectionMatrix;
-  uniform vec4 lightPosition;
   uniform mat3 normalMatrix;
 
   // lighting
+  uniform vec4 lightPosition;
   varying vec3 N, L, E;
 
+  // Experiment with multiple light sources
+  const int cNumLight = 2;
+  uniform vec4 lightPositionTest[cNumLight];
+
   void main() {
+
 
     // lighting
     vec3 light;
     vec3 pos = (modelViewMatrix * vPosition).xyz;
+
+    // Experiment with multiple light sources
+    vec3 Ltest;
+    for (int i=0; i < cNumLight; i++) {
+        Ltest = normalize(lightPositionTest[i].xyz - pos);
+    }
 
     if(lightPosition.w == 0.0)  L = normalize(lightPosition.xyz);
     else  L = normalize(lightPosition.xyz - pos);
@@ -212,15 +223,13 @@
         <button id="clear" class="button button-small"><i id="clearIcon" class="fa fa-refresh icon"></i>Reset</button>
         <button id="downloadShapeData" title="download shape data in JSON format" class="button button-small"><i id="downloadShapeDataIcon" class="fa fa-download icon"></i>JSON</button>
       </div>
-
-      <div class="form-group">
-        <input type="checkbox" id="lightSwitch" name="lightSwitch" value="lightSwitch" checked>
-        <label for="lightSwitch">Lighting</label>
-      </div>
     </div><!--//shape settings-->
 
     <div id="lightSettings1" class="light-settings">
-      <div class="form-sub-header">Light Source 1</div>
+      <div class="form-group">
+        <input type="checkbox" id="lightSwitch" name="lightSwitch" value="lightSwitch" checked>
+        <label for="lightSwitch">Light 1</label>
+      </div>
       <div class="form-group">
         <label for="lightDiffuse">Light Diffuse</label>
         <input type="color" name="lightDiffuse" id="lightDiffuse" value="#ffffff">
@@ -250,6 +259,10 @@
     </div><!--//lightSettings1-->
 
     <div id="lightSettings2" class="light-settings">
+      <div class="form-group">
+        <input type="checkbox" id="lightSwitch2" name="lightSwitch2" value="lightSwitch2" checked>
+        <label for="lightSwitch">Light Source 2</label>
+      </div>
       <div class="form-group">
         <label for="lightDiffuse">Light Diffuse</label>
         <input type="color" name="lightDiffuse" id="lightDiffuse2" value="#ffffff">

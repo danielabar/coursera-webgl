@@ -22,7 +22,8 @@
         lightAmbient: vec4( 1.0, 1.0, 1.0, 1.0 ),
         diffuseProduct: mult(lightDiffuse, materialDiffuse),
         specularProduct: mult(lightSpecular, materialSpecular),
-        theta: 0.0
+        theta: 0.0,
+        enabled: true
       };
     },
 

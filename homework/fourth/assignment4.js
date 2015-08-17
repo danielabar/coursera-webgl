@@ -11,7 +11,6 @@
       viewMatrix: mat4(),
       projectionMatrix: mat4(),
     },
-    _lighting = true,
     _lightSource = Light.defaultSource();
 
   var renderShape = function(shape) {
@@ -45,7 +44,13 @@
     gl.uniformMatrix3fv(gl.getUniformLocation( shape.program, "normalMatrix" ), false, flatten(shape.normalMatrix) );
     gl.uniformMatrix4fv(gl.getUniformLocation( shape.program, "projectionMatrix" ), false, flatten(_camera.projectionMatrix) );
 
-    if (_lighting) {
+    if (_lightSource.enabled) {
+      // experiment multiple light sources
+      var lightPosition1 = vec4(1.0, 1.0, 1.0, 0.0 );
+      var lightPosition2 = vec4(0.5, 0.5, 0.5, 0.0 );
+      var lightPosArr = [lightPosition1, lightPosition2];
+      gl.uniform4fv( gl.getUniformLocation(shape.program, "lightPositionTest"), flatten(lightPosArr) );
+
       gl.uniform4fv( gl.getUniformLocation(shape.program, "ambientProduct"), flatten(shape.ambientProduct) );
       gl.uniform4fv( gl.getUniformLocation(shape.program, "diffuseProduct"), flatten(_lightSource.diffuseProduct) );
       gl.uniform4fv( gl.getUniformLocation(shape.program, "specularProduct"), flatten(_lightSource.specularProduct) );
@@ -73,7 +78,7 @@
 
     setTimeout(
         function () {requestAnimFrame( render );},
-        60
+        1000 / 60
     );
 
   };
@@ -114,7 +119,7 @@
     shape.normals = shapeVI.n;
     shape.vertices = shapeVI.v;
 
-    if (_lighting) {
+    if (_lightSource.enabled) {
       shape.program = initShaders( gl, 'vertex-shader', 'fragment-shader' );
     } else {
       shape.program = initShaders( gl, 'vertex-shader', 'fragment-shader-simple' );
@@ -201,23 +206,10 @@
       document.body.removeChild(element);
     }
 
-    if (evt.target.id === 'lightSwitch') {
-      if (document.getElementById('lightSwitch').checked) {
-        _lighting = true;
-        _shapes.forEach(function(shape) {
-          shape.program = initShaders( gl, 'vertex-shader', 'fragment-shader' );
-        });
-      } else {
-        _lighting = false;
-        _shapes.forEach(function(shape) {
-          shape.program = initShaders( gl, 'vertex-shader', 'fragment-shader-simple' );
-        });
-      }
-    }
   };
 
   var changeHandler = function(evt) {
-    if (evt.target.id !== 'lightSwitch' && (evt.target.id === 'shape' || _shapes.length === 0)) {
+    if (evt.target.id === 'shape' || _shapes.length === 0) {
       seedOneShape();
     } else {
       var currentShape = _shapes[_shapes.length-1];
@@ -234,8 +226,22 @@
     }
   };
 
+  var enableOrDisableLight = function(enabled) {
+    if (enabled) {
+      _shapes.forEach(function(shape) {
+        shape.program = initShaders( gl, 'vertex-shader', 'fragment-shader' );
+      });
+    } else {
+      _shapes.forEach(function(shape) {
+        shape.program = initShaders( gl, 'vertex-shader', 'fragment-shader-simple' );
+      });
+    }
+  };
+
   var updateLightSource = function() {
-    var lightDiffuse = ColorUtils.hexToGLvec4(document.getElementById('lightDiffuse').value),
+    var currentEnabled = _lightSource.enabled,
+      enabled = document.getElementById('lightSwitch').checked,
+      lightDiffuse = ColorUtils.hexToGLvec4(document.getElementById('lightDiffuse').value),
       materialDiffuse = ColorUtils.hexToGLvec4(document.getElementById('materialDiffuse').value),
       lightSpecular = ColorUtils.hexToGLvec4(document.getElementById('lightSpecular').value),
       materialSpecular = ColorUtils.hexToGLvec4(document.getElementById('materialSpecular').value),
@@ -244,10 +250,15 @@
       lightDistance = document.getElementById('lightDistance').valueAsNumber,
       curentLightAmbient = _lightSource.lightAmbient;
 
+    if (currentEnabled !== enabled) {
+      enableOrDisableLight(enabled);
+    }
+
     if (!equal(curentLightAmbient, lightAmbient)) {
       updateShapesWithLightSource();
     }
 
+    _lightSource.enabled = enabled;
     _lightSource.lightPosition = Light.initPosition(lightDistance, lightType);
     _lightSource.lightAmbient = lightAmbient;
     _lightSource.diffuseProduct = mult(lightDiffuse, materialDiffuse);
@@ -285,8 +296,8 @@
 
     document.getElementById('materialShininess').value = 10.0;
     document.getElementById('mshiny').value = 10.0;
-    document.getElementById('lightSwitch').checked = true;
 
+    document.getElementById('lightSwitch').checked = true;
     document.getElementById('lightDiffuse').value = '#ffffff';
     document.getElementById('materialDiffuse').value = '#ffffff';
     document.getElementById('lightSpecular').value = '#ffffff';
@@ -294,6 +305,7 @@
     document.getElementById('lightAmbient').value = '#ffffff';
     document.getElementById('sunlight').checked = true;
     document.getElementById('lightDistance').value = 1.0;
+
     _lightSource = Light.defaultSource();
   };
 
