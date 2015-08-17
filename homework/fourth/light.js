@@ -31,6 +31,21 @@
       var newX = radius * Math.cos(theta);   // new x pos
       var newY = radius * Math.sin(theta);   // new y pos
       return vec2(newX, newY);
+    },
+
+    rotatePoint3D: function(vec4Point, xAngle, yAngle) {
+      var origX = vec4Point[0];
+      var origY = vec4Point[1];
+      var origZ = vec4Point[2];
+      var origW = vec4Point[3];
+      var xAngleRad = radians(xAngle);
+      var yAngleRad = radians(yAngle);
+
+      var newX = (Math.cos(yAngleRad) * origX) + (Math.sin(yAngleRad) * Math.sin(xAngleRad) * origY) - (Math.sin(yAngleRad) * Math.cos(xAngleRad) * origZ);
+      var newY = (Math.cos(xAngleRad) * origY) + (Math.sin(xAngleRad) * origZ);
+      var newZ = (Math.sin(yAngleRad) * origX) + (Math.cos(yAngleRad) * origY) + (Math.cos(yAngleRad) * Math.cos(xAngleRad) * origZ);
+
+      return vec4(newX, newY, newZ, origW);
     }
 
   };
