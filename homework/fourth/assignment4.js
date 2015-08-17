@@ -78,28 +78,6 @@
 
   };
 
-  /**
-   *
-   https://www.opengl.org/discussion_boards/showthread.php/139444-Easiest-way-to-rotate-point-in-3d-using-trig
-   x= cos(yangle)* x + sin(yangle)*sin(xangle)*y - sin(yangle)*cos(xangle)*z
-   y = 0 + cos(xangle)*y + sin(xangle)*z
-   z= sin(yangle)*x + cos(yangle)*-sin(xangle) *y + cos(yangle)*cos(xangle)*z
-   */
-  var rotatePoint3D = function(vec4Point, xAngle, yAngle) {
-    var origX = vec4Point[0];
-    var origY = vec4Point[1];
-    var origZ = vec4Point[2];
-    var origW = vec4Point[3];
-    var xAngleRad = radians(xAngle);
-    var yAngleRad = radians(yAngle);
-
-    var newX = (Math.cos(yAngleRad) * origX) + (Math.sin(yAngleRad) * Math.sin(xAngleRad) * origY) - (Math.sin(yAngleRad) * Math.cos(xAngleRad) * origZ);
-    var newY = (Math.cos(xAngleRad) * origY) + (Math.sin(xAngleRad) * origZ);
-    var newZ = (Math.sin(yAngleRad) * origX) + (Math.cos(yAngleRad) * origY) + (Math.cos(yAngleRad) * Math.cos(xAngleRad) * origZ);
-
-    return vec4(newX, newY, newZ, origW);
-  };
-
   var updateLightPosition = function() {
     _lightSource.theta += 0.1;
     var rotatedPoint = Light.rotatePoint2D(_lightSource.theta, 16);
@@ -110,7 +88,6 @@
     if (_lightSource.theta >= 2*Math.PI) {
       _lightSource.theta = 0.0;
     }
-    // _lightSource.lightPosition = rotatePoint3D(_lightSource.lightPosition, 0, _lightSource.theta);
   };
 
   var generateShape = function(shapeType) {
