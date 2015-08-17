@@ -45,12 +45,12 @@
           vertices.push(uniqueVertices[0]);
           normals.push(vec3(0.0, -1.0, 0.0));
 
-          indices.push(n);
-          vertices.push(uniqueVertices[n]);
-          normals.push(vec3(0.0, -1.0, 0.0));
-
           indices.push(1);
           vertices.push(uniqueVertices[1]);
+          normals.push(vec3(0.0, -1.0, 0.0));
+
+          indices.push(n);
+          vertices.push(uniqueVertices[n]);
           normals.push(vec3(0.0, -1.0, 0.0));
 
         } else {
@@ -58,13 +58,14 @@
           vertices.push(uniqueVertices[0]);
           normals.push(vec3(0.0, -1.0, 0.0));
 
+          indices.push(i+2);
+          vertices.push(uniqueVertices[i+2]);
+          normals.push(vec3(0.0, -1.0, 0.0));
+
           indices.push(i+1);
           vertices.push(uniqueVertices[i+1]);
           normals.push(vec3(0.0, -1.0, 0.0));
 
-          indices.push(i+2);
-          vertices.push(uniqueVertices[i+2]);
-          normals.push(vec3(0.0, -1.0, 0.0));
         }
       }
 
