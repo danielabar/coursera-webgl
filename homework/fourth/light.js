@@ -11,7 +11,7 @@
       return vec4(1.0, 1.0, distance, w);
     },
 
-    defaultSource: function() {
+    defaultSource: function(enabledFlag, initialTheta) {
       var lightDiffuse = vec4( 1.0, 1.0, 1.0, 1.0 ),
         lightSpecular = vec4( 1.0, 1.0, 1.0, 1.0 ),
         materialDiffuse =  vec4( 1.0, 1.0, 1.0, 1.0 ),
@@ -22,9 +22,13 @@
         lightAmbient: vec4( 1.0, 1.0, 1.0, 1.0 ),
         diffuseProduct: mult(lightDiffuse, materialDiffuse),
         specularProduct: mult(lightSpecular, materialSpecular),
-        theta: 0.0,
-        enabled: true
+        theta: initialTheta,
+        enabled: enabledFlag
       };
+    },
+
+    globalAmbient: function() {
+
     },
 
     rotatePoint2D: function(theta, radius) {

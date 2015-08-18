@@ -21,51 +21,19 @@
   uniform mat3 normalMatrix;
 
   // lighting
-  uniform vec4 lightPosition;
-  varying vec3 N, L, E;
-
-  void main() {
-
-    // lighting
-    vec3 light;
-    vec3 pos = (modelViewMatrix * vPosition).xyz;
-
-    if(lightPosition.w == 0.0)  L = normalize(lightPosition.xyz);
-    else  L = normalize(lightPosition.xyz - pos);
-
-    E =  -normalize(pos);
-    N = normalize( normalMatrix*vNormal.xyz);
-
-    // apply matricies to the vertex
-    gl_Position = projectionMatrix * modelViewMatrix * vPosition;
-  }
-  </script>
-
-  <script id="vertex-shader-dual" type="x-shader/x-vertex">
-
-  // vertex data
-  attribute vec4 vPosition;
-  attribute vec3 vNormal;
-
-  // camera settings
-  uniform mat4 modelViewMatrix;
-  uniform mat4 projectionMatrix;
-  uniform mat3 normalMatrix;
-
-  // lighting
-  const int cNumLight = 2;
+  // const int cNumLight = 2;
+  uniform int cNumLight;
   uniform vec4 lightPosition[cNumLight];
   varying vec3 N, E;
   varying vec3 L[cNumLight];
 
   void main() {
 
-    // lighting
-    vec3 light;
     vec3 pos = (modelViewMatrix * vPosition).xyz;
 
+    // lighting
     for (int i=0; i < cNumLight; i++) {
-      if(lightPosition.w == 0.0)  L = normalize(lightPosition.xyz);
+      if(lightPosition[i].w == 0.0)  L = normalize(lightPosition[i].xyz);
       else  L[i] = normalize(lightPosition[i].xyz - pos);
     }
 
@@ -80,7 +48,9 @@
   <script id="fragment-shader" type="x-shader/x-fragment">
   precision mediump float;
 
-  // uniform vec4 fColor;
+  // https://www.opengl.org/discussion_boards/showthread.php/178977-Set-value-to-uniform-int-in-fragment-shader
+  // const int cNumLight = 2;
+  uniform int cNumLight;
   uniform vec4 ambientProduct[cNumLight];
   uniform vec4 diffuseProduct[cNumLight];
   uniform vec4 specularProduct[cNumLight];
@@ -89,28 +59,37 @@
   varying vec3 N, E;
   varying vec3 L[cNumLight];
 
-  // TODO work in arrays
   void main() {
     vec4 fColor;
+    vec3 H[cNumLight];
+    vec4 ambient[cNumLight];
+    float Kd[cNumLight];
+    vec4 diffuse[cNumLight];
+    float Ks[cNumLight];
+    vec4 specular[cNumLight];
 
-    vec3 H = normalize( L + E );
-    vec4 ambient = ambientProduct;
+    for (int i=0; i < cNumLight; i++) {
+      H[i] = normalize( L[i] + E );
+      ambient[i] = ambientProduct[i];
+      Kd[i] = max( dot(L[i], N), 0.0 );
+      diffuse[i] = Kd[i] * diffuseProduct[i];
+      Ks[i] = pow( max(dot(N, H[i]), 0.0), shininess );
+      specular[i] = Ks[i] * specularProduct[i];
+      if( dot(L[i], N) < 0.0 ) specular[i] = vec4(0.0, 0.0, 0.0, 1.0);
+    }
 
-    float Kd = max( dot(L, N), 0.0 );
-    vec4  diffuse = Kd*diffuseProduct;
-
-    float Ks = pow( max(dot(N, H), 0.0), shininess );
-    vec4  specular = Ks * specularProduct;
-
-    if( dot(L, N) < 0.0 ) specular = vec4(0.0, 0.0, 0.0, 1.0);
-
-    fColor = ambient + diffuse +specular;
+    fColor = ambient[0] + ambient[1] + diffuse[0] + diffuse[1] + specular[0] + specular[1];
     fColor.a = 1.0;
 
-    gl_FragColor = fColor;
+    //The minimum and maximum color values:
+    // vec4(0,0,0,0) // or vec4(0,0,0,1) if you dont want to worry about transparency
+    // vec4(1,1,1,1)
+    // gl_FragColor = clamp(fColor, 0.0, 1.0);
+    gl_FragColor = clamp(fColor, vec4(0,0,0,1), vec4(1,1,1,1));
   }
   </script>
 
+  <!-- No lighting -->
   <script id="fragment-shader-simple" type="x-shader/x-fragment">
   precision mediump float;
 

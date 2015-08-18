@@ -1,4 +1,19 @@
 /**
+ * https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/String/endsWith
+ */
+if (!String.prototype.endsWith) {
+  String.prototype.endsWith = function(searchString, position) {
+      var subjectString = this.toString();
+      if (position === undefined || position > subjectString.length) {
+        position = subjectString.length;
+      }
+      position -= searchString.length;
+      var lastIndex = subjectString.indexOf(searchString, position);
+      return lastIndex !== -1 && lastIndex === position;
+  };
+}
+
+/**
  * App
  */
 (function(window, ColorUtils, Shape, DomUtils, Light) {
@@ -11,7 +26,10 @@
       viewMatrix: mat4(),
       projectionMatrix: mat4(),
     },
-    _lightSource = Light.defaultSource();
+    _lightSources = [
+      Light.defaultSource(true, 0.0),
+      Light.defaultSource(true, 90.0)
+    ];
 
   var renderShape = function(shape) {
     var modelViewMatrix;
@@ -44,21 +62,17 @@
     gl.uniformMatrix3fv(gl.getUniformLocation( shape.program, "normalMatrix" ), false, flatten(shape.normalMatrix) );
     gl.uniformMatrix4fv(gl.getUniformLocation( shape.program, "projectionMatrix" ), false, flatten(_camera.projectionMatrix) );
 
-    if (_lightSource.enabled) {
-      // experiment multiple light sources
-      // var lightPosition1 = vec4(1.0, 1.0, 1.0, 0.0 );
-      // var lightPosition2 = vec4(0.5, 0.5, 0.5, 0.0 );
-      // var lightPosArr = [lightPosition1, lightPosition2];
-      // gl.uniform4fv( gl.getUniformLocation(shape.program, "lightPositionTest"), flatten(lightPosArr) );
-
-      gl.uniform4fv( gl.getUniformLocation(shape.program, "ambientProduct"), flatten(shape.ambientProduct) );
-      gl.uniform4fv( gl.getUniformLocation(shape.program, "diffuseProduct"), flatten(_lightSource.diffuseProduct) );
-      gl.uniform4fv( gl.getUniformLocation(shape.program, "specularProduct"), flatten(_lightSource.specularProduct) );
-      gl.uniform4fv( gl.getUniformLocation(shape.program, "lightPosition"), flatten(_lightSource.lightPosition) );
-      gl.uniform1f( gl.getUniformLocation(shape.program, "shininess"), shape.materialShininess );
-    } else {
-      gl.uniform4fv(gl.getUniformLocation(shape.program, 'fColor'), shape.color);
-    }
+    // experiment multiple light sources
+    // var lightPosition1 = vec4(1.0, 1.0, 1.0, 0.0 );
+    // var lightPosition2 = vec4(0.5, 0.5, 0.5, 0.0 );
+    // var lightPosArr = [lightPosition1, lightPosition2];
+    // gl.uniform4fv( gl.getUniformLocation(shape.program, "lightPositionTest"), flatten(lightPosArr) );
+    glUniform1i( gl.getUniformLocation(shape.program, "cNumLight"), _lightSource.length );
+    gl.uniform4fv( gl.getUniformLocation(shape.program, "ambientProduct"), flatten(shape.ambientProduct) );
+    gl.uniform4fv( gl.getUniformLocation(shape.program, "diffuseProduct"), flatten(_lightSource.diffuseProduct) );
+    gl.uniform4fv( gl.getUniformLocation(shape.program, "specularProduct"), flatten(_lightSource.specularProduct) );
+    gl.uniform4fv( gl.getUniformLocation(shape.program, "lightPosition"), flatten(_lightSource.lightPosition) );
+    gl.uniform1f( gl.getUniformLocation(shape.program, "shininess"), shape.materialShininess );
 
     // draw
     for( var i=0; i<shape.vertices.length; i+=3) {
@@ -99,14 +113,16 @@
 
   // 2D Rotation
   var updateLightPosition = function() {
-    _lightSource.theta += 0.1;
-    var rotatedPoint = Light.rotatePoint2D(_lightSource.theta, 16);
+    for (var i=0; i<_lightSources.length; i++) {
+      _lightSources[i].theta += 0.1;
+      var rotatedPoint = Light.rotatePoint2D(_lightSources[i].theta, 16);
 
-    _lightSource.lightPosition[0] = rotatedPoint[0];
-    _lightSource.lightPosition[1] = rotatedPoint[1];
+      _lightSources[i].lightPosition[0] = rotatedPoint[0];
+      _lightSources[i].lightPosition[1] = rotatedPoint[1];
 
-    if (_lightSource.theta >= 2*Math.PI) {
-      _lightSource.theta = 0.0;
+      if (_lightSources[i].theta >= 2*Math.PI) {
+        _lightSources[i].theta = 0.0;
+      }
     }
   };
 
@@ -119,11 +135,13 @@
     shape.normals = shapeVI.n;
     shape.vertices = shapeVI.v;
 
-    if (_lightSource.enabled) {
-      shape.program = initShaders( gl, 'vertex-shader', 'fragment-shader' );
-    } else {
-      shape.program = initShaders( gl, 'vertex-shader', 'fragment-shader-simple' );
-    }
+    // FIXME handle no lights, for now, assume both light sources always on
+    shape.program = initShaders( gl, 'vertex-shader', 'fragment-shader' );
+    // if (_lightSource[0].enabled) {
+    //   shape.program = initShaders( gl, 'vertex-shader', 'fragment-shader' );
+    // } else {
+    //   shape.program = initShaders( gl, 'vertex-shader', 'fragment-shader-simple' );
+    // }
 
     updateShapeWithUserSettings(shape);
 
@@ -140,7 +158,8 @@
     // Store the plain old color plus lit color in case user turns off lighting
     var selectedColor = ColorUtils.hexToGLvec4(document.getElementById('shapeColor').value);
     shape.color = selectedColor;
-    shape.ambientProduct = mult(_lightSource.lightAmbient, selectedColor);
+    // FIXME need contribution from both lights
+    shape.ambientProduct = mult(_lightSource[0].lightAmbient, selectedColor);
     shape.materialShininess = document.getElementById('materialShininess').valueAsNumber;
 
     thetaOpts = [
@@ -168,11 +187,11 @@
     modelViewMatrix = mult(modelViewMatrix, rotate(thetaOpts[2], [0, 0, 1] ));
     modelViewMatrix = mult(modelViewMatrix, genScaleMatrix(scaleOpts[0], scaleOpts[1], scaleOpts[2]));
 
+    // Multiply model matrix by camera view to get the model view matrix
     modelViewMatrix = mult(modelViewMatrix, _camera.viewMatrix);
-
     shape.modelViewMatrix = modelViewMatrix;
 
-    // Calculate normal matrix
+    // Calculate normal matrix based on inverse-transpose of model view
     normalMatrix = inverseMat3(flatten(shape.modelViewMatrix));
     normalMatrix = transpose(normalMatrix);
     shape.normalMatrix = normalMatrix;
@@ -218,56 +237,75 @@
   };
 
   var updateShapesWithLightSource = function() {
+    var ambientPerLight = [];
+
     for (var i=0; i<_shapes.length; i++) {
-      _shapes[i].ambientProduct = mult(
-        _lightSource.lightAmbient,
-        _shapes[i].color
-      );
+      for (var j=0; j<_lightSources.length; j++) {
+        ambientPerLight.push(mult(
+          _lightSources[j].lightAmbient,
+          _shapes[i].color
+        ));
+      }
+      _shapes[i].ambientProduct = add(tempAmb[0], tempAmb[1]);
     }
   };
 
-  var enableOrDisableLight = function(enabled) {
-    if (enabled) {
-      _shapes.forEach(function(shape) {
-        shape.program = initShaders( gl, 'vertex-shader', 'fragment-shader' );
-      });
+  // var enableOrDisableLight = function(enabled) {
+  //   if (enabled) {
+  //     _shapes.forEach(function(shape) {
+  //       shape.program = initShaders( gl, 'vertex-shader', 'fragment-shader' );
+  //     });
+  //   } else {
+  //     _shapes.forEach(function(shape) {
+  //       shape.program = initShaders( gl, 'vertex-shader', 'fragment-shader-simple' );
+  //     });
+  //   }
+  // };
+
+  var lightDomElementId = function(elemId, lightIndex) {
+    if (lightIndex === 0) {
+      return elemId;
     } else {
-      _shapes.forEach(function(shape) {
-        shape.program = initShaders( gl, 'vertex-shader', 'fragment-shader-simple' );
-      });
+      return elemId + lightIndex;
     }
   };
 
-  var updateLightSource = function() {
-    var currentEnabled = _lightSource.enabled,
-      enabled = document.getElementById('lightSwitch').checked,
-      lightDiffuse = ColorUtils.hexToGLvec4(document.getElementById('lightDiffuse').value),
-      materialDiffuse = ColorUtils.hexToGLvec4(document.getElementById('materialDiffuse').value),
-      lightSpecular = ColorUtils.hexToGLvec4(document.getElementById('lightSpecular').value),
-      materialSpecular = ColorUtils.hexToGLvec4(document.getElementById('materialSpecular').value),
-      lightAmbient = ColorUtils.hexToGLvec4(document.getElementById('lightAmbient').value),
-      lightType = DomUtils.getCheckedValue('lightType'),
-      lightDistance = document.getElementById('lightDistance').valueAsNumber,
+  var updateLightSource = function(lightIndex) {
+    var currentEnabled = _lightSource[lightIndex].enabled,
+      enabled = document.getElementById(lightDomElementId('lightSwitch', lightIndex)).checked,
+      lightDiffuse = ColorUtils.hexToGLvec4(document.getElementById(lightDomElementId('lightDiffuse', lightIndex)).value),
+      materialDiffuse = ColorUtils.hexToGLvec4(document.getElementById(lightDomElementId('materialDiffuse', lightIndex)).value),
+      lightSpecular = ColorUtils.hexToGLvec4(document.getElementById(lightDomElementId('lightSpecular', lightIndex)).value),
+      materialSpecular = ColorUtils.hexToGLvec4(document.getElementById(lightDomElementId('materialSpecular', lightIndex)).value),
+      lightAmbient = ColorUtils.hexToGLvec4(document.getElementById(lightDomElementId('lightAmbient', lightIndex)).value),
+      lightType = DomUtils.getCheckedValue(lightDomElementId('lightType', lightIndex)),
+      lightDistance = document.getElementById(lightDomElementId('lightDistance', lightIndex)).valueAsNumber,
       curentLightAmbient = _lightSource.lightAmbient;
 
-    if (currentEnabled !== enabled) {
-      enableOrDisableLight(enabled);
-    }
+    // FIXME handle turning off an individual light
+    // if (currentEnabled !== enabled) {
+    //   enableOrDisableLight(lightIndex, enabled);
+    // }
 
     if (!equal(curentLightAmbient, lightAmbient)) {
       updateShapesWithLightSource();
     }
 
-    _lightSource.enabled = enabled;
-    _lightSource.lightPosition = Light.initPosition(lightDistance, lightType);
-    _lightSource.lightAmbient = lightAmbient;
-    _lightSource.diffuseProduct = mult(lightDiffuse, materialDiffuse);
-    _lightSource.specularProduct = mult(lightSpecular, materialSpecular);
+    // _lightSource[lightIndex].enabled = enabled;
+    _lightSource[lightIndex].lightPosition = Light.initPosition(lightDistance, lightType);
+    _lightSource[lightIndex].lightAmbient = lightAmbient;
+    _lightSource[lightIndex].diffuseProduct = mult(lightDiffuse, materialDiffuse);
+    _lightSource[lightIndex].specularProduct = mult(lightSpecular, materialSpecular);
 
   };
 
   var lightHandler = function(evt) {
-    updateLightSource();
+    var target = evt.target.id;
+    if (target.endsWith('2')) {
+      updateLightSource(1);
+    } else {
+      updateLightSource(0);
+    }
   };
 
   var setDefaults = function() {
@@ -297,6 +335,7 @@
     document.getElementById('materialShininess').value = 10.0;
     document.getElementById('mshiny').value = 10.0;
 
+    // Light 1
     document.getElementById('lightSwitch').checked = true;
     document.getElementById('lightDiffuse').value = '#ffffff';
     document.getElementById('materialDiffuse').value = '#ffffff';
@@ -305,8 +344,18 @@
     document.getElementById('lightAmbient').value = '#ffffff';
     document.getElementById('sunlight').checked = true;
     document.getElementById('lightDistance').value = 1.0;
+    _lightSource[0] = Light.defaultSource(true, 0.0);
 
-    _lightSource = Light.defaultSource();
+    // Light 2
+    document.getElementById('lightSwitch2').checked = false;
+    document.getElementById('lightDiffuse2').value = '#ffffff';
+    document.getElementById('materialDiffuse2').value = '#ffffff';
+    document.getElementById('lightSpecular2').value = '#ffffff';
+    document.getElementById('materialSpecular2').value = '#ffffff';
+    document.getElementById('lightAmbient2').value = '#ffffff';
+    document.getElementById('sunlight2').checked = true;
+    document.getElementById('lightDistance2').value = 1.0;
+    _lightSource[1] = Light.defaultSource(true, 90.0);
   };
 
   var App = {
@@ -322,6 +371,7 @@
       document.getElementById('shapeSettings').addEventListener('click', actionHandler);
       document.getElementById('shapeSettings').addEventListener('change', changeHandler);
       document.getElementById('lightSettings1').addEventListener('change', lightHandler);
+      document.getElementById('lightSettings2').addEventListener('change', lightHandler);
 
       // Configure WebGL
       gl.viewport( 0, 0, _canvas.width, _canvas.height );
