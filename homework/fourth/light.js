@@ -27,7 +27,13 @@
       };
     },
 
+    // TODO fill this in
     globalAmbient: function() {
+
+    },
+
+    // TODO iterate lightSources and count how many have emabled=true
+    numEnabled: function(lightSources) {
 
     },
 

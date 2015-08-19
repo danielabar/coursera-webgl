@@ -67,6 +67,9 @@ if (!String.prototype.endsWith) {
     // var lightPosition2 = vec4(0.5, 0.5, 0.5, 0.0 );
     // var lightPosArr = [lightPosition1, lightPosition2];
     // gl.uniform4fv( gl.getUniformLocation(shape.program, "lightPositionTest"), flatten(lightPosArr) );
+
+    // TODO: Call Light.numEnabled for value of cNumLight
+    // TODO If no lights selected, send in cNumLight=1 with global ambient light
     glUniform1i( gl.getUniformLocation(shape.program, "cNumLight"), _lightSource.length );
     gl.uniform4fv( gl.getUniformLocation(shape.program, "ambientProduct"), flatten(shape.ambientProduct) );
     gl.uniform4fv( gl.getUniformLocation(shape.program, "diffuseProduct"), flatten(_lightSource.diffuseProduct) );
@@ -280,16 +283,17 @@ if (!String.prototype.endsWith) {
       lightAmbient = ColorUtils.hexToGLvec4(document.getElementById(lightDomElementId('lightAmbient', lightIndex)).value),
       lightType = DomUtils.getCheckedValue(lightDomElementId('lightType', lightIndex)),
       lightDistance = document.getElementById(lightDomElementId('lightDistance', lightIndex)).valueAsNumber,
-      curentLightAmbient = _lightSource.lightAmbient;
+      curentLightAmbient = _lightSource[lightIndex].lightAmbient;
 
     // FIXME handle turning off an individual light
     // if (currentEnabled !== enabled) {
     //   enableOrDisableLight(lightIndex, enabled);
     // }
 
-    if (!equal(curentLightAmbient, lightAmbient)) {
-      updateShapesWithLightSource();
-    }
+    // FIXME this wasn't working even with a single light source
+    // if (!equal(curentLightAmbient, lightAmbient)) {
+    //   updateShapesWithLightSource();
+    // }
 
     // _lightSource[lightIndex].enabled = enabled;
     _lightSource[lightIndex].lightPosition = Light.initPosition(lightDistance, lightType);
