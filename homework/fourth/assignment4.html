@@ -299,14 +299,14 @@
 
     <div id="lightSettings2" class="light-settings">
       <div class="form-group">
-        <input type="checkbox" id="lightSwitch2" name="lightSwitch2" value="lightSwitch2" checked>
+        <input type="checkbox" id="lightSwitch2" name="lightSwitch2" value="lightSwitch2">
         <label for="lightSwitch">Light Source 2</label>
       </div>
       <div class="form-group">
         <label for="lightDiffuse">Light Diffuse</label>
         <input type="color" name="lightDiffuse" id="lightDiffuse2" value="#ffffff">
         <label for="materialDiffuse">Material Diffuse</label>
-        <input type="color" name="materialDiffuse" id="materialDiffuse2" value="#ffffff">
+        <input type="color" name="materialDiffuse" id="materialDiffuse2" value="#ffdd05">
       </div>
       <div class="form-group">
         <label for="lightSpecular">Light Specular</label>
@@ -320,13 +320,13 @@
       </div>
       <div class="form-group">
         <label for="lightType2">Type</label>
-        <input type="radio" id="sunlight2" name="lightType2" value="sunlight" checked>Sunlight
-        <input type="radio" id="spotlight2" name="lightType2" value="spotlight">Spotlight
+        <input type="radio" id="sunlight2" name="lightType2" value="sunlight">Sunlight
+        <input type="radio" id="spotlight2" name="lightType2" value="spotlight" checked>Spotlight
       </div>
       <div class="form-group">
         <label for="lightDistance2">Distance</label>
-        <input type=range id=lightDistance2 min=0.1 value=1.0 max=10.0 step=0.1 oninput="outputLightDistance(value)">
-        <output for=lightDistance2 id=ldz>1.0</output>
+        <input type=range id=lightDistance2 min=0.1 value=5.0 max=10.0 step=0.1 oninput="outputLightDistance(value)">
+        <output for=lightDistance2 id=ldz>5.0</output>
       </div>
     </div><!--//lightSettings2-->
 

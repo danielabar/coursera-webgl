@@ -1,7 +1,7 @@
 /**
  * Light
  */
-(function(window) {
+(function(window, ColorUtils) {
   'use strict';
 
   var Light = {
@@ -11,7 +11,7 @@
       return vec4(1.0, 1.0, distance, w);
     },
 
-    defaultSource: function(enabledFlag, initialTheta) {
+    defaultSource: function() {
       var lightDiffuse = vec4( 1.0, 1.0, 1.0, 1.0 ),
         lightSpecular = vec4( 1.0, 1.0, 1.0, 1.0 ),
         materialDiffuse =  vec4( 1.0, 1.0, 1.0, 1.0 ),
@@ -22,8 +22,24 @@
         lightAmbient: vec4( 1.0, 1.0, 1.0, 1.0 ),
         diffuseProduct: mult(lightDiffuse, materialDiffuse),
         specularProduct: mult(lightSpecular, materialSpecular),
-        theta: initialTheta,
-        enabled: enabledFlag
+        theta: 0.0,
+        enabled: true
+      };
+    },
+
+    alternateSource: function() {
+      var lightDiffuse = vec4( 1.0, 1.0, 1.0, 1.0 ),
+        lightSpecular = vec4( 1.0, 1.0, 1.0, 1.0 ),
+        materialDiffuse =  ColorUtils.hexToGLvec4('#ffdd05'),
+        materialSpecular = vec4( 1.0, 1.0, 1.0, 1.0 );
+
+      return {
+        lightPosition: vec4(-1.0, -1.0, -1.0, 1.0 ),
+        lightAmbient: vec4( 1.0, 1.0, 1.0, 1.0 ),
+        diffuseProduct: mult(lightDiffuse, materialDiffuse),
+        specularProduct: mult(lightSpecular, materialSpecular),
+        theta: 180.0,
+        enabled: false
       };
     },
 
@@ -94,4 +110,4 @@
 
   window.Light = Light;
 
-})(window);
+})(window, window.ColorUtils);

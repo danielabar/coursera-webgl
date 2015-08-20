@@ -27,8 +27,8 @@ if (!String.prototype.endsWith) {
       projectionMatrix: mat4(),
     },
     _lightSources = [
-      Light.defaultSource(true, 0.0),
-      Light.defaultSource(true, 180.0)
+      Light.defaultSource(),
+      Light.alternateSource()
     ],
     _globalAmbientLight = Light.globalAmbient();
 
@@ -352,18 +352,18 @@ if (!String.prototype.endsWith) {
     document.getElementById('lightAmbient').value = '#ffffff';
     document.getElementById('sunlight').checked = true;
     document.getElementById('lightDistance').value = 1.0;
-    _lightSources[0] = Light.defaultSource(true, 0.0);
+    _lightSources[0] = Light.defaultSource();
 
     // Light 2
-    document.getElementById('lightSwitch2').checked = true;
+    document.getElementById('lightSwitch2').checked = false;
     document.getElementById('lightDiffuse2').value = '#ffffff';
-    document.getElementById('materialDiffuse2').value = '#ffffff';
+    document.getElementById('materialDiffuse2').value = '#ffdd05';
     document.getElementById('lightSpecular2').value = '#ffffff';
     document.getElementById('materialSpecular2').value = '#ffffff';
     document.getElementById('lightAmbient2').value = '#ffffff';
-    document.getElementById('sunlight2').checked = true;
-    document.getElementById('lightDistance2').value = 1.0;
-    _lightSources[1] = Light.defaultSource(true, 90.0);
+    document.getElementById('spotlight2').checked = true;
+    document.getElementById('lightDistance2').value = 5.0;
+    _lightSources[1] = Light.alternateSource();
   };
 
   var App = {
