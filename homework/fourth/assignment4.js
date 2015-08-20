@@ -458,7 +458,8 @@ if (!String.prototype.endsWith) {
       // Init shaders
       _shaders1 = initShaders( gl, 'vertex-shader-1', 'fragment-shader-1' );
       console.log('compiled shaders1');
-      // _shaders2 = initShaders( gl, 'vertex-shader-2', 'fragment-shader-2' );
+      _shaders2 = initShaders( gl, 'vertex-shader-2', 'fragment-shader-2' );
+      console.log('compiled shaders2');
 
       setDefaults();
       render();

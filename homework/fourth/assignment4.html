@@ -32,7 +32,7 @@
 
     // lighting
     for (int i=0; i < cNumLight; i++) {
-      if(lightPosition[i].w == 0.0)  L = normalize(lightPosition[i].xyz);
+      if(lightPosition[i].w == 0.0)  L[i] = normalize(lightPosition[i].xyz);
       else  L[i] = normalize(lightPosition[i].xyz - pos);
     }
 
