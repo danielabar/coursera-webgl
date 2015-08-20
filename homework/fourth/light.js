@@ -27,14 +27,40 @@
       };
     },
 
-    // TODO fill this in
+    // TODO darkened room effect
     globalAmbient: function() {
+      var lightDiffuse = vec4( 1.0, 1.0, 1.0, 1.0 ),
+        lightSpecular = vec4( 1.0, 1.0, 1.0, 1.0 ),
+        materialDiffuse =  vec4( 1.0, 1.0, 1.0, 1.0 ),
+        materialSpecular = vec4( 1.0, 1.0, 1.0, 1.0 );
 
+      return {
+        lightPosition: vec4(1.0, 1.0, 1.0, 0.0 ),
+        lightAmbient: vec4( 0.1, 0.1, 0.1, 1.0 ),
+        diffuseProduct: mult(lightDiffuse, materialDiffuse),
+        specularProduct: mult(lightSpecular, materialSpecular)
+      };
     },
 
-    // TODO iterate lightSources and count how many have emabled=true
     numEnabled: function(lightSources) {
+      var count = 0;
+      for (var i=0; i<lightSources.length; i++) {
+        if (lightSources[i].enabled) {
+          count += 1;
+        }
+      }
+      return count;
+    },
 
+    indexEnabled: function(lightSources) {
+      var index = null;
+      for (var i=0; i<lightSources.length; i++) {
+        if (lightSources[i].enabled) {
+          index = i;
+          break;
+        }
+      }
+      return index;
     },
 
     rotatePoint2D: function(theta, radius) {

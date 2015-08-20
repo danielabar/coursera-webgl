@@ -28,8 +28,10 @@ if (!String.prototype.endsWith) {
     },
     _lightSources = [
       Light.defaultSource(true, 0.0),
-      Light.defaultSource(true, 90.0)
-    ];
+      Light.defaultSource(false, 90.0)
+    ],
+    _globalAmbientLight = Light.globalAmbient(),
+    _shaders1, _shaders2;
 
   var renderShape = function(shape) {
     var modelViewMatrix;
@@ -68,14 +70,36 @@ if (!String.prototype.endsWith) {
     // var lightPosArr = [lightPosition1, lightPosition2];
     // gl.uniform4fv( gl.getUniformLocation(shape.program, "lightPositionTest"), flatten(lightPosArr) );
 
-    // TODO: Call Light.numEnabled for value of cNumLight
-    // TODO If no lights selected, send in cNumLight=1 with global ambient light
-    glUniform1i( gl.getUniformLocation(shape.program, "cNumLight"), _lightSource.length );
-    gl.uniform4fv( gl.getUniformLocation(shape.program, "ambientProduct"), flatten(shape.ambientProduct) );
-    gl.uniform4fv( gl.getUniformLocation(shape.program, "diffuseProduct"), flatten(_lightSource.diffuseProduct) );
-    gl.uniform4fv( gl.getUniformLocation(shape.program, "specularProduct"), flatten(_lightSource.specularProduct) );
-    gl.uniform4fv( gl.getUniformLocation(shape.program, "lightPosition"), flatten(_lightSource.lightPosition) );
+    var numL = Light.numEnabled(_lightSources);
     gl.uniform1f( gl.getUniformLocation(shape.program, "shininess"), shape.materialShininess );
+    switch (numL) {
+      // User turned off both light sources, send global ambient lighting
+      case 0:
+        gl.uniform4fv( gl.getUniformLocation(shape.program, "ambientProduct"), flatten(shape.globalAmbientProduct) );
+        gl.uniform4fv( gl.getUniformLocation(shape.program, "diffuseProduct"), flatten(_globalAmbientLight.diffuseProduct) );
+        gl.uniform4fv( gl.getUniformLocation(shape.program, "specularProduct"), flatten(_globalAmbientLight.specularProduct) );
+        gl.uniform4fv( gl.getUniformLocation(shape.program, "lightPosition"), flatten(_globalAmbientLight.lightPosition) );
+        break;
+      case 1:
+        // Only one light source enabled, send the selected one
+        var lightIndex = Light.indexEnabled(_lightSources);
+        gl.uniform4fv( gl.getUniformLocation(shape.program, "ambientProduct"), flatten(shape.ambientProduct[lightIndex]) );
+        gl.uniform4fv( gl.getUniformLocation(shape.program, "diffuseProduct"), flatten(_lightSources[lightIndex].diffuseProduct) );
+        gl.uniform4fv( gl.getUniformLocation(shape.program, "specularProduct"), flatten(_lightSources[lightIndex].specularProduct) );
+        gl.uniform4fv( gl.getUniformLocation(shape.program, "lightPosition"), flatten(_lightSources[lightIndex].lightPosition) );
+        break;
+      default:
+        // Both light sources are enabled
+        var allAmbient = shape.ambientProduct[0].concat(shape.ambientProduct[1]);
+        var allDiffuse = _lightSources[0].diffuseProduct.concat(_lightSources[1].diffuseProduct);
+        var allSpecular = _lightSources[0].specularProduct.concat(_lightSources[1].specularProduct);
+        var allPos = _lightSources[0].lightPosition.concat(_lightSources[1].lightPosition);
+        gl.uniform4fv( gl.getUniformLocation(shape.program, "ambientProduct"), flatten(allAmbient) );
+        gl.uniform4fv( gl.getUniformLocation(shape.program, "diffuseProduct"), flatten(allDiffuse) );
+        gl.uniform4fv( gl.getUniformLocation(shape.program, "specularProduct"), flatten(allSpecular) );
+        gl.uniform4fv( gl.getUniformLocation(shape.program, "lightPosition"), flatten(allPos) );
+        break;
+    }
 
     // draw
     for( var i=0; i<shape.vertices.length; i+=3) {
@@ -116,15 +140,17 @@ if (!String.prototype.endsWith) {
 
   // 2D Rotation
   var updateLightPosition = function() {
-    for (var i=0; i<_lightSources.length; i++) {
-      _lightSources[i].theta += 0.1;
-      var rotatedPoint = Light.rotatePoint2D(_lightSources[i].theta, 16);
+    if (Light.numEnabled(_lightSources) > 0) {
+      for (var i=0; i<_lightSources.length; i++) {
+        _lightSources[i].theta += 0.1;
+        var rotatedPoint = Light.rotatePoint2D(_lightSources[i].theta, 16);
 
-      _lightSources[i].lightPosition[0] = rotatedPoint[0];
-      _lightSources[i].lightPosition[1] = rotatedPoint[1];
+        _lightSources[i].lightPosition[0] = rotatedPoint[0];
+        _lightSources[i].lightPosition[1] = rotatedPoint[1];
 
-      if (_lightSources[i].theta >= 2*Math.PI) {
-        _lightSources[i].theta = 0.0;
+        if (_lightSources[i].theta >= 2*Math.PI) {
+          _lightSources[i].theta = 0.0;
+        }
       }
     }
   };
@@ -138,14 +164,6 @@ if (!String.prototype.endsWith) {
     shape.normals = shapeVI.n;
     shape.vertices = shapeVI.v;
 
-    // FIXME handle no lights, for now, assume both light sources always on
-    shape.program = initShaders( gl, 'vertex-shader', 'fragment-shader' );
-    // if (_lightSource[0].enabled) {
-    //   shape.program = initShaders( gl, 'vertex-shader', 'fragment-shader' );
-    // } else {
-    //   shape.program = initShaders( gl, 'vertex-shader', 'fragment-shader-simple' );
-    // }
-
     updateShapeWithUserSettings(shape);
 
     return shape;
@@ -158,11 +176,22 @@ if (!String.prototype.endsWith) {
       scaleOpts = [],
       translateOpts = [];
 
+    if (Light.numEnabled(_lightSources) <= 1) {
+      shape.program = _shaders1;
+    } else {
+      shape.program = _shaders2;
+    }
+
     // Store the plain old color plus lit color in case user turns off lighting
     var selectedColor = ColorUtils.hexToGLvec4(document.getElementById('shapeColor').value);
     shape.color = selectedColor;
-    // FIXME need contribution from both lights
-    shape.ambientProduct = mult(_lightSource[0].lightAmbient, selectedColor);
+    shape.ambientProduct = [];
+    for (var j=0; j<_lightSources.length; j++) {
+      shape.ambientProduct[j] = mult(_lightSources[j].lightAmbient, selectedColor);
+      console.log('updated shape ambientProduct: ' + shape.ambientProduct[j]);
+    }
+    shape.globalAmbientProduct = mult(_globalAmbientLight.lightAmbient, selectedColor);
+
     shape.materialShininess = document.getElementById('materialShininess').valueAsNumber;
 
     thetaOpts = [
@@ -239,17 +268,37 @@ if (!String.prototype.endsWith) {
     }
   };
 
+  // var updateShapesWithLightSource = function() {
+  //   var ambientPerLight = [];
+  //
+  //   for (var i=0; i<_shapes.length; i++) {
+  //     for (var j=0; j<_lightSources.length; j++) {
+  //       ambientPerLight.push(mult(
+  //         _lightSources[j].lightAmbient,
+  //         _shapes[i].color
+  //       ));
+  //     }
+  //     _shapes[i].ambientProduct = add(tempAmb[0], tempAmb[1]);
+  //   }
+  // };
   var updateShapesWithLightSource = function() {
-    var ambientPerLight = [];
 
     for (var i=0; i<_shapes.length; i++) {
+
+      if (Light.numEnabled(_lightSources) <= 1) {
+        shape.program = _shaders1;
+      } else {
+        console.log('updating shape program with shaders2: ' + _shaders2);
+        shape.program = _shaders2;
+      }
+
+      _shapes[i].ambientProduct = [];
       for (var j=0; j<_lightSources.length; j++) {
-        ambientPerLight.push(mult(
+        _shapes[i].ambientProduct[j] = mult(
           _lightSources[j].lightAmbient,
           _shapes[i].color
-        ));
+        );
       }
-      _shapes[i].ambientProduct = add(tempAmb[0], tempAmb[1]);
     }
   };
 
@@ -269,12 +318,12 @@ if (!String.prototype.endsWith) {
     if (lightIndex === 0) {
       return elemId;
     } else {
-      return elemId + lightIndex;
+      return elemId + '2';
     }
   };
 
   var updateLightSource = function(lightIndex) {
-    var currentEnabled = _lightSource[lightIndex].enabled,
+    var currentEnabled = _lightSources[lightIndex].enabled,
       enabled = document.getElementById(lightDomElementId('lightSwitch', lightIndex)).checked,
       lightDiffuse = ColorUtils.hexToGLvec4(document.getElementById(lightDomElementId('lightDiffuse', lightIndex)).value),
       materialDiffuse = ColorUtils.hexToGLvec4(document.getElementById(lightDomElementId('materialDiffuse', lightIndex)).value),
@@ -283,24 +332,23 @@ if (!String.prototype.endsWith) {
       lightAmbient = ColorUtils.hexToGLvec4(document.getElementById(lightDomElementId('lightAmbient', lightIndex)).value),
       lightType = DomUtils.getCheckedValue(lightDomElementId('lightType', lightIndex)),
       lightDistance = document.getElementById(lightDomElementId('lightDistance', lightIndex)).valueAsNumber,
-      curentLightAmbient = _lightSource[lightIndex].lightAmbient;
+      curentLightAmbient = _lightSources[lightIndex].lightAmbient;
 
     // FIXME handle turning off an individual light
     // if (currentEnabled !== enabled) {
     //   enableOrDisableLight(lightIndex, enabled);
     // }
 
+    _lightSources[lightIndex].enabled = enabled;
+    _lightSources[lightIndex].lightPosition = Light.initPosition(lightDistance, lightType);
+    _lightSources[lightIndex].lightAmbient = lightAmbient;
+    _lightSources[lightIndex].diffuseProduct = mult(lightDiffuse, materialDiffuse);
+    _lightSources[lightIndex].specularProduct = mult(lightSpecular, materialSpecular);
+
     // FIXME this wasn't working even with a single light source
     // if (!equal(curentLightAmbient, lightAmbient)) {
-    //   updateShapesWithLightSource();
+      updateShapesWithLightSource();
     // }
-
-    // _lightSource[lightIndex].enabled = enabled;
-    _lightSource[lightIndex].lightPosition = Light.initPosition(lightDistance, lightType);
-    _lightSource[lightIndex].lightAmbient = lightAmbient;
-    _lightSource[lightIndex].diffuseProduct = mult(lightDiffuse, materialDiffuse);
-    _lightSource[lightIndex].specularProduct = mult(lightSpecular, materialSpecular);
-
   };
 
   var lightHandler = function(evt) {
@@ -348,7 +396,7 @@ if (!String.prototype.endsWith) {
     document.getElementById('lightAmbient').value = '#ffffff';
     document.getElementById('sunlight').checked = true;
     document.getElementById('lightDistance').value = 1.0;
-    _lightSource[0] = Light.defaultSource(true, 0.0);
+    _lightSources[0] = Light.defaultSource(true, 0.0);
 
     // Light 2
     document.getElementById('lightSwitch2').checked = false;
@@ -359,7 +407,7 @@ if (!String.prototype.endsWith) {
     document.getElementById('lightAmbient2').value = '#ffffff';
     document.getElementById('sunlight2').checked = true;
     document.getElementById('lightDistance2').value = 1.0;
-    _lightSource[1] = Light.defaultSource(true, 90.0);
+    _lightSources[1] = Light.defaultSource(false, 90.0);
   };
 
   var App = {
@@ -406,6 +454,11 @@ if (!String.prototype.endsWith) {
       var ytop =3.0;
       var near = -10;
       _camera.projectionMatrix = ortho(left, right, bottom, ytop, near, far);
+
+      // Init shaders
+      _shaders1 = initShaders( gl, 'vertex-shader-1', 'fragment-shader-1' );
+      console.log('compiled shaders1');
+      // _shaders2 = initShaders( gl, 'vertex-shader-2', 'fragment-shader-2' );
 
       setDefaults();
       render();
