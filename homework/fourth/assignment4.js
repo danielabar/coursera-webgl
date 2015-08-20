@@ -30,14 +30,22 @@ if (!String.prototype.endsWith) {
       Light.defaultSource(true, 0.0),
       Light.defaultSource(true, 180.0)
     ],
-    _globalAmbientLight = Light.globalAmbient(),
-    _shaders1, _shaders2;
+    _globalAmbientLight = Light.globalAmbient();
+    // _shaders1, _shaders2;
 
   var renderShape = function(shape) {
     var modelViewMatrix;
 
     // Load shaders
-    gl.useProgram(shape.program);
+    var program;
+    if (Light.numEnabled(_lightSources) <= 1) {
+      program = shape.program1;
+      // gl.useProgram(shape.program1);
+    } else {
+      program = shape.program2;
+      // gl.useProgram(shape.program2);
+    }
+    gl.useProgram(program);
 
     // Load normal buffer onto GPU
     var nBuffer = gl.createBuffer();
@@ -45,7 +53,7 @@ if (!String.prototype.endsWith) {
     gl.bufferData( gl.ARRAY_BUFFER, flatten(shape.normals), gl.STATIC_DRAW );
 
     // Associate shader variables with normal data buffer
-    var vNormal = gl.getAttribLocation( shape.program, "vNormal" );
+    var vNormal = gl.getAttribLocation( program, "vNormal" );
     gl.vertexAttribPointer( vNormal, 3, gl.FLOAT, false, 0, 0 );
     gl.enableVertexAttribArray( vNormal);
 
@@ -55,43 +63,46 @@ if (!String.prototype.endsWith) {
     gl.bufferData( gl.ARRAY_BUFFER, flatten(shape.vertices), gl.STATIC_DRAW );
 
     // Associate shader variables with vertex data buffer
-    var vPosition = gl.getAttribLocation( shape.program, 'vPosition' );
+    var vPosition = gl.getAttribLocation( program, 'vPosition' );
     gl.vertexAttribPointer( vPosition, 4, gl.FLOAT, false, 0, 0 );
     gl.enableVertexAttribArray( vPosition );
 
     // Uniform vars
-    gl.uniformMatrix4fv(gl.getUniformLocation(shape.program, "modelViewMatrix" ), false, flatten(shape.modelViewMatrix) );
-    gl.uniformMatrix3fv(gl.getUniformLocation( shape.program, "normalMatrix" ), false, flatten(shape.normalMatrix) );
-    gl.uniformMatrix4fv(gl.getUniformLocation( shape.program, "projectionMatrix" ), false, flatten(_camera.projectionMatrix) );
+    gl.uniformMatrix4fv(gl.getUniformLocation(program, "modelViewMatrix" ), false, flatten(shape.modelViewMatrix) );
+    gl.uniformMatrix3fv(gl.getUniformLocation( program, "normalMatrix" ), false, flatten(shape.normalMatrix) );
+    gl.uniformMatrix4fv(gl.getUniformLocation( program, "projectionMatrix" ), false, flatten(_camera.projectionMatrix) );
 
     var numL = Light.numEnabled(_lightSources);
-    gl.uniform1f( gl.getUniformLocation(shape.program, "shininess"), shape.materialShininess );
+    gl.uniform1f( gl.getUniformLocation(program, "shininess"), shape.materialShininess );
     switch (numL) {
       // User turned off both light sources, send global ambient lighting
       case 0:
-        gl.uniform4fv( gl.getUniformLocation(shape.program, "ambientProduct"), flatten(shape.globalAmbientProduct) );
-        gl.uniform4fv( gl.getUniformLocation(shape.program, "diffuseProduct"), flatten(_globalAmbientLight.diffuseProduct) );
-        gl.uniform4fv( gl.getUniformLocation(shape.program, "specularProduct"), flatten(_globalAmbientLight.specularProduct) );
-        gl.uniform4fv( gl.getUniformLocation(shape.program, "lightPosition"), flatten(_globalAmbientLight.lightPosition) );
+        // console.log('numL = 0');
+        gl.uniform4fv( gl.getUniformLocation(program, "ambientProduct"), flatten(shape.globalAmbientProduct) );
+        gl.uniform4fv( gl.getUniformLocation(program, "diffuseProduct"), flatten(_globalAmbientLight.diffuseProduct) );
+        gl.uniform4fv( gl.getUniformLocation(program, "specularProduct"), flatten(_globalAmbientLight.specularProduct) );
+        gl.uniform4fv( gl.getUniformLocation(program, "lightPosition"), flatten(_globalAmbientLight.lightPosition) );
         break;
       case 1:
+        // console.log('numL = 1');
         // Only one light source enabled, send the selected one
         var lightIndex = Light.indexEnabled(_lightSources);
-        gl.uniform4fv( gl.getUniformLocation(shape.program, "ambientProduct"), flatten(shape.ambientProduct[lightIndex]) );
-        gl.uniform4fv( gl.getUniformLocation(shape.program, "diffuseProduct"), flatten(_lightSources[lightIndex].diffuseProduct) );
-        gl.uniform4fv( gl.getUniformLocation(shape.program, "specularProduct"), flatten(_lightSources[lightIndex].specularProduct) );
-        gl.uniform4fv( gl.getUniformLocation(shape.program, "lightPosition"), flatten(_lightSources[lightIndex].lightPosition) );
+        gl.uniform4fv( gl.getUniformLocation(program, "ambientProduct"), flatten(shape.ambientProduct[lightIndex]) );
+        gl.uniform4fv( gl.getUniformLocation(program, "diffuseProduct"), flatten(_lightSources[lightIndex].diffuseProduct) );
+        gl.uniform4fv( gl.getUniformLocation(program, "specularProduct"), flatten(_lightSources[lightIndex].specularProduct) );
+        gl.uniform4fv( gl.getUniformLocation(program, "lightPosition"), flatten(_lightSources[lightIndex].lightPosition) );
         break;
       default:
+        // console.log('numL = 2');
         // Both light sources are enabled
         var allAmbient = shape.ambientProduct[0].concat(shape.ambientProduct[1]);
         var allDiffuse = _lightSources[0].diffuseProduct.concat(_lightSources[1].diffuseProduct);
         var allSpecular = _lightSources[0].specularProduct.concat(_lightSources[1].specularProduct);
         var allPos = _lightSources[0].lightPosition.concat(_lightSources[1].lightPosition);
-        gl.uniform4fv( gl.getUniformLocation(shape.program, "ambientProduct"), flatten(allAmbient) );
-        gl.uniform4fv( gl.getUniformLocation(shape.program, "diffuseProduct"), flatten(allDiffuse) );
-        gl.uniform4fv( gl.getUniformLocation(shape.program, "specularProduct"), flatten(allSpecular) );
-        gl.uniform4fv( gl.getUniformLocation(shape.program, "lightPosition"), flatten(allPos) );
+        gl.uniform4fv( gl.getUniformLocation(program, "ambientProduct"), flatten(allAmbient) );
+        gl.uniform4fv( gl.getUniformLocation(program, "diffuseProduct"), flatten(allDiffuse) );
+        gl.uniform4fv( gl.getUniformLocation(program, "specularProduct"), flatten(allSpecular) );
+        gl.uniform4fv( gl.getUniformLocation(program, "lightPosition"), flatten(allPos) );
         break;
     }
 
@@ -154,6 +165,9 @@ if (!String.prototype.endsWith) {
       shapeVI,
       materialAmbient;
 
+    shape.program1 = initShaders( gl, 'vertex-shader-1', 'fragment-shader-1' );
+    shape.program2 = initShaders( gl, 'vertex-shader-2', 'fragment-shader-2' );
+
     shapeVI = Shape.generate(shapeType);
     shape.normals = shapeVI.n;
     shape.vertices = shapeVI.v;
@@ -170,11 +184,11 @@ if (!String.prototype.endsWith) {
       scaleOpts = [],
       translateOpts = [];
 
-    if (Light.numEnabled(_lightSources) <= 1) {
-      shape.program = initShaders( gl, 'vertex-shader-1', 'fragment-shader-1' );
-    } else {
-      shape.program = initShaders( gl, 'vertex-shader-2', 'fragment-shader-2' );
-    }
+    // if (Light.numEnabled(_lightSources) <= 1) {
+    //   shape.program = initShaders( gl, 'vertex-shader-1', 'fragment-shader-1' );
+    // } else {
+    //   shape.program = initShaders( gl, 'vertex-shader-2', 'fragment-shader-2' );
+    // }
 
     // Store the plain old color plus lit color in case user turns off lighting
     var selectedColor = ColorUtils.hexToGLvec4(document.getElementById('shapeColor').value);
@@ -278,11 +292,11 @@ if (!String.prototype.endsWith) {
 
     for (var i=0; i<_shapes.length; i++) {
 
-      if (Light.numEnabled(_lightSources) <= 1) {
-        shape.program = initShaders( gl, 'vertex-shader-1', 'fragment-shader-1' );
-      } else {
-        shape.program = initShaders( gl, 'vertex-shader-2', 'fragment-shader-2' );
-      }
+      // if (Light.numEnabled(_lightSources) <= 1) {
+      //   shape.program = initShaders( gl, 'vertex-shader-1', 'fragment-shader-1' );
+      // } else {
+      //   shape.program = initShaders( gl, 'vertex-shader-2', 'fragment-shader-2' );
+      // }
 
       _shapes[i].ambientProduct = [];
       for (var j=0; j<_lightSources.length; j++) {
@@ -431,10 +445,10 @@ if (!String.prototype.endsWith) {
       _camera.projectionMatrix = ortho(left, right, bottom, ytop, near, far);
 
       // Init shaders
-      _shaders1 = initShaders( gl, 'vertex-shader-1', 'fragment-shader-1' );
-      console.log('compiled shaders1');
-      _shaders2 = initShaders( gl, 'vertex-shader-2', 'fragment-shader-2' );
-      console.log('compiled shaders2');
+      // _shaders1 = initShaders( gl, 'vertex-shader-1', 'fragment-shader-1' );
+      // console.log('compiled shaders1');
+      // _shaders2 = initShaders( gl, 'vertex-shader-2', 'fragment-shader-2' );
+      // console.log('compiled shaders2');
 
       setDefaults();
       render();

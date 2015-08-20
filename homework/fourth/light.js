@@ -27,7 +27,6 @@
       };
     },
 
-    // TODO darkened room effect
     globalAmbient: function() {
       var lightDiffuse = vec4( 1.0, 1.0, 1.0, 1.0 ),
         lightSpecular = vec4( 1.0, 1.0, 1.0, 1.0 ),
