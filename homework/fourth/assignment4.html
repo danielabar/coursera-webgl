@@ -325,8 +325,8 @@
       </div>
       <div class="form-group">
         <label for="lightDistance2">Distance</label>
-        <input type=range id=lightDistance2 min=0.1 value=5.0 max=10.0 step=0.1 oninput="outputLightDistance(value)">
-        <output for=lightDistance2 id=ldz>5.0</output>
+        <input type=range id=lightDistance2 min=0.1 value=5.0 max=10.0 step=0.1 oninput="outputLightDistance2(value)">
+        <output for=lightDistance2 id=ldz2>5.0</output>
       </div>
     </div><!--//lightSettings2-->
 
@@ -379,6 +379,9 @@
   }
   var outputLightDistance = function(value) {
     document.querySelector('#ldz').value = value;
+  }
+  var outputLightDistance2 = function(value) {
+    document.querySelector('#ldz2').value = value;
   }
   var outputMaterialShininess = function(value) {
     document.querySelector('#mshiny').value = value;
