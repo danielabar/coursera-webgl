@@ -28,7 +28,7 @@ if (!String.prototype.endsWith) {
     },
     _lightSources = [
       Light.defaultSource(true, 0.0),
-      Light.defaultSource(false, 90.0)
+      Light.defaultSource(true, 180.0)
     ],
     _globalAmbientLight = Light.globalAmbient(),
     _shaders1, _shaders2;
@@ -63,12 +63,6 @@ if (!String.prototype.endsWith) {
     gl.uniformMatrix4fv(gl.getUniformLocation(shape.program, "modelViewMatrix" ), false, flatten(shape.modelViewMatrix) );
     gl.uniformMatrix3fv(gl.getUniformLocation( shape.program, "normalMatrix" ), false, flatten(shape.normalMatrix) );
     gl.uniformMatrix4fv(gl.getUniformLocation( shape.program, "projectionMatrix" ), false, flatten(_camera.projectionMatrix) );
-
-    // experiment multiple light sources
-    // var lightPosition1 = vec4(1.0, 1.0, 1.0, 0.0 );
-    // var lightPosition2 = vec4(0.5, 0.5, 0.5, 0.0 );
-    // var lightPosArr = [lightPosition1, lightPosition2];
-    // gl.uniform4fv( gl.getUniformLocation(shape.program, "lightPositionTest"), flatten(lightPosArr) );
 
     var numL = Light.numEnabled(_lightSources);
     gl.uniform1f( gl.getUniformLocation(shape.program, "shininess"), shape.materialShininess );
@@ -177,9 +171,9 @@ if (!String.prototype.endsWith) {
       translateOpts = [];
 
     if (Light.numEnabled(_lightSources) <= 1) {
-      shape.program = _shaders1;
+      shape.program = initShaders( gl, 'vertex-shader-1', 'fragment-shader-1' );
     } else {
-      shape.program = _shaders2;
+      shape.program = initShaders( gl, 'vertex-shader-2', 'fragment-shader-2' );
     }
 
     // Store the plain old color plus lit color in case user turns off lighting
@@ -188,7 +182,6 @@ if (!String.prototype.endsWith) {
     shape.ambientProduct = [];
     for (var j=0; j<_lightSources.length; j++) {
       shape.ambientProduct[j] = mult(_lightSources[j].lightAmbient, selectedColor);
-      console.log('updated shape ambientProduct: ' + shape.ambientProduct[j]);
     }
     shape.globalAmbientProduct = mult(_globalAmbientLight.lightAmbient, selectedColor);
 
@@ -286,10 +279,9 @@ if (!String.prototype.endsWith) {
     for (var i=0; i<_shapes.length; i++) {
 
       if (Light.numEnabled(_lightSources) <= 1) {
-        shape.program = _shaders1;
+        shape.program = initShaders( gl, 'vertex-shader-1', 'fragment-shader-1' );
       } else {
-        console.log('updating shape program with shaders2: ' + _shaders2);
-        shape.program = _shaders2;
+        shape.program = initShaders( gl, 'vertex-shader-2', 'fragment-shader-2' );
       }
 
       _shapes[i].ambientProduct = [];
@@ -301,18 +293,6 @@ if (!String.prototype.endsWith) {
       }
     }
   };
-
-  // var enableOrDisableLight = function(enabled) {
-  //   if (enabled) {
-  //     _shapes.forEach(function(shape) {
-  //       shape.program = initShaders( gl, 'vertex-shader', 'fragment-shader' );
-  //     });
-  //   } else {
-  //     _shapes.forEach(function(shape) {
-  //       shape.program = initShaders( gl, 'vertex-shader', 'fragment-shader-simple' );
-  //     });
-  //   }
-  // };
 
   var lightDomElementId = function(elemId, lightIndex) {
     if (lightIndex === 0) {
@@ -333,11 +313,6 @@ if (!String.prototype.endsWith) {
       lightType = DomUtils.getCheckedValue(lightDomElementId('lightType', lightIndex)),
       lightDistance = document.getElementById(lightDomElementId('lightDistance', lightIndex)).valueAsNumber,
       curentLightAmbient = _lightSources[lightIndex].lightAmbient;
-
-    // FIXME handle turning off an individual light
-    // if (currentEnabled !== enabled) {
-    //   enableOrDisableLight(lightIndex, enabled);
-    // }
 
     _lightSources[lightIndex].enabled = enabled;
     _lightSources[lightIndex].lightPosition = Light.initPosition(lightDistance, lightType);
@@ -399,7 +374,7 @@ if (!String.prototype.endsWith) {
     _lightSources[0] = Light.defaultSource(true, 0.0);
 
     // Light 2
-    document.getElementById('lightSwitch2').checked = false;
+    document.getElementById('lightSwitch2').checked = true;
     document.getElementById('lightDiffuse2').value = '#ffffff';
     document.getElementById('materialDiffuse2').value = '#ffffff';
     document.getElementById('lightSpecular2').value = '#ffffff';
@@ -407,7 +382,7 @@ if (!String.prototype.endsWith) {
     document.getElementById('lightAmbient2').value = '#ffffff';
     document.getElementById('sunlight2').checked = true;
     document.getElementById('lightDistance2').value = 1.0;
-    _lightSources[1] = Light.defaultSource(false, 90.0);
+    _lightSources[1] = Light.defaultSource(true, 90.0);
   };
 
   var App = {
