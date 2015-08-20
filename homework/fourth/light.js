@@ -23,6 +23,7 @@
         diffuseProduct: mult(lightDiffuse, materialDiffuse),
         specularProduct: mult(lightSpecular, materialSpecular),
         theta: 0.0,
+        rotation: 'INC',
         enabled: true
       };
     },
@@ -39,6 +40,7 @@
         diffuseProduct: mult(lightDiffuse, materialDiffuse),
         specularProduct: mult(lightSpecular, materialSpecular),
         theta: 180.0,
+        rotation: 'DEC',
         enabled: false
       };
     },

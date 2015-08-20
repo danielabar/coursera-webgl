@@ -141,7 +141,12 @@ if (!String.prototype.endsWith) {
   var updateLightPosition = function() {
     if (Light.numEnabled(_lightSources) > 0) {
       for (var i=0; i<_lightSources.length; i++) {
-        _lightSources[i].theta += 0.1;
+
+        if (_lightSources[i].rotation === 'INC') {
+          _lightSources[i].theta += 0.1;
+        } else if (_lightSources[i].rotation === 'DEC') {
+          _lightSources[i].theta -= 0.1;
+        }
         var rotatedPoint = Light.rotatePoint2D(_lightSources[i].theta, 16);
 
         _lightSources[i].lightPosition[0] = rotatedPoint[0];
