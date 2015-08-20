@@ -9,7 +9,7 @@
   <link rel="stylesheet" href="../../css/styles.css">
   <link rel="stylesheet" href="../../css/assignment.css">
 
-  <script id="vertex-shader" type="x-shader/x-vertex">
+  <script id="vertex-shader-2" type="x-shader/x-vertex">
 
   // vertex data
   attribute vec4 vPosition;
@@ -21,28 +21,20 @@
   uniform mat3 normalMatrix;
 
   // lighting
-  uniform vec4 lightPosition;
-  varying vec3 N, L, E;
-
-  // Experiment with multiple light sources
   const int cNumLight = 2;
-  uniform vec4 lightPositionTest[cNumLight];
+  uniform vec4 lightPosition[cNumLight];
+  varying vec3 N, E;
+  varying vec3 L[cNumLight];
 
   void main() {
 
-
-    // lighting
-    vec3 light;
     vec3 pos = (modelViewMatrix * vPosition).xyz;
 
-    // Experiment with multiple light sources
-    vec3 Ltest;
+    // lighting
     for (int i=0; i < cNumLight; i++) {
-        Ltest = normalize(lightPositionTest[i].xyz - pos);
+      if(lightPosition[i].w == 0.0)  L[i] = normalize(lightPosition[i].xyz);
+      else  L[i] = normalize(lightPosition[i].xyz - pos);
     }
-
-    if(lightPosition.w == 0.0)  L = normalize(lightPosition.xyz);
-    else  L = normalize(lightPosition.xyz - pos);
 
     E =  -normalize(pos);
     N = normalize( normalMatrix*vNormal.xyz);
@@ -52,47 +44,94 @@
   }
   </script>
 
-  <script id="fragment-shader" type="x-shader/x-fragment">
+  <script id="fragment-shader-2" type="x-shader/x-fragment">
   precision mediump float;
 
-  // uniform vec4 fColor;
+  const int cNumLight = 2;
+  uniform vec4 ambientProduct[cNumLight];
+  uniform vec4 diffuseProduct[cNumLight];
+  uniform vec4 specularProduct[cNumLight];
+  uniform float shininess;
+
+  varying vec3 N, E;
+  varying vec3 L[cNumLight];
+
+  void main() {
+    vec4 fColor;
+    vec3 H[cNumLight];
+    vec4 ambient[cNumLight];
+    float Kd[cNumLight];
+    vec4 diffuse[cNumLight];
+    float Ks[cNumLight];
+    vec4 specular[cNumLight];
+
+    for (int i=0; i < cNumLight; i++) {
+      H[i] = normalize( L[i] + E );
+      ambient[i] = ambientProduct[i];
+      Kd[i] = max( dot(L[i], N), 0.0 );
+      diffuse[i] = Kd[i] * diffuseProduct[i];
+      Ks[i] = pow( max(dot(N, H[i]), 0.0), shininess );
+      specular[i] = Ks[i] * specularProduct[i];
+      if( dot(L[i], N) < 0.0 ) specular[i] = vec4(0.0, 0.0, 0.0, 1.0);
+    }
+
+    fColor = ambient[0] + ambient[1] + diffuse[0] + diffuse[1] + specular[0] + specular[1];
+    fColor.a = 1.0;
+
+    //The minimum and maximum color values:
+    // vec4(0,0,0,0) // or vec4(0,0,0,1) if you dont want to worry about transparency
+    // vec4(1,1,1,1)
+    // gl_FragColor = clamp(fColor, 0.0, 1.0);
+    gl_FragColor = clamp(fColor, vec4(0,0,0,1), vec4(1,1,1,1));
+  }
+  </script>
+
+  <script id="vertex-shader-1" type="x-shader/x-vertex">
+  // vertex data
+  attribute vec4 vPosition;
+  attribute vec3 vNormal;
+  // camera settings
+  uniform mat4 modelViewMatrix;
+  uniform mat4 projectionMatrix;
+  uniform vec4 lightPosition;
+  uniform mat3 normalMatrix;
+  // lighting
+  varying vec3 N, L, E;
+  void main() {
+    // lighting
+    vec3 light;
+    vec3 pos = (modelViewMatrix * vPosition).xyz;
+    if(lightPosition.w == 0.0)  L = normalize(lightPosition.xyz);
+    else  L = normalize(lightPosition.xyz - pos);
+    E =  -normalize(pos);
+    N = normalize( normalMatrix*vNormal.xyz);
+    // apply matricies to the vertex
+    gl_Position = projectionMatrix * modelViewMatrix * vPosition;
+  }
+  </script>
+
+  <script id="fragment-shader-1" type="x-shader/x-fragment">
+  precision mediump float;
+
   uniform vec4 ambientProduct;
   uniform vec4 diffuseProduct;
   uniform vec4 specularProduct;
   uniform float shininess;
   varying vec3 N, L, E;
-
   void main() {
     vec4 fColor;
-
     vec3 H = normalize( L + E );
     vec4 ambient = ambientProduct;
-
     float Kd = max( dot(L, N), 0.0 );
     vec4  diffuse = Kd*diffuseProduct;
-
     float Ks = pow( max(dot(N, H), 0.0), shininess );
     vec4  specular = Ks * specularProduct;
-
     if( dot(L, N) < 0.0 ) specular = vec4(0.0, 0.0, 0.0, 1.0);
-
     fColor = ambient + diffuse +specular;
     fColor.a = 1.0;
-
     gl_FragColor = fColor;
   }
   </script>
-
-  <script id="fragment-shader-simple" type="x-shader/x-fragment">
-  precision mediump float;
-
-  uniform vec4 fColor;
-
-  void main() {
-    gl_FragColor = fColor;
-  }
-  </script>
-
 
   <!--  WebGL Utils -->
   <script type="text/javascript" src="../../Common/webgl-utils.js"></script>
@@ -260,14 +299,14 @@
 
     <div id="lightSettings2" class="light-settings">
       <div class="form-group">
-        <input type="checkbox" id="lightSwitch2" name="lightSwitch2" value="lightSwitch2" checked>
+        <input type="checkbox" id="lightSwitch2" name="lightSwitch2" value="lightSwitch2">
         <label for="lightSwitch">Light Source 2</label>
       </div>
       <div class="form-group">
         <label for="lightDiffuse">Light Diffuse</label>
         <input type="color" name="lightDiffuse" id="lightDiffuse2" value="#ffffff">
         <label for="materialDiffuse">Material Diffuse</label>
-        <input type="color" name="materialDiffuse" id="materialDiffuse2" value="#ffffff">
+        <input type="color" name="materialDiffuse" id="materialDiffuse2" value="#ffdd05">
       </div>
       <div class="form-group">
         <label for="lightSpecular">Light Specular</label>
@@ -281,13 +320,13 @@
       </div>
       <div class="form-group">
         <label for="lightType2">Type</label>
-        <input type="radio" id="sunlight2" name="lightType2" value="sunlight" checked>Sunlight
-        <input type="radio" id="spotlight2" name="lightType2" value="spotlight">Spotlight
+        <input type="radio" id="sunlight2" name="lightType2" value="sunlight">Sunlight
+        <input type="radio" id="spotlight2" name="lightType2" value="spotlight" checked>Spotlight
       </div>
       <div class="form-group">
         <label for="lightDistance2">Distance</label>
-        <input type=range id=lightDistance2 min=0.1 value=1.0 max=10.0 step=0.1 oninput="outputLightDistance(value)">
-        <output for=lightDistance2 id=ldz>1.0</output>
+        <input type=range id=lightDistance2 min=0.1 value=5.0 max=10.0 step=0.1 oninput="outputLightDistance2(value)">
+        <output for=lightDistance2 id=ldz2>5.0</output>
       </div>
     </div><!--//lightSettings2-->
 
@@ -340,6 +379,9 @@
   }
   var outputLightDistance = function(value) {
     document.querySelector('#ldz').value = value;
+  }
+  var outputLightDistance2 = function(value) {
+    document.querySelector('#ldz2').value = value;
   }
   var outputMaterialShininess = function(value) {
     document.querySelector('#mshiny').value = value;

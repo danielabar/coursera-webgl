@@ -1,7 +1,7 @@
 /**
  * Light
  */
-(function(window) {
+(function(window, ColorUtils) {
   'use strict';
 
   var Light = {
@@ -23,8 +23,61 @@
         diffuseProduct: mult(lightDiffuse, materialDiffuse),
         specularProduct: mult(lightSpecular, materialSpecular),
         theta: 0.0,
+        rotation: 'INC',
         enabled: true
       };
+    },
+
+    alternateSource: function() {
+      var lightDiffuse = vec4( 1.0, 1.0, 1.0, 1.0 ),
+        lightSpecular = vec4( 1.0, 1.0, 1.0, 1.0 ),
+        materialDiffuse =  ColorUtils.hexToGLvec4('#ffdd05'),
+        materialSpecular = vec4( 1.0, 1.0, 1.0, 1.0 );
+
+      return {
+        lightPosition: vec4(-1.0, -1.0, -1.0, 1.0 ),
+        lightAmbient: vec4( 1.0, 1.0, 1.0, 1.0 ),
+        diffuseProduct: mult(lightDiffuse, materialDiffuse),
+        specularProduct: mult(lightSpecular, materialSpecular),
+        theta: 180.0,
+        rotation: 'DEC',
+        enabled: false
+      };
+    },
+
+    globalAmbient: function() {
+      var lightDiffuse = vec4( 1.0, 1.0, 1.0, 1.0 ),
+        lightSpecular = vec4( 1.0, 1.0, 1.0, 1.0 ),
+        materialDiffuse =  vec4( 1.0, 1.0, 1.0, 1.0 ),
+        materialSpecular = vec4( 1.0, 1.0, 1.0, 1.0 );
+
+      return {
+        lightPosition: vec4(1.0, 1.0, 1.0, 0.0 ),
+        lightAmbient: vec4( 0.1, 0.1, 0.1, 1.0 ),
+        diffuseProduct: mult(lightDiffuse, materialDiffuse),
+        specularProduct: mult(lightSpecular, materialSpecular)
+      };
+    },
+
+    numEnabled: function(lightSources) {
+      var count = 0;
+      for (var i=0; i<lightSources.length; i++) {
+        if (lightSources[i].enabled) {
+          count += 1;
+        }
+      }
+      return count;
+    },
+
+    indexEnabled: function(lightSources) {
+      var index = null;
+      for (var i=0; i<lightSources.length; i++) {
+        if (lightSources[i].enabled) {
+          index = i;
+          break;
+        }
+      }
+      return index;
     },
 
     rotatePoint2D: function(theta, radius) {
@@ -59,4 +112,4 @@
 
   window.Light = Light;
 
-})(window);
+})(window, window.ColorUtils);
