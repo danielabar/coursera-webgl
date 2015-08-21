@@ -100,6 +100,19 @@
         }
       }
 
+      /**
+       * Normals Summary:
+       * For each vertex we calculate normal as the average of normals of the faces to which the vertex belongs.
+       *
+       * Normals Details:
+       * First we create an array of the same size as the vertex array (each vertex should have its own normal)
+       * and fill it up with zero vectors [0, 0, 0].
+       * Then we loop through the faces of the mesh.
+       * For each face we calculate normal of the face using the "Normals for triangle",
+       * and for each vertex forming the face we add the calculated normal to the corresponding entry in the normals array
+       * (we use indices of the vertices to localize appropriate entries).
+       * Then we loop through the normals array and normalize each normal.
+       */
       // Index tube connecting top and bottom
       for (var k=1; k<=n-1; k++) {
 
