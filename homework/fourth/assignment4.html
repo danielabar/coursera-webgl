@@ -204,7 +204,13 @@
     </button>
   </div>
 
-  <section class="settings side-controls">
+  <div class="canvas-container">
+    <canvas id="gl-canvas" width="800" height="700">
+      Oops ... your browser doesn't support the HTML5 canvas element
+    </canvas>
+  </div>
+
+  <div id="sideControls" class="settings side-controls">
 
     <div id="shapeSettings" class="">
 
@@ -330,24 +336,7 @@
       </div>
     </div><!--//lightSettings2-->
 
-  </section><!--//side-controls-->
-
-  <section class="drawing with-side-controls">
-
-    <!-- Drawing area -->
-    <div class="drawing-area">
-
-      <canvas id="gl-canvas" width="800" height="700">
-        Oops ... your browser doesn't support the HTML5 canvas element
-      </canvas>
-
-    </div>
-  </section>
-
-
-  <footer>
-    <p>Daniela Baron <a href="https://www.coursera.org/course/webgl">Coursera WebGL</a></p>
-  </footer>
+  </div><!--//side-controls-->
 
   <script>
   var outputRX = function(value) {

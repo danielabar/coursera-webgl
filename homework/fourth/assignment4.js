@@ -369,6 +369,8 @@ if (!String.prototype.startsWith) {
 
       // Setup canvas
       _canvas = document.getElementById('gl-canvas');
+      _canvas.height = document.documentElement.clientHeight;
+      _canvas.width = document.documentElement.clientWidth - document.getElementById('sideControls').clientWidth;
       gl = WebGLUtils.setupWebGL( _canvas, {preserveDrawingBuffer: true} );
       if ( !gl ) { alert( 'WebGL isn\'t available' ); }
 
