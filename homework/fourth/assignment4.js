@@ -300,12 +300,10 @@ if (!String.prototype.endsWith) {
       lightSpecular = ColorUtils.hexToGLvec4(document.getElementById(lightDomElementId('lightSpecular', lightIndex)).value),
       materialSpecular = ColorUtils.hexToGLvec4(document.getElementById(lightDomElementId('materialSpecular', lightIndex)).value),
       lightAmbient = ColorUtils.hexToGLvec4(document.getElementById(lightDomElementId('lightAmbient', lightIndex)).value),
-      lightType = DomUtils.getCheckedValue(lightDomElementId('lightType', lightIndex)),
       lightDistance = document.getElementById(lightDomElementId('lightDistance', lightIndex)).valueAsNumber,
       curentLightAmbient = _lightSources[lightIndex].lightAmbient;
 
     _lightSources[lightIndex].enabled = enabled;
-    _lightSources[lightIndex].lightPosition = Light.initPosition(lightDistance, lightType);
     _lightSources[lightIndex].lightAmbient = lightAmbient;
     _lightSources[lightIndex].diffuseProduct = mult(lightDiffuse, materialDiffuse);
     _lightSources[lightIndex].specularProduct = mult(lightSpecular, materialSpecular);
@@ -360,7 +358,6 @@ if (!String.prototype.endsWith) {
     document.getElementById('lightSpecular').value = '#ffffff';
     document.getElementById('materialSpecular').value = '#ffffff';
     document.getElementById('lightAmbient').value = '#ffffff';
-    document.getElementById('sunlight').checked = true;
     document.getElementById('lightDistance').value = 0.0;
     _lightSources[0] = Light.defaultSource();
 
@@ -371,7 +368,6 @@ if (!String.prototype.endsWith) {
     document.getElementById('lightSpecular2').value = '#ffffff';
     document.getElementById('materialSpecular2').value = '#ffffff';
     document.getElementById('lightAmbient2').value = '#333333';
-    document.getElementById('spotlight2').checked = true;
     document.getElementById('lightDistance2').value = 0.0;
     _lightSources[1] = Light.alternateSource();
   };

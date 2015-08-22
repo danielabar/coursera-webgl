@@ -6,11 +6,6 @@
 
   var Light = {
 
-    initPosition: function(distance, type) {
-      var w = (type === 'sunlight') ? 0.0 : 0.1;
-      return vec4(1.0, 1.0, distance, w);
-    },
-
     defaultSource: function() {
       var lightDiffuse = vec4( 1.0, 1.0, 1.0, 1.0 ),
         lightSpecular = vec4( 1.0, 1.0, 1.0, 1.0 ),
@@ -36,7 +31,7 @@
         materialDiffuse =  ColorUtils.hexToGLvec4('#ffdd05'),
         materialSpecular = vec4( 1.0, 1.0, 1.0, 1.0 );
       return {
-        lightPosition: vec4(-1.0, -1.0, -1.0, 1.0 ),
+        lightPosition: vec4(-1.0, -1.0, 1.0, 0.0 ),
         lightAmbient: ColorUtils.hexToGLvec4('#333333'),
         diffuseProduct: mult(lightDiffuse, materialDiffuse),
         specularProduct: mult(lightSpecular, materialSpecular),
