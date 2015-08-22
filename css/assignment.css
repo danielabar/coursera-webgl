@@ -70,6 +70,17 @@ section.drawing {
 
 
 /* ---------------------------------- */
+/* Toolbar */
+/* ---------------------------------- */
+
+.toolbar {
+  background: #524f4f;
+  padding-top: 3px;
+  padding-bottom: 3px;
+  padding-left: 3px;
+}
+
+/* ---------------------------------- */
 /* Settings Form */
 /* ---------------------------------- */
 
