@@ -327,8 +327,8 @@ if (!String.prototype.endsWith) {
   var setDefaults = function() {
     document.getElementById('shapeColor').value = '#ff0000';
 
-    document.getElementById('rotateX').value = 0;
-    document.getElementById('rxv').value = 0;
+    document.getElementById('rotateX').value = 45;
+    document.getElementById('rxv').value = 45;
     document.getElementById('rotateY').value = 0;
     document.getElementById('ryv').value = 0;
     document.getElementById('rotateZ').value = 0;
@@ -345,8 +345,8 @@ if (!String.prototype.endsWith) {
     document.getElementById('txv').value = 0;
     document.getElementById('translateY').value = 0;
     document.getElementById('tyv').value = 0;
-    document.getElementById('translateZ').value = 0;
-    document.getElementById('tzv').value = 0;
+    document.getElementById('translateZ').value = 1.0;
+    document.getElementById('tzv').value = 1.0;
 
     document.getElementById('materialShininess').value = 10.0;
     document.getElementById('mshiny').value = 10.0;
