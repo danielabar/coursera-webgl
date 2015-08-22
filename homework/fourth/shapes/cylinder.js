@@ -16,12 +16,20 @@
     return normal;
   };
 
+  var computeNormal = function (a, b, c){
+    var t1 = subtract(b, a);
+    var t2 = subtract(c, b);
+    var normal = vec3(cross(t1, t2));
+    return normal;
+  };
+
   var Cylinder = {
 
     generate: function() {
       var uniqueVertices = [],
         vertices = [],
         indices = [],
+        uniqueNormals = [],
         normals = [],
         bottomCap = [],
         topCap = [],
@@ -113,6 +121,10 @@
        * (we use indices of the vertices to localize appropriate entries).
        * Then we loop through the normals array and normalize each normal.
        */
+
+      for (var kn=0; kn<=300; kn++) {
+        uniqueNormals[kn] = vec3(0.0, 0.0, 0.0);
+      }
       // Index tube connecting top and bottom
       for (var k=1; k<=n-1; k++) {
 
@@ -120,64 +132,100 @@
         if (k === n-1) {
 
           // first triangle
-          ftn = triangleNormal(uniqueVertices[k], uniqueVertices[1], uniqueVertices[k + offset]);
+          ftn = computeNormal(uniqueVertices[k], uniqueVertices[1], uniqueVertices[k + offset]);
           indices.push(k);
           vertices.push(uniqueVertices[k]);
-          normals.push(ftn);
+          // normals.push(ftn);
+          uniqueNormals[k] = add(ftn, uniqueNormals[k]);
 
           indices.push(1);
           vertices.push(uniqueVertices[1]);
-          normals.push(ftn);
+          // normals.push(ftn);
+          uniqueNormals[1] = add(ftn, uniqueNormals[1]);
 
           indices.push(k + offset);
           vertices.push(uniqueVertices[k + offset]);
-          normals.push(ftn);
+          // normals.push(ftn);
+          uniqueNormals[k + offset] = add(ftn, uniqueNormals[k + offset]);
 
           // second triangle
-          stn = triangleNormal(uniqueVertices[1], uniqueVertices[1+offset], uniqueVertices[k+offset]);
+          stn = computeNormal(uniqueVertices[1], uniqueVertices[1+offset], uniqueVertices[k+offset]);
           indices.push(1);
           vertices.push(uniqueVertices[1]);
-          normals.push(stn);
+          // normals.push(stn);
+          uniqueNormals[1] = add(stn, uniqueNormals[1]);
 
           indices.push(1 + offset);
           vertices.push(uniqueVertices[1+offset]);
-          normals.push(stn);
+          // normals.push(stn);
+          uniqueNormals[1 + offset] = add(stn, uniqueNormals[1 + offset]);
 
           indices.push(k + offset);
           vertices.push(uniqueVertices[k+offset]);
-          normals.push(stn);
+          // normals.push(stn);
+          uniqueNormals[k + offset] = add(stn, uniqueNormals[k + offset]);
 
         } else {
 
           // first triangle
-          ftn = triangleNormal(uniqueVertices[k], uniqueVertices[k+1], uniqueVertices[k + 1 + offset]);
+          ftn = computeNormal(uniqueVertices[k], uniqueVertices[k+1], uniqueVertices[k + 1 + offset]);
           indices.push(k);
           vertices.push(uniqueVertices[k]);
-          normals.push(ftn);
+          // normals.push(ftn);
+          uniqueNormals[k] = add(ftn, uniqueNormals[k]);
 
           indices.push(k+1);
           vertices.push(uniqueVertices[k+1]);
-          normals.push(ftn);
+          // normals.push(ftn);
+          uniqueNormals[k+1] = add(ftn, uniqueNormals[k+1]);
 
           indices.push(k + 1 + offset);
           vertices.push(uniqueVertices[k+1+offset]);
-          normals.push(ftn);
+          // normals.push(ftn);
+          uniqueNormals[k+1+offset] = add(ftn, uniqueNormals[k+1+offset]);
 
           // second triangle
-          stn = triangleNormal(uniqueVertices[k], uniqueVertices[k+1+offset], uniqueVertices[k+offset]);
+          stn = computeNormal(uniqueVertices[k], uniqueVertices[k+1+offset], uniqueVertices[k+offset]);
           indices.push(k);
           vertices.push(uniqueVertices[k]);
-          normals.push(stn);
+          // normals.push(stn);
+          uniqueNormals[k] = add(stn, uniqueNormals[k]);
 
           indices.push(k + 1 + offset);
           vertices.push(uniqueVertices[k+1+offset]);
-          normals.push(stn);
+          // normals.push(stn);
+          uniqueNormals[k+1+offset] = add(stn, uniqueNormals[k+1+offset]);
 
           indices.push(k + offset);
           vertices.push(uniqueVertices[k+offset]);
-          normals.push(stn);
+          // normals.push(stn);
+          uniqueNormals[k+offset] = add(stn, uniqueNormals[k+offset]);
         }
 
+      }
+
+      for (var knn=1; knn<=n-1; knn++) {
+        var curNormal = uniqueNormals[knn];
+        var nn = normalize(curNormal);
+        uniqueNormals[knn] = nn;
+      }
+
+      for (var k2=1; k2<=n-1; k2++) {
+        if (k2 === n-1) {
+          normals.push(uniqueNormals[k2]);
+          normals.push(uniqueNormals[1]);
+          normals.push(uniqueNormals[k2+offset]);
+          normals.push(uniqueNormals[1]);
+          normals.push(uniqueNormals[1+offset]);
+          normals.push(uniqueNormals[k2+offset]);
+        } else {
+          normals.push(uniqueNormals[k2]);
+          normals.push(uniqueNormals[k2+1]);
+          normals.push(uniqueNormals[k2+1+offset]);
+          normals.push(uniqueNormals[k2]);
+          normals.push(uniqueNormals[k2+1+offset]);
+          normals.push(uniqueNormals[k2+offset]);
+        }
       }
 
       return {
