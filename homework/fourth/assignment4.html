@@ -52,7 +52,6 @@
   uniform vec4 diffuseProduct[cNumLight];
   uniform vec4 specularProduct[cNumLight];
   uniform float shininess;
-  // uniform float attenuation[cNumLight];
   uniform float attenuationA;
   uniform float attenuationB;
 
@@ -78,8 +77,6 @@
       if( dot(L[i], N) < 0.0 ) specular[i] = vec4(0.0, 0.0, 0.0, 1.0);
     }
 
-    // fColor = ambient + attenuation * (diffuse + specular);
-    // fColor = ambient[0] + ambient[1] + diffuse[0] + diffuse[1] + specular[0] + specular[1];
     fColor = ambient[0] + attenuationA * (diffuse[0] + specular[0]) +
       ambient[1] + attenuationB * (diffuse[1] + specular[1]);
     fColor.a = 1.0;
