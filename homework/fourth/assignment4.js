@@ -82,8 +82,6 @@ if (!String.prototype.endsWith) {
       case 1:
         // Only one light source enabled, send the selected one
         var lightIndex = Light.indexEnabled(_lightSources);
-        // console.log('render case 1: lightIndex = ' + lightIndex);
-        // console.log('render case 1: attentuation = ' + _lightSources[lightIndex].attenuation);
         gl.uniform4fv( gl.getUniformLocation(program, "ambientProduct"), flatten(shape.ambientProduct[lightIndex]) );
         gl.uniform4fv( gl.getUniformLocation(program, "diffuseProduct"), flatten(_lightSources[lightIndex].diffuseProduct) );
         gl.uniform4fv( gl.getUniformLocation(program, "specularProduct"), flatten(_lightSources[lightIndex].specularProduct) );
@@ -100,6 +98,8 @@ if (!String.prototype.endsWith) {
         gl.uniform4fv( gl.getUniformLocation(program, "diffuseProduct"), flatten(allDiffuse) );
         gl.uniform4fv( gl.getUniformLocation(program, "specularProduct"), flatten(allSpecular) );
         gl.uniform4fv( gl.getUniformLocation(program, "lightPosition"), flatten(allPos) );
+        gl.uniform1f( gl.getUniformLocation(program, "attenuationA"), _lightSources[0].attenuation );
+        gl.uniform1f( gl.getUniformLocation(program, "attenuationB"), _lightSources[1].attenuation );
         break;
     }
 
@@ -310,7 +310,7 @@ if (!String.prototype.endsWith) {
     _lightSources[lightIndex].diffuseProduct = mult(lightDiffuse, materialDiffuse);
     _lightSources[lightIndex].specularProduct = mult(lightSpecular, materialSpecular);
     _lightSources[lightIndex].lightDistance = lightDistance;
-    _lightSources[lightIndex].attenuation = 1 / (1 + Math.pow(lightDistance, 2));
+    _lightSources[lightIndex].attenuation = 1 / (1 + (0.2 * Math.pow(lightDistance, 2)));
 
     if (!equal(curentLightAmbient, lightAmbient)) {
       updateShapesWithLightSource();
@@ -363,7 +363,6 @@ if (!String.prototype.endsWith) {
     document.getElementById('sunlight').checked = true;
     document.getElementById('lightDistance').value = 0.0;
     _lightSources[0] = Light.defaultSource();
-    console.dir(_lightSources[0]);
 
     // Light 2
     document.getElementById('lightSwitch2').checked = false;
