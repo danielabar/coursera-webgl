@@ -90,7 +90,7 @@
       }
 
       // Initialize unique normals with zero vectors
-      for (var kn=0; kn<=300; kn++) {
+      for (var kn=0; kn<=uniqueVertices.length; kn++) {
         uniqueNormals[kn] = vec3(0.0, 0.0, 0.0);
       }
 
@@ -162,7 +162,7 @@
       }
 
       // Normalize unique normals
-      for (var knn=1; knn<=n-1; knn++) {
+      for (var knn=0; knn<uniqueNormals.length; knn++) {
         var curNormal = uniqueNormals[knn];
         var nn = normalize(curNormal);
         uniqueNormals[knn] = nn;
