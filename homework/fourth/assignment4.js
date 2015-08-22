@@ -308,7 +308,7 @@ if (!String.prototype.endsWith) {
     _lightSources[lightIndex].diffuseProduct = mult(lightDiffuse, materialDiffuse);
     _lightSources[lightIndex].specularProduct = mult(lightSpecular, materialSpecular);
     _lightSources[lightIndex].lightDistance = lightDistance;
-    _lightSources[lightIndex].attenuation = 1 / (1 + (0.2 * Math.pow(lightDistance, 2)));
+    _lightSources[lightIndex].attenuation = 1 / (1 + (Light.attenuationFactor * Math.pow(lightDistance, 2)));
 
     if (!equal(curentLightAmbient, lightAmbient)) {
       updateShapesWithLightSource();

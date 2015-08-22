@@ -6,6 +6,8 @@
 
   var Light = {
 
+    attenuationFactor: 0.2,
+
     defaultSource: function() {
       var lightDiffuse = vec4( 1.0, 1.0, 1.0, 1.0 ),
         lightSpecular = vec4( 1.0, 1.0, 1.0, 1.0 ),
