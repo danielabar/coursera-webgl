@@ -82,10 +82,13 @@ if (!String.prototype.endsWith) {
       case 1:
         // Only one light source enabled, send the selected one
         var lightIndex = Light.indexEnabled(_lightSources);
+        // console.log('render case 1: lightIndex = ' + lightIndex);
+        // console.log('render case 1: attentuation = ' + _lightSources[lightIndex].attenuation);
         gl.uniform4fv( gl.getUniformLocation(program, "ambientProduct"), flatten(shape.ambientProduct[lightIndex]) );
         gl.uniform4fv( gl.getUniformLocation(program, "diffuseProduct"), flatten(_lightSources[lightIndex].diffuseProduct) );
         gl.uniform4fv( gl.getUniformLocation(program, "specularProduct"), flatten(_lightSources[lightIndex].specularProduct) );
         gl.uniform4fv( gl.getUniformLocation(program, "lightPosition"), flatten(_lightSources[lightIndex].lightPosition) );
+        gl.uniform1f( gl.getUniformLocation(program, "attenuation"), _lightSources[lightIndex].attenuation );
         break;
       default:
         // Both light sources are enabled, send them all
@@ -306,6 +309,8 @@ if (!String.prototype.endsWith) {
     _lightSources[lightIndex].lightAmbient = lightAmbient;
     _lightSources[lightIndex].diffuseProduct = mult(lightDiffuse, materialDiffuse);
     _lightSources[lightIndex].specularProduct = mult(lightSpecular, materialSpecular);
+    _lightSources[lightIndex].lightDistance = lightDistance;
+    _lightSources[lightIndex].attenuation = 1 / (1 + Math.pow(lightDistance, 2));
 
     if (!equal(curentLightAmbient, lightAmbient)) {
       updateShapesWithLightSource();
@@ -356,8 +361,9 @@ if (!String.prototype.endsWith) {
     document.getElementById('materialSpecular').value = '#ffffff';
     document.getElementById('lightAmbient').value = '#ffffff';
     document.getElementById('sunlight').checked = true;
-    document.getElementById('lightDistance').value = 1.0;
+    document.getElementById('lightDistance').value = 0.0;
     _lightSources[0] = Light.defaultSource();
+    console.dir(_lightSources[0]);
 
     // Light 2
     document.getElementById('lightSwitch2').checked = false;
@@ -367,7 +373,7 @@ if (!String.prototype.endsWith) {
     document.getElementById('materialSpecular2').value = '#ffffff';
     document.getElementById('lightAmbient2').value = '#333333';
     document.getElementById('spotlight2').checked = true;
-    document.getElementById('lightDistance2').value = 5.0;
+    document.getElementById('lightDistance2').value = 0.0;
     _lightSources[1] = Light.alternateSource();
   };
 

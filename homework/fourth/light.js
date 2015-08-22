@@ -24,6 +24,8 @@
         specularProduct: mult(lightSpecular, materialSpecular),
         theta: 0.0,
         rotation: 'INC',
+        lightDistance: 0.0,
+        attenuation: 1.0,
         enabled: true
       };
     },
@@ -40,6 +42,8 @@
         specularProduct: mult(lightSpecular, materialSpecular),
         theta: 180.0,
         rotation: 'DEC',
+        lightDistance: 0.0,
+        attenuation: 1.0,
         enabled: false
       };
     },

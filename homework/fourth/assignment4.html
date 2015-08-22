@@ -52,6 +52,7 @@
   uniform vec4 diffuseProduct[cNumLight];
   uniform vec4 specularProduct[cNumLight];
   uniform float shininess;
+  // uniform float attentuation[cNumLight];
 
   varying vec3 N, E;
   varying vec3 L[cNumLight];
@@ -75,28 +76,30 @@
       if( dot(L[i], N) < 0.0 ) specular[i] = vec4(0.0, 0.0, 0.0, 1.0);
     }
 
+    // vec3 linearColor = ambient + attenuation*(diffuse + specular);
+    // fColor = ambient[0] + ambient[1] + attentuation * (diffuse[0] + diffuse[1] + specular[0] + specular[1]);
     fColor = ambient[0] + ambient[1] + diffuse[0] + diffuse[1] + specular[0] + specular[1];
     fColor.a = 1.0;
 
-    //The minimum and maximum color values:
-    // vec4(0,0,0,0) // or vec4(0,0,0,1) if you dont want to worry about transparency
-    // vec4(1,1,1,1)
-    // gl_FragColor = clamp(fColor, 0.0, 1.0);
     gl_FragColor = clamp(fColor, vec4(0,0,0,1), vec4(1,1,1,1));
   }
   </script>
 
   <script id="vertex-shader-1" type="x-shader/x-vertex">
+
   // vertex data
   attribute vec4 vPosition;
   attribute vec3 vNormal;
+
   // camera settings
   uniform mat4 modelViewMatrix;
   uniform mat4 projectionMatrix;
+
+  // lighting
   uniform vec4 lightPosition;
   uniform mat3 normalMatrix;
-  // lighting
   varying vec3 N, L, E;
+
   void main() {
     // lighting
     vec3 light;
@@ -117,7 +120,10 @@
   uniform vec4 diffuseProduct;
   uniform vec4 specularProduct;
   uniform float shininess;
+  uniform float attenuation;
+
   varying vec3 N, L, E;
+
   void main() {
     vec4 fColor;
     vec3 H = normalize( L + E );
@@ -127,8 +133,10 @@
     float Ks = pow( max(dot(N, H), 0.0), shininess );
     vec4  specular = Ks * specularProduct;
     if( dot(L, N) < 0.0 ) specular = vec4(0.0, 0.0, 0.0, 1.0);
-    fColor = ambient + diffuse +specular;
+
+    fColor = ambient + attenuation * (diffuse + specular);
     fColor.a = 1.0;
+
     gl_FragColor = fColor;
   }
   </script>
@@ -292,8 +300,8 @@
       </div>
       <div class="form-group">
         <label for="lightDistance">Distance</label>
-        <input type=range id=lightDistance min=0.1 value=1.0 max=10.0 step=0.1 oninput="outputLightDistance(value)">
-        <output for=lightDistance id=ldz>1.0</output>
+        <input type=range id=lightDistance min=0.0 value=0.0 max=3.0 step=0.1 oninput="outputLightDistance(value)">
+        <output for=lightDistance id=ldz>0.0</output>
       </div>
     </div><!--//lightSettings1-->
 
@@ -325,8 +333,8 @@
       </div>
       <div class="form-group">
         <label for="lightDistance2">Distance</label>
-        <input type=range id=lightDistance2 min=0.1 value=5.0 max=10.0 step=0.1 oninput="outputLightDistance2(value)">
-        <output for=lightDistance2 id=ldz2>5.0</output>
+        <input type=range id=lightDistance2 min=0.0 value=0.0 max=3.0 step=0.1 oninput="outputLightDistance2(value)">
+        <output for=lightDistance2 id=ldz2>0.0</output>
       </div>
     </div><!--//lightSettings2-->
 
