@@ -15,6 +15,38 @@
   margin-bottom: 20px;
 }
 
+.assignment-four header h1 {
+  font-size: 40px;
+}
+
+/* ---------------------------------- */
+/* Nav */
+/* ---------------------------------- */
+
+.assignment-four nav {
+  position: static;
+  /*border-bottom: 1px solid #B9B8B8;*/
+}
+
+.sub-nav {
+  display: inline-block;
+  position: absolute;
+  left: 10px;
+}
+
+.sub-nav a {
+  font-size: 24px;
+  font-weight: 500;
+  font-family: "Open Sans";
+  text-transform: none;
+}
+
+.sub-nav a:hover {
+  background: inherit;
+  color: inherit;
+  border-radius: 0;
+}
+
 
 /* ---------------------------------- */
 /* Section */
@@ -212,6 +244,10 @@ input[type=button] {
 
 .button-small {
   width: 115px;
+}
+
+.button-mini {
+  width: 50px;
 }
 
 .button:hover {

@@ -166,22 +166,43 @@
   <script type="text/javascript" src="assignment4.js"></script>
 </head>
 
-<body class="assignment">
+<body class="assignment assignment-four">
 
   <!--[if lt IE 9]>
     <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
   <![endif]-->
 
   <nav>
+    <div class="sub-nav">
+      <a href="#">Assignment 4 Lighting</a>
+    </div>
 		<a href="../../index.html#assignments">Assignments</a>
 		<a href="../../index.html#experiments">Experiments</a>
 		<a href="../../index.html">Home</a>
 	</nav>
 
-  <header>
-    <h1>Assignment 4</h1>
-    <h2>Lighting (work in progress)</h2>
-  </header>
+  <div id="toolbar" class="toolbar">
+    <!-- sphere -->
+    <button id="shapeSphere" data-shape="Sphere" title="create a new sphere" class="button button-mini">
+      <i id="shapeSphereIcon" data-shape="Sphere" class="fa fa-adjust icon"></i>
+    </button>
+    <!-- cylinder -->
+    <button id="shapeCylinder" data-shape="Cylinder" title="create a new cylinder" class="button button-mini">
+      <i id="shapeCylinderIcon" data-shape="Cylinder" class="fa fa-database icon"></i>
+    </button>
+    <!-- cone -->
+    <button id="shapeCone" data-shape="Cone" title="create a new cone" class="button button-mini">
+      <i id="shapeConeIcon" data-shape="Cone" class="fa fa-chevron-up icon"></i>
+    </button>
+    <!-- tetrahedron -->
+    <button id="shapeTetrahedron" data-shape="Tetrahedron" title="create a new tetrahedron" class="button button-mini">
+      <i id="shapeTetrahedronIcon" data-shape="Tetrahedron" class="fa fa-connectdevelop icon"></i>
+    </button>
+    <!-- cube -->
+    <button id="shapeCube" data-shape="Cube" title="create a new cube" class="button button-mini">
+      <i id="shapeCubeIcon" data-shape="Cube" class="fa fa-cube icon"></i>
+    </button>
+  </div>
 
   <section class="settings side-controls">
 

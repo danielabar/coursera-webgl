@@ -13,6 +13,13 @@ if (!String.prototype.endsWith) {
   };
 }
 
+if (!String.prototype.startsWith) {
+  String.prototype.startsWith = function(searchString, position) {
+    position = position || 0;
+    return this.indexOf(searchString, position) === position;
+  };
+}
+
 /**
  * App
  */
@@ -232,10 +239,18 @@ if (!String.prototype.endsWith) {
     shape.normalMatrix = normalMatrix;
   };
 
-  var seedOneShape = function() {
-    var shapeSelect = document.getElementById('shape');
-    var shapeType = shapeSelect.options[shapeSelect.selectedIndex].value;
-    _shapes.push(generateShape(shapeType, true));
+  var seedOneShape = function(shapeType) {
+    _shapes.push(generateShape(shapeType));
+  };
+
+  var toolbarHandler = function(evt) {
+    var clickedOnId = evt.target.id,
+      shapeElement;
+      
+    if (clickedOnId.startsWith('shape')) {
+      shapeElement = document.getElementById(clickedOnId);
+      seedOneShape(shapeElement.dataset.shape);
+    }
   };
 
   var actionHandler = function(evt) {
@@ -382,6 +397,7 @@ if (!String.prototype.endsWith) {
       if ( !gl ) { alert( 'WebGL isn\'t available' ); }
 
       // Register event handlers
+      document.getElementById('toolbar').addEventListener('click', toolbarHandler);
       document.getElementById('shapeSettings').addEventListener('click', actionHandler);
       document.getElementById('shapeSettings').addEventListener('change', changeHandler);
       document.getElementById('lightSettings1').addEventListener('change', lightHandler);
