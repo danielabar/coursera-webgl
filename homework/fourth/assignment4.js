@@ -365,7 +365,7 @@ if (!String.prototype.endsWith) {
     document.getElementById('materialDiffuse2').value = '#ffdd05';
     document.getElementById('lightSpecular2').value = '#ffffff';
     document.getElementById('materialSpecular2').value = '#ffffff';
-    document.getElementById('lightAmbient2').value = '#ffffff';
+    document.getElementById('lightAmbient2').value = '#333333';
     document.getElementById('spotlight2').checked = true;
     document.getElementById('lightDistance2').value = 5.0;
     _lightSources[1] = Light.alternateSource();

@@ -33,10 +33,9 @@
         lightSpecular = vec4( 1.0, 1.0, 1.0, 1.0 ),
         materialDiffuse =  ColorUtils.hexToGLvec4('#ffdd05'),
         materialSpecular = vec4( 1.0, 1.0, 1.0, 1.0 );
-
       return {
         lightPosition: vec4(-1.0, -1.0, -1.0, 1.0 ),
-        lightAmbient: vec4( 1.0, 1.0, 1.0, 1.0 ),
+        lightAmbient: ColorUtils.hexToGLvec4('#333333'),
         diffuseProduct: mult(lightDiffuse, materialDiffuse),
         specularProduct: mult(lightSpecular, materialSpecular),
         theta: 180.0,
