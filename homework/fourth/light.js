@@ -6,10 +6,7 @@
 
   var Light = {
 
-    initPosition: function(distance, type) {
-      var w = (type === 'sunlight') ? 0.0 : 0.1;
-      return vec4(1.0, 1.0, distance, w);
-    },
+    attenuationFactor: 0.2,
 
     defaultSource: function() {
       var lightDiffuse = vec4( 1.0, 1.0, 1.0, 1.0 ),
@@ -24,6 +21,8 @@
         specularProduct: mult(lightSpecular, materialSpecular),
         theta: 0.0,
         rotation: 'INC',
+        lightDistance: 0.0,
+        attenuation: 1.0,
         enabled: true
       };
     },
@@ -34,12 +33,14 @@
         materialDiffuse =  ColorUtils.hexToGLvec4('#ffdd05'),
         materialSpecular = vec4( 1.0, 1.0, 1.0, 1.0 );
       return {
-        lightPosition: vec4(-1.0, -1.0, -1.0, 1.0 ),
+        lightPosition: vec4(-1.0, -1.0, 1.0, 0.0 ),
         lightAmbient: ColorUtils.hexToGLvec4('#333333'),
         diffuseProduct: mult(lightDiffuse, materialDiffuse),
         specularProduct: mult(lightSpecular, materialSpecular),
         theta: 180.0,
         rotation: 'DEC',
+        lightDistance: 0.0,
+        attenuation: 1.0,
         enabled: false
       };
     },
