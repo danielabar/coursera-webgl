@@ -29,6 +29,13 @@
 
       normal = vec3(normal);
       return normal;
+    },
+
+    computeNormal: function (a, b, c){
+      var t1 = subtract(b, a);
+      var t2 = subtract(c, b);
+      var normal = vec3(cross(t1, t2));
+      return normal;
     }
 
   };
