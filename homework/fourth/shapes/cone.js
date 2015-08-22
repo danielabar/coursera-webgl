@@ -10,6 +10,7 @@
       var uniqueVertices = [],
         vertices = [],
         indices = [],
+        uniqueNormals = [],
         normals = [],
         bottomCap = [],
         topPoint = [],
@@ -56,37 +57,64 @@
         }
       }
 
-      // TODO: for each vertex we calculate normal as the average of normals of the faces to which the vertex belongs.
+      // Initialize unique normals with zero vectors
+      for (var kn=0; kn<=uniqueVertices.length; kn++) {
+        uniqueNormals[kn] = vec3(0.0, 0.0, 0.0);
+      }
 
       // Join top point to bottom cap
       for (var j=1; j<=n; j++) {
+
+        // Special handling to "wrap it up"
         if (j === n) {
-          tn = ShapeCommon.triangleNormal(uniqueVertices[n+1], uniqueVertices[j], uniqueVertices[1]);
+
+          tn = ShapeCommon.computeNormal(uniqueVertices[n+1], uniqueVertices[j], uniqueVertices[1]);
           indices.push(n+1);
           vertices.push(uniqueVertices[n+1]);
-          normals.push(tn);
+          uniqueNormals[n+1] = add(tn, uniqueNormals[n+1]);
 
           indices.push(j);
           vertices.push(uniqueVertices[j]);
-          normals.push(tn);
+          uniqueNormals[j] = add(tn, uniqueNormals[j]);
 
           indices.push(1);
           vertices.push(uniqueVertices[1]);
-          normals.push(tn);
+          uniqueNormals[1] = add(tn, uniqueNormals[1]);
 
         } else {
-          tn = ShapeCommon.triangleNormal(uniqueVertices[n+1], uniqueVertices[j], uniqueVertices[j+1]);
+
+          tn = ShapeCommon.computeNormal(uniqueVertices[n+1], uniqueVertices[j], uniqueVertices[j+1]);
           indices.push(n+1);
           vertices.push(uniqueVertices[n+1]);
-          normals.push(tn);
+          uniqueNormals[n+1] = add(tn, uniqueNormals[n+1]);
 
           indices.push(j);
           vertices.push(uniqueVertices[j]);
-          normals.push(tn);
+          uniqueNormals[j] = add(tn, uniqueNormals[j]);
 
           indices.push(j+1);
           vertices.push(uniqueVertices[j+1]);
-          normals.push(tn);
+          uniqueNormals[j+1] = add(tn, uniqueNormals[j+1]);
+        }
+      }
+
+      // Normalize unique normals
+      for (var knn=0; knn<uniqueNormals.length; knn++) {
+        var curNormal = uniqueNormals[knn];
+        var nn = normalize(curNormal);
+        uniqueNormals[knn] = nn;
+      }
+
+      // Fill normals array with unique normals
+      for (var j2=1; j2<=n; j2++) {
+        if (j === n) {
+          normals.push(uniqueNormals[n+1]);
+          normals.push(uniqueNormals[j2]);
+          normals.push(uniqueNormals[1]);
+        } else {
+          normals.push(uniqueNormals[n+1]);
+          normals.push(uniqueNormals[j2]);
+          normals.push(uniqueNormals[j2+1]);
         }
       }
 
