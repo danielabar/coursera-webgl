@@ -13,6 +13,13 @@ if (!String.prototype.endsWith) {
   };
 }
 
+if (!String.prototype.startsWith) {
+  String.prototype.startsWith = function(searchString, position) {
+    position = position || 0;
+    return this.indexOf(searchString, position) === position;
+  };
+}
+
 /**
  * App
  */
@@ -232,34 +239,18 @@ if (!String.prototype.endsWith) {
     shape.normalMatrix = normalMatrix;
   };
 
-  var seedOneShape = function() {
-    var shapeSelect = document.getElementById('shape');
-    var shapeType = shapeSelect.options[shapeSelect.selectedIndex].value;
-    _shapes.push(generateShape(shapeType, true));
+  var seedOneShape = function(shapeType) {
+    _shapes.push(generateShape(shapeType));
   };
 
-  var actionHandler = function(evt) {
+  var toolbarHandler = function(evt) {
+    var clickedOnId = evt.target.id,
+      shapeElement;
 
-    if (evt.target.id === 'newShape' || evt.target.id === 'newShapeIcon') {
-      setDefaults();
-      seedOneShape();
+    if (clickedOnId.startsWith('shape')) {
+      shapeElement = document.getElementById(clickedOnId);
+      seedOneShape(shapeElement.dataset.shape);
     }
-
-    if (evt.target.id === 'clear' || evt.target.id === 'clearIcon') {
-      _shapes = [];
-      setDefaults();
-    }
-
-    if (evt.target.id === 'downloadShapeData' || evt.target.id === 'downloadShapeDataIcon') {
-      var element = document.createElement('a');
-      element.setAttribute('href', 'data:application/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(_shapes, null, 2)));
-      element.setAttribute('download', 'shapes.json');
-      element.style.display = 'none';
-      document.body.appendChild(element);
-      element.click();
-      document.body.removeChild(element);
-    }
-
   };
 
   var changeHandler = function(evt) {
@@ -382,7 +373,7 @@ if (!String.prototype.endsWith) {
       if ( !gl ) { alert( 'WebGL isn\'t available' ); }
 
       // Register event handlers
-      document.getElementById('shapeSettings').addEventListener('click', actionHandler);
+      document.getElementById('toolbar').addEventListener('click', toolbarHandler);
       document.getElementById('shapeSettings').addEventListener('change', changeHandler);
       document.getElementById('lightSettings1').addEventListener('change', lightHandler);
       document.getElementById('lightSettings2').addEventListener('change', lightHandler);
