@@ -246,35 +246,11 @@ if (!String.prototype.startsWith) {
   var toolbarHandler = function(evt) {
     var clickedOnId = evt.target.id,
       shapeElement;
-      
+
     if (clickedOnId.startsWith('shape')) {
       shapeElement = document.getElementById(clickedOnId);
       seedOneShape(shapeElement.dataset.shape);
     }
-  };
-
-  var actionHandler = function(evt) {
-
-    if (evt.target.id === 'newShape' || evt.target.id === 'newShapeIcon') {
-      setDefaults();
-      seedOneShape();
-    }
-
-    if (evt.target.id === 'clear' || evt.target.id === 'clearIcon') {
-      _shapes = [];
-      setDefaults();
-    }
-
-    if (evt.target.id === 'downloadShapeData' || evt.target.id === 'downloadShapeDataIcon') {
-      var element = document.createElement('a');
-      element.setAttribute('href', 'data:application/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(_shapes, null, 2)));
-      element.setAttribute('download', 'shapes.json');
-      element.style.display = 'none';
-      document.body.appendChild(element);
-      element.click();
-      document.body.removeChild(element);
-    }
-
   };
 
   var changeHandler = function(evt) {
@@ -398,7 +374,6 @@ if (!String.prototype.startsWith) {
 
       // Register event handlers
       document.getElementById('toolbar').addEventListener('click', toolbarHandler);
-      document.getElementById('shapeSettings').addEventListener('click', actionHandler);
       document.getElementById('shapeSettings').addEventListener('change', changeHandler);
       document.getElementById('lightSettings1').addEventListener('change', lightHandler);
       document.getElementById('lightSettings2').addEventListener('change', lightHandler);
