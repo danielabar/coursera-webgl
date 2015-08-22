@@ -327,8 +327,8 @@ if (!String.prototype.endsWith) {
   var setDefaults = function() {
     document.getElementById('shapeColor').value = '#ff0000';
 
-    document.getElementById('rotateX').value = 0;
-    document.getElementById('rxv').value = 0;
+    document.getElementById('rotateX').value = 45;
+    document.getElementById('rxv').value = 45;
     document.getElementById('rotateY').value = 0;
     document.getElementById('ryv').value = 0;
     document.getElementById('rotateZ').value = 0;
