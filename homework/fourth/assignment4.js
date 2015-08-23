@@ -246,9 +246,6 @@ if (!String.prototype.startsWith) {
     normalMatrix = inverseMat3(flatten(shape.modelViewMatrix));
     normalMatrix = transpose(normalMatrix);
     shape.normalMatrix = normalMatrix;
-
-    // temp debug
-    console.dir(shape);
   };
 
   var seedOneShape = function(shapeType) {
@@ -281,23 +278,18 @@ if (!String.prototype.startsWith) {
       _shapes[i].diffuseProduct = [];
       _shapes[i].specularProduct = [];
       for (var j=0; j<_lightSources.length; j++) {
-        // temp debug
-        console.log('updating shape i = ' + i + ', with light j = ' + j);
         _shapes[i].ambientProduct[j] = mult(
           _lightSources[j].lightAmbient,
           _shapes[i].color
         );
-        console.log('multiplied ambient');
         _shapes[i].diffuseProduct[j] = mult(
           _lightSources[j].lightDiffuse,
           _shapes[i].materialDiffuse
         );
-        console.log('multiplied diffuse');
         _shapes[i].specularProduct[j] = mult(
           _lightSources[j].lightSpecular,
           _shapes[i].materialSpecular
         );
-        console.log('multiplied specular');
       }
     }
   };
