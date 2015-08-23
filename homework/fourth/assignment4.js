@@ -194,13 +194,19 @@ if (!String.prototype.startsWith) {
       selectedColor, selectedDiffuse, selectedSpecular;
 
     // Material properties
-    selectedColor = ColorUtils.hexToGLvec4(document.getElementById('shapeColor').value);
-    selectedDiffuse = ColorUtils.hexToGLvec4(document.getElementById('materialDiffuse').value);
-    selectedSpecular = ColorUtils.hexToGLvec4(document.getElementById('materialSpecular').value);
-
+    shape.hexAmbient = document.getElementById('shapeColor').value;
+    selectedColor = ColorUtils.hexToGLvec4(shape.hexAmbient);
     shape.color = selectedColor;
+
+    shape.hexDiffuse = document.getElementById('materialDiffuse').value;
+    selectedDiffuse = ColorUtils.hexToGLvec4(shape.hexDiffuse);
     shape.materialDiffuse = selectedDiffuse;
+
+    shape.hexSpecular = document.getElementById('materialSpecular').value;
+    selectedSpecular = ColorUtils.hexToGLvec4(shape.hexSpecular);
     shape.materialSpecular = selectedSpecular;
+
+    shape.materialShininess = document.getElementById('materialShininess').valueAsNumber;
 
     shape.ambientProduct = [];
     shape.diffuseProduct = [];
@@ -211,7 +217,6 @@ if (!String.prototype.startsWith) {
       shape.specularProduct[j] = mult(_lightSources[j].lightSpecular, selectedSpecular);
     }
     shape.globalAmbientProduct = mult(_globalAmbientLight.lightAmbient, selectedColor);
-    shape.materialShininess = document.getElementById('materialShininess').valueAsNumber;
 
     // TRS
     thetaOpts = [
@@ -219,18 +224,21 @@ if (!String.prototype.startsWith) {
       document.getElementById('rotateY').valueAsNumber,
       document.getElementById('rotateZ').valueAsNumber
     ];
+    shape.thetaOpts = thetaOpts;
 
     scaleOpts = [
       document.getElementById('scaleX').valueAsNumber,
       document.getElementById('scaleY').valueAsNumber,
       document.getElementById('scaleZ').valueAsNumber
     ];
+    shape.scaleOpts = scaleOpts;
 
     translateOpts = [
       document.getElementById('translateX').valueAsNumber,
       document.getElementById('translateY').valueAsNumber,
       document.getElementById('translateZ').valueAsNumber
     ];
+    shape.translateOpts = translateOpts;
 
     // Calculate model matrix based on Translate, Rotate, Scale
     modelViewMatrix = mult(modelViewMatrix, translate(translateOpts[0], translateOpts[1], translateOpts[2]));
@@ -295,12 +303,32 @@ if (!String.prototype.startsWith) {
 
   };
 
+  var loadShapeSettings = function(shape) {
+    document.getElementById('shapeColor').value = shape.hexAmbient;
+    document.getElementById('materialDiffuse').value = shape.hexDiffuse;
+    document.getElementById('materialSpecular').value = shape.hexSpecular;
+    document.getElementById('materialShininess').value = shape.materialShininess;
+
+    document.getElementById('rotateX').value = shape.thetaOpts[0];
+    document.getElementById('rotateY').value = shape.thetaOpts[1];
+    document.getElementById('rotateZ').value = shape.thetaOpts[2];
+
+    document.getElementById('scaleX').value = shape.scaleOpts[0];
+    document.getElementById('scaleY').value = shape.scaleOpts[1];
+    document.getElementById('scaleZ').value = shape.scaleOpts[2];
+
+    document.getElementById('translateX').value = shape.translateOpts[0];
+    document.getElementById('translateY').value = shape.translateOpts[1];
+    document.getElementById('translateZ').value = shape.translateOpts[2];
+  };
+
   var manageShapeHandler = function() {
     var manageShapeEl = document.getElementById('manageShapes');
     var selectedShapeIndex = manageShapeEl.options[manageShapeEl.selectedIndex].value;
     if (_shapes.length > 0 && selectedShapeIndex >= 0 && selectedShapeIndex < _shapes.length) {
       _currentShape = _shapes[selectedShapeIndex];
       // TODO load _currentShape settings into DOM
+      loadShapeSettings(_currentShape);
     }
   };
 
