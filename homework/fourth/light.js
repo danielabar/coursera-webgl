@@ -46,7 +46,8 @@
         lightPosition: vec4(1.0, 1.0, 1.0, 0.0 ),
         lightAmbient: vec4( 0.1, 0.1, 0.1, 1.0 ),
         diffuseProduct: mult(lightDiffuse, materialDiffuse),
-        specularProduct: mult(lightSpecular, materialSpecular)
+        specularProduct: mult(lightSpecular, materialSpecular),
+        attenuation: 0.2
       };
     },
 

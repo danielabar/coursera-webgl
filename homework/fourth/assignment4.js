@@ -85,6 +85,7 @@ if (!String.prototype.startsWith) {
         gl.uniform4fv( gl.getUniformLocation(program, "diffuseProduct"), flatten(_globalAmbientLight.diffuseProduct) );
         gl.uniform4fv( gl.getUniformLocation(program, "specularProduct"), flatten(_globalAmbientLight.specularProduct) );
         gl.uniform4fv( gl.getUniformLocation(program, "lightPosition"), flatten(_globalAmbientLight.lightPosition) );
+        gl.uniform1f( gl.getUniformLocation(program, "attenuation"), _globalAmbientLight.attenuation );
         break;
       case 1:
         // Only one light source enabled, send the selected one
