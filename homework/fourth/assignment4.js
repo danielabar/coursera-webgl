@@ -260,6 +260,10 @@ if (!String.prototype.startsWith) {
     }
   };
 
+  var removeAllShapes = function() {
+    _shapes = [];
+  };
+
   var toolbarHandler = function(evt) {
     var clickedOnId = evt.target.id,
       shapeElement;
@@ -271,6 +275,10 @@ if (!String.prototype.startsWith) {
 
     if (clickedOnId === 'undo' || clickedOnId === 'undoIcon') {
       removeLastShape();
+    }
+
+    if (clickedOnId === 'clearAll' || clickedOnId === 'clearAllIcon') {
+      removeAllShapes();
     }
   };
 
