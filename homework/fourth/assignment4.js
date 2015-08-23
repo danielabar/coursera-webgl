@@ -29,6 +29,7 @@ if (!String.prototype.startsWith) {
   var gl,
     _canvas,
     _shapes = [],
+    _currentShape,
     _camera = {
       viewMatrix: mat4(),
       projectionMatrix: mat4(),
@@ -249,7 +250,19 @@ if (!String.prototype.startsWith) {
   };
 
   var seedOneShape = function(shapeType) {
-    _shapes.push(generateShape(shapeType));
+    var generatedShape = generateShape(shapeType);
+    _shapes.push(generatedShape);
+    _currentShape = generatedShape;
+    addToManagedList(generatedShape, _shapes.length);
+  };
+
+  var addToManagedList = function(shape, shapeNumber) {
+    var managedList = document.getElementById('manageShapes');
+    var option = document.createElement("option");
+    option.text = shapeNumber + '-' + shape.type;
+    option.value = shapeNumber - 1;
+    option.selected = true;
+    managedList.add(option);
   };
 
   var removeLastShape = function() {
@@ -260,6 +273,7 @@ if (!String.prototype.startsWith) {
 
   var removeAllShapes = function() {
     _shapes = [];
+    // TODO remove all options from manageShape dropdown
   };
 
   var toolbarHandler = function(evt) {
@@ -278,15 +292,20 @@ if (!String.prototype.startsWith) {
     if (clickedOnId === 'clearAll' || clickedOnId === 'clearAllIcon') {
       removeAllShapes();
     }
+
+  };
+
+  var manageShapeHandler = function() {
+    var manageShapeEl = document.getElementById('manageShapes');
+    var selectedShapeIndex = manageShapeEl.options[manageShapeEl.selectedIndex].value;
+    if (_shapes.length > 0 && selectedShapeIndex >= 0 && selectedShapeIndex < _shapes.length) {
+      _currentShape = _shapes[selectedShapeIndex];
+      // TODO load _currentShape settings into DOM
+    }
   };
 
   var changeHandler = function(evt) {
-    if (evt.target.id === 'shape' || _shapes.length === 0) {
-      seedOneShape();
-    } else {
-      var currentShape = _shapes[_shapes.length-1];
-      updateShapeWithUserSettings(currentShape);
-    }
+    updateShapeWithUserSettings(_currentShape);
   };
 
   var updateShapesWithLightSource = function() {
@@ -405,6 +424,7 @@ if (!String.prototype.startsWith) {
 
       // Register event handlers
       document.getElementById('toolbar').addEventListener('click', toolbarHandler);
+      document.getElementById('manageShapes').addEventListener('change', manageShapeHandler);
       document.getElementById('shapeSettings').addEventListener('change', changeHandler);
       document.getElementById('lightSettings1').addEventListener('change', lightHandler);
       document.getElementById('lightSettings2').addEventListener('change', lightHandler);
