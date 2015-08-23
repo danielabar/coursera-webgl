@@ -281,7 +281,7 @@ if (!String.prototype.startsWith) {
 
   var removeAllShapes = function() {
     _shapes = [];
-    // TODO remove all options from manageShape dropdown
+    DomUtils.removeOptions('manageShapes');
   };
 
   var toolbarHandler = function(evt) {
@@ -327,7 +327,6 @@ if (!String.prototype.startsWith) {
     var selectedShapeIndex = manageShapeEl.options[manageShapeEl.selectedIndex].value;
     if (_shapes.length > 0 && selectedShapeIndex >= 0 && selectedShapeIndex < _shapes.length) {
       _currentShape = _shapes[selectedShapeIndex];
-      // TODO load _currentShape settings into DOM
       loadShapeSettings(_currentShape);
     }
   };
