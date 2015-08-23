@@ -182,6 +182,7 @@
 	</nav>
 
   <div id="toolbar" class="toolbar">
+
     <!-- sphere -->
     <button id="shapeSphere" data-shape="Sphere" title="create a new sphere" class="button button-mini">
       <i id="shapeSphereIcon" data-shape="Sphere" class="fa fa-fw fa-adjust"></i>
@@ -202,10 +203,21 @@
     <button id="shapeCube" data-shape="Cube" title="create a new cube" class="button button-mini">
       <i id="shapeCubeIcon" data-shape="Cube" class="fa fa-fw fa-cube"></i>
     </button>
+
+    <div class="toolbar-spacer"></div>
+
+    <!-- undo -->
+    <button id="undo" title="remove the last shape" class="button button-mini">
+      <i id="undoIcon" class="fa fa-fw fa-undo"></i>
+    </button>
+    <!-- clear all -->
+    <button id="clearAll" title="remove all shape" class="button button-mini">
+      <i id="clearAllIcon" class="fa fa-fw fa-refresh"></i>
+    </button>
   </div>
 
   <div class="canvas-container">
-    <canvas id="gl-canvas" width="800" height="700">
+    <canvas id="gl-canvas">
       Oops ... your browser doesn't support the HTML5 canvas element
     </canvas>
   </div>
