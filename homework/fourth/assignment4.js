@@ -299,18 +299,28 @@ if (!String.prototype.startsWith) {
     document.getElementById('materialDiffuse').value = shape.hexDiffuse;
     document.getElementById('materialSpecular').value = shape.hexSpecular;
     document.getElementById('materialShininess').value = shape.materialShininess;
+    document.getElementById('mshiny').value = shape.materialShininess;
 
     document.getElementById('rotateX').value = shape.thetaOpts[0];
+    document.getElementById('rxv').value = shape.thetaOpts[0];
     document.getElementById('rotateY').value = shape.thetaOpts[1];
+    document.getElementById('ryv').value = shape.thetaOpts[1];
     document.getElementById('rotateZ').value = shape.thetaOpts[2];
+    document.getElementById('rzv').value = shape.thetaOpts[2];
 
     document.getElementById('scaleX').value = shape.scaleOpts[0];
+    document.getElementById('sxv').value = shape.scaleOpts[0];
     document.getElementById('scaleY').value = shape.scaleOpts[1];
+    document.getElementById('syv').value = shape.scaleOpts[1];
     document.getElementById('scaleZ').value = shape.scaleOpts[2];
+    document.getElementById('szv').value = shape.scaleOpts[2];
 
     document.getElementById('translateX').value = shape.translateOpts[0];
+    document.getElementById('txv').value = shape.translateOpts[0];
     document.getElementById('translateY').value = shape.translateOpts[1];
+    document.getElementById('tyv').value = shape.translateOpts[1];
     document.getElementById('translateZ').value = shape.translateOpts[2];
+    document.getElementById('tzv').value = shape.translateOpts[2];
   };
 
   var manageShapeHandler = function() {
