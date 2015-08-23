@@ -94,6 +94,20 @@ section.drawing {
   height: 1px;
 }
 
+.toolbar-select {
+  width: 150px;
+  padding: 5px;
+  font-size: 1em;
+  font-family: "Open Sans";
+  line-height: 1;
+  border: 0;
+  border-radius: 3px;
+  height: 32px;
+  background-image: -moz-linear-gradient(top, #ddd, #CECCCC);
+  background-image: -webkit-linear-gradient(top, #ddd, #CECCCC);
+  background-image: linear-gradient(top, #ddd, #CECCCC);
+}
+
 /* ---------------------------------- */
 /* Settings Form */
 /* ---------------------------------- */

@@ -29,6 +29,7 @@ if (!String.prototype.startsWith) {
   var gl,
     _canvas,
     _shapes = [],
+    _currentShape,
     _camera = {
       viewMatrix: mat4(),
       projectionMatrix: mat4(),
@@ -193,13 +194,19 @@ if (!String.prototype.startsWith) {
       selectedColor, selectedDiffuse, selectedSpecular;
 
     // Material properties
-    selectedColor = ColorUtils.hexToGLvec4(document.getElementById('shapeColor').value);
-    selectedDiffuse = ColorUtils.hexToGLvec4(document.getElementById('materialDiffuse').value);
-    selectedSpecular = ColorUtils.hexToGLvec4(document.getElementById('materialSpecular').value);
-
+    shape.hexAmbient = document.getElementById('shapeColor').value;
+    selectedColor = ColorUtils.hexToGLvec4(shape.hexAmbient);
     shape.color = selectedColor;
+
+    shape.hexDiffuse = document.getElementById('materialDiffuse').value;
+    selectedDiffuse = ColorUtils.hexToGLvec4(shape.hexDiffuse);
     shape.materialDiffuse = selectedDiffuse;
+
+    shape.hexSpecular = document.getElementById('materialSpecular').value;
+    selectedSpecular = ColorUtils.hexToGLvec4(shape.hexSpecular);
     shape.materialSpecular = selectedSpecular;
+
+    shape.materialShininess = document.getElementById('materialShininess').valueAsNumber;
 
     shape.ambientProduct = [];
     shape.diffuseProduct = [];
@@ -210,7 +217,6 @@ if (!String.prototype.startsWith) {
       shape.specularProduct[j] = mult(_lightSources[j].lightSpecular, selectedSpecular);
     }
     shape.globalAmbientProduct = mult(_globalAmbientLight.lightAmbient, selectedColor);
-    shape.materialShininess = document.getElementById('materialShininess').valueAsNumber;
 
     // TRS
     thetaOpts = [
@@ -218,18 +224,21 @@ if (!String.prototype.startsWith) {
       document.getElementById('rotateY').valueAsNumber,
       document.getElementById('rotateZ').valueAsNumber
     ];
+    shape.thetaOpts = thetaOpts;
 
     scaleOpts = [
       document.getElementById('scaleX').valueAsNumber,
       document.getElementById('scaleY').valueAsNumber,
       document.getElementById('scaleZ').valueAsNumber
     ];
+    shape.scaleOpts = scaleOpts;
 
     translateOpts = [
       document.getElementById('translateX').valueAsNumber,
       document.getElementById('translateY').valueAsNumber,
       document.getElementById('translateZ').valueAsNumber
     ];
+    shape.translateOpts = translateOpts;
 
     // Calculate model matrix based on Translate, Rotate, Scale
     modelViewMatrix = mult(modelViewMatrix, translate(translateOpts[0], translateOpts[1], translateOpts[2]));
@@ -249,17 +258,25 @@ if (!String.prototype.startsWith) {
   };
 
   var seedOneShape = function(shapeType) {
-    _shapes.push(generateShape(shapeType));
+    var generatedShape = generateShape(shapeType);
+    _shapes.push(generatedShape);
+    _currentShape = generatedShape;
+    addToManagedList(generatedShape, _shapes.length);
   };
 
-  var removeLastShape = function() {
-    if (_shapes.length > 0) {
-      _shapes.pop();
-    }
+  var addToManagedList = function(shape, shapeNumber) {
+    var managedList = document.getElementById('manageShapes');
+    var option = document.createElement("option");
+    option.text = shapeNumber + '-' + shape.type;
+    option.value = shapeNumber - 1;
+    option.selected = true;
+    managedList.add(option);
   };
 
   var removeAllShapes = function() {
     _shapes = [];
+    DomUtils.removeOptions('manageShapes');
+    setDefaults();
   };
 
   var toolbarHandler = function(evt) {
@@ -271,22 +288,52 @@ if (!String.prototype.startsWith) {
       seedOneShape(shapeElement.dataset.shape);
     }
 
-    if (clickedOnId === 'undo' || clickedOnId === 'undoIcon') {
-      removeLastShape();
-    }
-
     if (clickedOnId === 'clearAll' || clickedOnId === 'clearAllIcon') {
       removeAllShapes();
+    }
+
+  };
+
+  var loadShapeSettings = function(shape) {
+    document.getElementById('shapeColor').value = shape.hexAmbient;
+    document.getElementById('materialDiffuse').value = shape.hexDiffuse;
+    document.getElementById('materialSpecular').value = shape.hexSpecular;
+    document.getElementById('materialShininess').value = shape.materialShininess;
+    document.getElementById('mshiny').value = shape.materialShininess;
+
+    document.getElementById('rotateX').value = shape.thetaOpts[0];
+    document.getElementById('rxv').value = shape.thetaOpts[0];
+    document.getElementById('rotateY').value = shape.thetaOpts[1];
+    document.getElementById('ryv').value = shape.thetaOpts[1];
+    document.getElementById('rotateZ').value = shape.thetaOpts[2];
+    document.getElementById('rzv').value = shape.thetaOpts[2];
+
+    document.getElementById('scaleX').value = shape.scaleOpts[0];
+    document.getElementById('sxv').value = shape.scaleOpts[0];
+    document.getElementById('scaleY').value = shape.scaleOpts[1];
+    document.getElementById('syv').value = shape.scaleOpts[1];
+    document.getElementById('scaleZ').value = shape.scaleOpts[2];
+    document.getElementById('szv').value = shape.scaleOpts[2];
+
+    document.getElementById('translateX').value = shape.translateOpts[0];
+    document.getElementById('txv').value = shape.translateOpts[0];
+    document.getElementById('translateY').value = shape.translateOpts[1];
+    document.getElementById('tyv').value = shape.translateOpts[1];
+    document.getElementById('translateZ').value = shape.translateOpts[2];
+    document.getElementById('tzv').value = shape.translateOpts[2];
+  };
+
+  var manageShapeHandler = function() {
+    var manageShapeEl = document.getElementById('manageShapes');
+    var selectedShapeIndex = manageShapeEl.options[manageShapeEl.selectedIndex].value;
+    if (_shapes.length > 0 && selectedShapeIndex >= 0 && selectedShapeIndex < _shapes.length) {
+      _currentShape = _shapes[selectedShapeIndex];
+      loadShapeSettings(_currentShape);
     }
   };
 
   var changeHandler = function(evt) {
-    if (evt.target.id === 'shape' || _shapes.length === 0) {
-      seedOneShape();
-    } else {
-      var currentShape = _shapes[_shapes.length-1];
-      updateShapeWithUserSettings(currentShape);
-    }
+    updateShapeWithUserSettings(_currentShape);
   };
 
   var updateShapesWithLightSource = function() {
@@ -405,6 +452,7 @@ if (!String.prototype.startsWith) {
 
       // Register event handlers
       document.getElementById('toolbar').addEventListener('click', toolbarHandler);
+      document.getElementById('manageShapes').addEventListener('change', manageShapeHandler);
       document.getElementById('shapeSettings').addEventListener('change', changeHandler);
       document.getElementById('lightSettings1').addEventListener('change', lightHandler);
       document.getElementById('lightSettings2').addEventListener('change', lightHandler);
