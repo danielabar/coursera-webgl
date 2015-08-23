@@ -214,26 +214,28 @@
 
     <div id="shapeSettings" class="">
 
-      <!--  material -->
-      <div class="form-group">
-        <label for="shapeColor">Ambient</label>
-        <input type="color" name="shapeColor" id="shapeColor" value="#ff0000">
-      </div>
-      <div class="form-group">
-        <label for="materialDiffuse">Diffuse</label>
-        <input type="color" name="materialDiffuse" id="materialDiffuse" value="#ffffff">
-      </div>
-      <div class="form-group">
-        <label for="materialSpecular">Specular</label>
-        <input type="color" name="materialSpecular" id="materialSpecular" value="#ffffff">
-      </div>
-      <div class="form-group">
-        <label for="materialShininess">Shininess</label>
-        <input type=range id=materialShininess min=1.0 value=10.0 max=50.0 step=1.0 oninput="outputMaterialShininess(value)">
-        <output for=materialShininess id=mshiny>10.0</output>
+      <!-- material -->
+      <div class="group-settings">
+        <div class="form-group">
+          <label for="shapeColor">Ambient</label>
+          <input type="color" name="shapeColor" id="shapeColor" value="#ff0000">
+        </div>
+        <div class="form-group">
+          <label for="materialDiffuse">Diffuse</label>
+          <input type="color" name="materialDiffuse" id="materialDiffuse" value="#ffffff">
+        </div>
+        <div class="form-group">
+          <label for="materialSpecular">Specular</label>
+          <input type="color" name="materialSpecular" id="materialSpecular" value="#ffffff">
+        </div>
+        <div class="form-group">
+          <label for="materialShininess">Shininess</label>
+          <input type=range id=materialShininess min=1.0 value=10.0 max=50.0 step=1.0 oninput="outputMaterialShininess(value)">
+          <output for=materialShininess id=mshiny>10.0</output>
+        </div>
       </div>
 
-      <!--  rotate -->
+      <!-- rotate -->
       <div class="form-group">
         <label for="rotateX">Rotate X</label>
         <input type=range id=rotateX min=-180 value=45 max=180 step=15 oninput="outputRX(value)">
@@ -286,7 +288,7 @@
 
     </div><!--//shape settings-->
 
-    <div id="lightSettings1" class="light-settings">
+    <div id="lightSettings1" class="group-settings">
       <div class="form-group">
         <input type="checkbox" id="lightSwitch" name="lightSwitch" value="lightSwitch" checked>
         <label for="lightSwitch">Light 1</label>
@@ -294,14 +296,10 @@
       <div class="form-group">
         <label for="lightDiffuse">Diffuse</label>
         <input type="color" name="lightDiffuse" id="lightDiffuse" value="#ffffff">
-        <!-- <label for="materialDiffuse">Material Diffuse</label>
-        <input type="color" name="materialDiffuse" id="materialDiffuse" value="#ffffff"> -->
       </div>
       <div class="form-group">
         <label for="lightSpecular">Specular</label>
         <input type="color" name="lightSpecular" id="lightSpecular" value="#ffffff">
-        <!-- <label for="materialSpecular">Material Specular</label>
-        <input type="color" name="materialSpecular" id="materialSpecular" value="#ffffff"> -->
       </div>
       <div class="form-group">
         <label for="lightAmbient">Ambient</label>
@@ -314,7 +312,7 @@
       </div>
     </div><!--//lightSettings1-->
 
-    <div id="lightSettings2" class="light-settings">
+    <div id="lightSettings2" class="group-settings">
       <div class="form-group">
         <input type="checkbox" id="lightSwitch2" name="lightSwitch2" value="lightSwitch2">
         <label for="lightSwitch">Light 2</label>
@@ -322,14 +320,10 @@
       <div class="form-group">
         <label for="lightDiffuse">Diffuse</label>
         <input type="color" name="lightDiffuse" id="lightDiffuse2" value="#ffffff">
-        <!-- <label for="materialDiffuse">Material Diffuse</label>
-        <input type="color" name="materialDiffuse" id="materialDiffuse2" value="#ffdd05"> -->
       </div>
       <div class="form-group">
         <label for="lightSpecular">Specular</label>
         <input type="color" name="lightSpecular2" id="lightSpecular2" value="#ffffff">
-        <!-- <label for="materialSpecular2">Material Specular</label>
-        <input type="color" name="materialSpecular2" id="materialSpecular2" value="#ffffff"> -->
       </div>
       <div class="form-group">
         <label for="lightAmbient">Ambient</label>
