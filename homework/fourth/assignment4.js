@@ -276,6 +276,7 @@ if (!String.prototype.startsWith) {
   var removeAllShapes = function() {
     _shapes = [];
     DomUtils.removeOptions('manageShapes');
+    setDefaults();
   };
 
   var toolbarHandler = function(evt) {
