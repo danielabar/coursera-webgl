@@ -9,16 +9,11 @@
     attenuationFactor: 0.2,
 
     defaultSource: function() {
-      var lightDiffuse = vec4( 1.0, 1.0, 1.0, 1.0 ),
-        lightSpecular = vec4( 1.0, 1.0, 1.0, 1.0 ),
-        materialDiffuse =  vec4( 1.0, 1.0, 1.0, 1.0 ),
-        materialSpecular = vec4( 1.0, 1.0, 1.0, 1.0 );
-
       return {
         lightPosition: vec4(1.0, 1.0, 1.0, 0.0 ),
         lightAmbient: vec4( 1.0, 1.0, 1.0, 1.0 ),
-        diffuseProduct: mult(lightDiffuse, materialDiffuse),
-        specularProduct: mult(lightSpecular, materialSpecular),
+        lightDiffuse: vec4( 1.0, 1.0, 1.0, 1.0 ),
+        lightSpecular: vec4( 1.0, 1.0, 1.0, 1.0 ),
         theta: 0.0,
         rotation: 'INC',
         lightDistance: 0.0,
@@ -28,15 +23,11 @@
     },
 
     alternateSource: function() {
-      var lightDiffuse = vec4( 1.0, 1.0, 1.0, 1.0 ),
-        lightSpecular = vec4( 1.0, 1.0, 1.0, 1.0 ),
-        materialDiffuse =  ColorUtils.hexToGLvec4('#ffdd05'),
-        materialSpecular = vec4( 1.0, 1.0, 1.0, 1.0 );
       return {
         lightPosition: vec4(-1.0, -1.0, 1.0, 0.0 ),
         lightAmbient: ColorUtils.hexToGLvec4('#333333'),
-        diffuseProduct: mult(lightDiffuse, materialDiffuse),
-        specularProduct: mult(lightSpecular, materialSpecular),
+        lightDiffuse: ColorUtils.hexToGLvec4('#ffdd05'),
+        lightSpecular: vec4( 1.0, 1.0, 1.0, 1.0 ),
         theta: 180.0,
         rotation: 'DEC',
         lightDistance: 0.0,
@@ -55,7 +46,8 @@
         lightPosition: vec4(1.0, 1.0, 1.0, 0.0 ),
         lightAmbient: vec4( 0.1, 0.1, 0.1, 1.0 ),
         diffuseProduct: mult(lightDiffuse, materialDiffuse),
-        specularProduct: mult(lightSpecular, materialSpecular)
+        specularProduct: mult(lightSpecular, materialSpecular),
+        attenuation: 0.2
       };
     },
 
