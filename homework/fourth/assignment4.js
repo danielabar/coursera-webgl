@@ -139,21 +139,25 @@ if (!String.prototype.startsWith) {
     if (Light.numEnabled(_lightSources) > 0) {
       for (var i=0; i<_lightSources.length; i++) {
 
-        if (_lightSources[i].rotation === 'INC') {
-          _lightSources[i].theta += 0.1;
-        } else if (_lightSources[i].rotation === 'DEC') {
-          _lightSources[i].theta -= 0.1;
-        }
-        var rotatedPoint = Light.rotatePoint2D(_lightSources[i].theta, 16);
+        if (_lightSources[i].lightMotion === 'animated') {
 
-        _lightSources[i].lightPosition[0] = rotatedPoint[0];
-        _lightSources[i].lightPosition[1] = rotatedPoint[1];
+          if (_lightSources[i].rotation === 'INC') {
+            _lightSources[i].theta += 0.1;
+          } else if (_lightSources[i].rotation === 'DEC') {
+            _lightSources[i].theta -= 0.1;
+          }
+          var rotatedPoint = Light.rotatePoint2D(_lightSources[i].theta, 16);
 
-        if (_lightSources[i].theta >= 2*Math.PI) {
-          _lightSources[i].theta = 0.0;
-        }
-      }
-    }
+          _lightSources[i].lightPosition[0] = rotatedPoint[0];
+          _lightSources[i].lightPosition[1] = rotatedPoint[1];
+
+          if (_lightSources[i].theta >= 2*Math.PI) {
+            _lightSources[i].theta = 0.0;
+          }
+
+        }// if light is animated
+      }// for each light source
+    }// if any light source is enabled
   };
 
   var generateShape = function(shapeType) {
@@ -357,9 +361,11 @@ if (!String.prototype.startsWith) {
       lightDiffuse = ColorUtils.hexToGLvec4(document.getElementById(lightDomElementId('lightDiffuse', lightIndex)).value),
       lightSpecular = ColorUtils.hexToGLvec4(document.getElementById(lightDomElementId('lightSpecular', lightIndex)).value),
       lightAmbient = ColorUtils.hexToGLvec4(document.getElementById(lightDomElementId('lightAmbient', lightIndex)).value),
-      lightDistance = document.getElementById(lightDomElementId('lightDistance', lightIndex)).valueAsNumber;
+      lightDistance = document.getElementById(lightDomElementId('lightDistance', lightIndex)).valueAsNumber,
+      lightMotion = DomUtils.getCheckedValue(lightDomElementId('lightMotion', lightIndex));
 
     _lightSources[lightIndex].enabled = enabled;
+    _lightSources[lightIndex].lightMotion = lightMotion;
     _lightSources[lightIndex].lightAmbient = lightAmbient;
     _lightSources[lightIndex].lightDiffuse = lightDiffuse;
     _lightSources[lightIndex].lightSpecular = lightSpecular;
@@ -409,6 +415,7 @@ if (!String.prototype.startsWith) {
 
     // Light 1
     document.getElementById('lightSwitch').checked = true;
+    document.getElementById('lightMotionAnimated').checked = true;
     document.getElementById('lightDiffuse').value = '#ffffff';
     document.getElementById('lightSpecular').value = '#ffffff';
     document.getElementById('lightAmbient').value = '#ffffff';
@@ -417,6 +424,7 @@ if (!String.prototype.startsWith) {
 
     // Light 2
     document.getElementById('lightSwitch2').checked = false;
+    document.getElementById('lightMotionAnimated2').checked = true;
     document.getElementById('lightDiffuse2').value = '#ffdd05';
     document.getElementById('lightSpecular2').value = '#ffffff';
     document.getElementById('lightAmbient2').value = '#333333';
