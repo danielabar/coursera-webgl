@@ -42,6 +42,13 @@
       _inputs.forEach(function(input) {
         document.getElementById(input).disabled = false;
       });
+    },
+
+    removeOptions: function(elementId) {
+      var selectBox = document.getElementById(elementId);
+      for(var i=selectBox.options.length-1; i>=0; i--) {
+        selectBox.remove(i);
+      }
     }
 
   };
