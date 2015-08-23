@@ -204,7 +204,13 @@
     </button>
   </div>
 
-  <section class="settings side-controls">
+  <div class="canvas-container">
+    <canvas id="gl-canvas" width="800" height="700">
+      Oops ... your browser doesn't support the HTML5 canvas element
+    </canvas>
+  </div>
+
+  <div id="sideControls" class="settings side-controls">
 
     <div id="shapeSettings" class="">
 
@@ -305,7 +311,7 @@
     <div id="lightSettings2" class="light-settings">
       <div class="form-group">
         <input type="checkbox" id="lightSwitch2" name="lightSwitch2" value="lightSwitch2">
-        <label for="lightSwitch">Light Source 2</label>
+        <label for="lightSwitch">Light 2</label>
       </div>
       <div class="form-group">
         <label for="lightDiffuse">Light Diffuse</label>
@@ -330,24 +336,7 @@
       </div>
     </div><!--//lightSettings2-->
 
-  </section><!--//side-controls-->
-
-  <section class="drawing with-side-controls">
-
-    <!-- Drawing area -->
-    <div class="drawing-area">
-
-      <canvas id="gl-canvas" width="800" height="700">
-        Oops ... your browser doesn't support the HTML5 canvas element
-      </canvas>
-
-    </div>
-  </section>
-
-
-  <footer>
-    <p>Daniela Baron <a href="https://www.coursera.org/course/webgl">Coursera WebGL</a></p>
-  </footer>
+  </div><!--//side-controls-->
 
   <script>
   var outputRX = function(value) {
