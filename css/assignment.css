@@ -88,6 +88,12 @@ section.drawing {
   padding-left: 3px;
 }
 
+.toolbar-spacer {
+  display: inline-block;
+  width: 15px;
+  height: 1px;
+}
+
 /* ---------------------------------- */
 /* Settings Form */
 /* ---------------------------------- */
