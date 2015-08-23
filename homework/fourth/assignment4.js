@@ -273,12 +273,6 @@ if (!String.prototype.startsWith) {
     managedList.add(option);
   };
 
-  var removeLastShape = function() {
-    if (_shapes.length > 0) {
-      _shapes.pop();
-    }
-  };
-
   var removeAllShapes = function() {
     _shapes = [];
     DomUtils.removeOptions('manageShapes');
@@ -291,10 +285,6 @@ if (!String.prototype.startsWith) {
     if (clickedOnId.startsWith('shape')) {
       shapeElement = document.getElementById(clickedOnId);
       seedOneShape(shapeElement.dataset.shape);
-    }
-
-    if (clickedOnId === 'undo' || clickedOnId === 'undoIcon') {
-      removeLastShape();
     }
 
     if (clickedOnId === 'clearAll' || clickedOnId === 'clearAllIcon') {
