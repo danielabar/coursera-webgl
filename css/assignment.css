@@ -368,10 +368,6 @@ input[type=button] {
   margin-top: 20px;
 }
 
-/*.box::selection {
-  background-color: #322F2F;
-}*/
-
 .camera-zoom .box {
   background: #151414;
   border: 1px solid #322;
@@ -386,9 +382,11 @@ input[type=button] {
 /* ---------------------------------- */
 
 .light-settings {
+  margin-top: 15px;
+  margin-right: 10px;
   padding-left: 10px;
   padding-right: 10px;
-  border: 1px solid #636161;
+  border: 1px solid #474747;
   border-radius: 3px;
 }
 
