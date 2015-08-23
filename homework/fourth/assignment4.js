@@ -255,8 +255,6 @@ if (!String.prototype.startsWith) {
   var removeLastShape = function() {
     if (_shapes.length > 0) {
       _shapes.pop();
-      console.log('removeLastShape');
-      console.table(_shapes);
     }
   };
 
