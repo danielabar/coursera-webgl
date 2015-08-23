@@ -252,6 +252,16 @@ if (!String.prototype.startsWith) {
     _shapes.push(generateShape(shapeType));
   };
 
+  var removeLastShape = function() {
+    if (_shapes.length > 0) {
+      _shapes.pop();
+    }
+  };
+
+  var removeAllShapes = function() {
+    _shapes = [];
+  };
+
   var toolbarHandler = function(evt) {
     var clickedOnId = evt.target.id,
       shapeElement;
@@ -259,6 +269,14 @@ if (!String.prototype.startsWith) {
     if (clickedOnId.startsWith('shape')) {
       shapeElement = document.getElementById(clickedOnId);
       seedOneShape(shapeElement.dataset.shape);
+    }
+
+    if (clickedOnId === 'undo' || clickedOnId === 'undoIcon') {
+      removeLastShape();
+    }
+
+    if (clickedOnId === 'clearAll' || clickedOnId === 'clearAllIcon') {
+      removeAllShapes();
     }
   };
 
