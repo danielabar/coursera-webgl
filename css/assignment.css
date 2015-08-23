@@ -1,4 +1,13 @@
 /* ---------------------------------- */
+/* Body */
+/* ---------------------------------- */
+
+body.assignment-four {
+  background: #191919;
+}
+
+
+/* ---------------------------------- */
 /* Header */
 /* ---------------------------------- */
 
@@ -25,7 +34,6 @@
 
 .assignment-four nav {
   position: static;
-  /*border-bottom: 1px solid #B9B8B8;*/
 }
 
 .sub-nav {
@@ -74,7 +82,7 @@ section.drawing {
 /* ---------------------------------- */
 
 .toolbar {
-  background: #524f4f;
+  background: #191919;
   padding-top: 3px;
   padding-bottom: 3px;
   padding-left: 3px;
@@ -282,13 +290,15 @@ input[type=button] {
 /* Side Controls  */
 /* ---------------------------------- */
 
-.assignment section.side-controls {
-  padding-right: 20px;
-}
-
 .side-controls {
-  float: right;
-  padding-left: 0;
+  display: inline-block;
+  position: absolute;
+  top: 100px;
+  right: 0;
+  width: 405px;
+  padding-left: 10px;
+  background: #191919;
+  color: #E1D8D8;
 }
 
 .side-controls .form-group {
@@ -311,10 +321,17 @@ input[type=button] {
   margin-top: 20px;
 }
 
-.with-side-controls {
-  padding-left: 40px;
-}
 
+/* ---------------------------------- */
+/* Canvas container */
+/* ---------------------------------- */
+
+.canvas-container {
+  display: inline-block;
+  position: absolute;
+  top: 102px;
+  left: 0;
+}
 
 /* ---------------------------------- */
 /* Camera controls */
@@ -351,10 +368,6 @@ input[type=button] {
   margin-top: 20px;
 }
 
-/*.box::selection {
-  background-color: #322F2F;
-}*/
-
 .camera-zoom .box {
   background: #151414;
   border: 1px solid #322;
@@ -369,9 +382,11 @@ input[type=button] {
 /* ---------------------------------- */
 
 .light-settings {
+  margin-top: 15px;
+  margin-right: 10px;
   padding-left: 10px;
   padding-right: 10px;
-  border: 1px solid #636161;
+  border: 1px solid #474747;
   border-radius: 3px;
 }
 
