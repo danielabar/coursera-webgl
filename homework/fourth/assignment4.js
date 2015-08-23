@@ -135,21 +135,6 @@ if (!String.prototype.startsWith) {
 
   };
 
-  // Orbit Rotation
-  // var updateLightPosition = function() {
-  //   _lightSource.theta += 0.1;
-  //   var rotatedPoint = Light.rotatePoint3D(_lightSource.lightPosition, 0, _lightSource.theta);
-  //
-  //   _lightSource.lightPosition[0] = rotatedPoint[0];
-  //   _lightSource.lightPosition[1] = rotatedPoint[1];
-  //   _lightSource.lightPosition[2] = rotatedPoint[2];
-  //
-  //   if (_lightSource.theta >= 2*Math.PI) {
-  //     _lightSource.theta = 0.0;
-  //   }
-  // };
-
-  // Around the edge rotation
   var updateLightPosition = function() {
     if (Light.numEnabled(_lightSources) > 0) {
       for (var i=0; i<_lightSources.length; i++) {
@@ -408,8 +393,8 @@ if (!String.prototype.startsWith) {
     document.getElementById('rotateZ').value = 0;
     document.getElementById('rzv').value = 0;
 
-    document.getElementById('scaleX').value = 1.0;
-    document.getElementById('sxv').value = 1.0;
+    document.getElementById('scaleX').value = 0.9;
+    document.getElementById('sxv').value = 0.9;
     document.getElementById('scaleY').value = 1.0;
     document.getElementById('syv').value = 1.0;
     document.getElementById('scaleZ').value = 1.0;
@@ -419,8 +404,8 @@ if (!String.prototype.startsWith) {
     document.getElementById('txv').value = 0;
     document.getElementById('translateY').value = 0;
     document.getElementById('tyv').value = 0;
-    document.getElementById('translateZ').value = 1.0;
-    document.getElementById('tzv').value = 1.0;
+    document.getElementById('translateZ').value = 1.5;
+    document.getElementById('tzv').value = 1.5;
 
     // Light 1
     document.getElementById('lightSwitch').checked = true;
