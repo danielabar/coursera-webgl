@@ -139,7 +139,7 @@ if (!String.prototype.startsWith) {
     if (Light.numEnabled(_lightSources) > 0) {
       for (var i=0; i<_lightSources.length; i++) {
 
-        if (_lightSources[i].lightMotion === 'animated') {
+        if (_lightSources[i].lightAnimated) {
 
           if (_lightSources[i].rotation === 'INC') {
             _lightSources[i].theta += 0.1;
@@ -358,14 +358,14 @@ if (!String.prototype.startsWith) {
 
   var updateLightSource = function(lightIndex) {
     var enabled = document.getElementById(lightDomElementId('lightSwitch', lightIndex)).checked,
+      lightAnimated = document.getElementById(lightDomElementId('lightAnimated', lightIndex)).checked,
       lightDiffuse = ColorUtils.hexToGLvec4(document.getElementById(lightDomElementId('lightDiffuse', lightIndex)).value),
       lightSpecular = ColorUtils.hexToGLvec4(document.getElementById(lightDomElementId('lightSpecular', lightIndex)).value),
       lightAmbient = ColorUtils.hexToGLvec4(document.getElementById(lightDomElementId('lightAmbient', lightIndex)).value),
-      lightDistance = document.getElementById(lightDomElementId('lightDistance', lightIndex)).valueAsNumber,
-      lightMotion = DomUtils.getCheckedValue(lightDomElementId('lightMotion', lightIndex));
+      lightDistance = document.getElementById(lightDomElementId('lightDistance', lightIndex)).valueAsNumber;
 
     _lightSources[lightIndex].enabled = enabled;
-    _lightSources[lightIndex].lightMotion = lightMotion;
+    _lightSources[lightIndex].lightAnimated = lightAnimated;
     _lightSources[lightIndex].lightAmbient = lightAmbient;
     _lightSources[lightIndex].lightDiffuse = lightDiffuse;
     _lightSources[lightIndex].lightSpecular = lightSpecular;
@@ -415,7 +415,7 @@ if (!String.prototype.startsWith) {
 
     // Light 1
     document.getElementById('lightSwitch').checked = true;
-    document.getElementById('lightMotionAnimated').checked = true;
+    document.getElementById('lightAnimated').checked = true;
     document.getElementById('lightDiffuse').value = '#ffffff';
     document.getElementById('lightSpecular').value = '#ffffff';
     document.getElementById('lightAmbient').value = '#ffffff';
@@ -424,7 +424,7 @@ if (!String.prototype.startsWith) {
 
     // Light 2
     document.getElementById('lightSwitch2').checked = false;
-    document.getElementById('lightMotionAnimated2').checked = true;
+    document.getElementById('lightAnimated2').checked = false;
     document.getElementById('lightDiffuse2').value = '#ffdd05';
     document.getElementById('lightSpecular2').value = '#ffffff';
     document.getElementById('lightAmbient2').value = '#333333';
