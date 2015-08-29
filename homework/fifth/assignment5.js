@@ -78,7 +78,6 @@
     canvas.width = width;
     canvas.height = height;
     gl.viewport(0, 0, width, height);
-    gl.uniformMatrix4fv(gl.getUniformLocation( program, 'projectionMatrix' ), false, flatten(projectionMatrix) );
     // uncomment if can get perspective working
     // projectionMatrix = perspective(fov, (width/height), near, far);
     // gl.uniformMatrix4fv(uProjection, false, flatten(perspective));
@@ -91,7 +90,7 @@
     gl.uniformMatrix4fv(gl.getUniformLocation(program, 'modelViewMatrix' ), false, flatten(modelViewMatrix) );
 
     // if switch to perspective then this will be done in adjustCanvas
-    // gl.uniformMatrix4fv(gl.getUniformLocation( program, 'projectionMatrix' ), false, flatten(projectionMatrix) );
+    gl.uniformMatrix4fv(gl.getUniformLocation( program, 'projectionMatrix' ), false, flatten(projectionMatrix) );
 
     gl.drawElements(gl.TRIANGLES, shape.indices.length, gl.UNSIGNED_SHORT, 0);
 
@@ -102,12 +101,12 @@
   };
 
   var buildProjectionMatrix = function() {
-    var far = 50;
-    var left = -5.0;
-    var right = 3.0;
-    var bottom = -3.0;
-    var ytop =5.0;
-    var near = -50;
+    var far = 10;
+    var left = -4.0;
+    var right = 2.0;
+    var bottom = -2.0;
+    var ytop = 4.0;
+    var near = -10;
     return ortho(left, right, bottom, ytop, near, far);
   };
 
