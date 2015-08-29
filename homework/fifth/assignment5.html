@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link href='http://fonts.googleapis.com/css?family=Nixie+One|Open+Sans:300italic,300,700|Pacifico' rel='stylesheet' type='text/css'>
+	<meta charset="UTF-8">
+  <title>Daniela Baron | Assignment 5 | Coursera WebGL</title>
+  <link rel="stylesheet" href="../../css/reset.css">
+  <link rel="stylesheet" href="assignment5.css">
+
+  <script id="vertex-shader" type="x-shader/x-vertex">
+
+  attribute vec4 vPosition;
+  attribute vec2 vTexCoord;
+  varying vec2 fTexCoord;
+
+  uniform mat4 modelViewMatrix;
+  uniform mat4 projectionMatrix;
+
+  void main() {
+    fTexCoord = vTexCoord;
+    gl_Position = projectionMatrix * modelViewMatrix * vPosition;
+  }
+  </script>
+
+  <script id="fragment-shader" type="x-shader/x-fragment">
+
+  precision mediump float;
+
+  varying  vec2 fTexCoord;
+
+  uniform vec4 fColor;
+  uniform sampler2D texture;
+
+  void main() {
+    gl_FragColor = fColor * texture2D( texture, fTexCoord );
+  }
+  </script>
+
+
+  <!--  WebGL Utils -->
+  <script type="text/javascript" src="../../Common/webgl-utils.js"></script>
+  <script type="text/javascript" src="../../Common/initShaders.js"></script>
+  <script type="text/javascript" src="../../Common/flatten.js"></script>
+  <script type="text/javascript" src="../../Common/MV.js"></script>
+
+  <!-- App -->
+  <script type="text/javascript" src="sphere.js"></script>
+  <script type="text/javascript" src="assignment5.js"></script>
+</head>
+
+<body>
+
+  <!--[if lt IE 9]>
+    <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+  <![endif]-->
+
+  <canvas id="gl-canvas">
+    Oops ... your browser doesn't support the HTML5 canvas element
+  </canvas>
+
+  <div class="side-controls">
+    <div id="textureSelection" class="control-group">
+      <button id="fileTexture">File</button>
+      <button id="patternTexture">Pattern</button>
+    </div>
+  </div>
+
+</body>
+</html>
