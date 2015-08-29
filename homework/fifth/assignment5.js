@@ -9,6 +9,10 @@
     program,
     shape,
     theta = [45.0, 45.0, 45.0],
+    modelMatrix = mat4(),
+    viewMatrix = mat4(),
+    modelViewMatrix = mat4(),
+    projectionMatrix = mat4(),
     shapeColor = vec4(1.0, 0.0, 0.0, 1.0),
     texture;
 
@@ -29,12 +33,60 @@
     canvas.width = width;
     canvas.height = height;
     gl.viewport(0, 0, width, height);
+    // projectionMatrix = perspective(fov, (width/height), near, far);
+    // gl.uniformMatrix4fv(uProjection, false, flatten(perspective));
   };
 
   var render = function() {
     adjustCanvas();
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+    modelViewMatrix = buildModelViewMatrix(viewMatrix, theta);
+    gl.uniformMatrix4fv(gl.getUniformLocation(program, 'modelViewMatrix' ), false, flatten(modelViewMatrix) );
+
+    // if switch to perspective then this will be done in adjustCanvas
+    gl.uniformMatrix4fv(gl.getUniformLocation( program, 'projectionMatrix' ), false, flatten(projectionMatrix) );
+
     gl.drawElements(gl.TRIANGLES, shape.indices.length, gl.UNSIGNED_SHORT, 0);
+
+    setTimeout(
+      function () {requestAnimFrame( render );},
+      1000 / 60
+    );
+  };
+
+  var buildProjectionMatrix = function() {
+    var far = 10;
+    var left = -3.0;
+    var right = 3.0;
+    var bottom = -3.0;
+    var ytop =3.0;
+    var near = -10;
+    return ortho(left, right, bottom, ytop, near, far);
+  };
+
+  var buildViewMatrix = function() {
+    var radius = 0.0;
+    var theta  = radians(1.0);
+    var phi    = radians(1.0);
+    var at = vec3(0.0, 0.0, 0.0);
+    var up = vec3(0.0, 1.0, 0.0);
+    var eye = vec3(
+      radius*Math.sin(theta)*Math.cos(phi),
+      radius*Math.sin(theta)*Math.sin(phi),
+      radius*Math.cos(theta)
+    );
+    return lookAt(eye, at, up);
+  };
+
+  var buildModelViewMatrix = function(viewMatrix, theta) {
+    var modelMatrix = mat4();
+
+    modelMatrix = mult(modelMatrix, rotate(theta[0], [1, 0, 0] ));
+    modelMatrix = mult(modelMatrix, rotate(theta[1], [0, 1, 0] ));
+    modelMatrix = mult(modelMatrix, rotate(theta[2], [0, 0, 1] ));
+
+    return mult(modelMatrix, viewMatrix);
   };
 
   var App = {
@@ -46,6 +98,8 @@
       gl = WebGLUtils.setupWebGL( canvas, {preserveDrawingBuffer: true} );
       if ( !gl ) { alert( 'WebGL isn\'t available' ); }
 
+      // TODO register mouse handlers to manipulate theta
+
       // Configure WebGL
       gl.viewport( 0, 0, canvas.width, canvas.height );
       gl.clearColor(0.0, 0.0, 0.0, 1.0);
@@ -54,8 +108,10 @@
       gl.enable(gl.POLYGON_OFFSET_FILL);
       gl.polygonOffset(1.0, 2.0);
 
-      // Generage sphere
+      // Model and view
       shape = Sphere.generate();
+      viewMatrix = buildViewMatrix();
+      projectionMatrix = buildProjectionMatrix();
 
       // Load shaders
       program = initShaders(gl, 'vertex-shader', 'fragment-shader');
@@ -88,9 +144,6 @@
 
       // Send color
       gl.uniform4fv(gl.getUniformLocation(program, 'fColor'), flatten(shapeColor));
-
-      // Send theta
-      gl.uniform3fv(gl.getUniformLocation(program, 'theta'), flatten(theta));
 
       // Initialize texture
       var image = new Image();

@@ -9,7 +9,7 @@
     generate: function(opts) {
       var lats = 30,
         longs = 30,
-        radius = 0.5,
+        radius = 1.0,
         vertices = [],
         normals = [],
         textureCoords = [],
