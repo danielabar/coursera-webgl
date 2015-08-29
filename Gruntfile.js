@@ -32,6 +32,8 @@ module.exports = function(grunt) {
               'Common/*.js',
               'homework/**/*.js',
               'homework/**/*.html',
+              'homework/**/*.css',
+              'homework/**/*.gif',
               'experiments/**/*.js',
               'experiments/**/*.html'
             ],
