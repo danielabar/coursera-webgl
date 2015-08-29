@@ -19,7 +19,8 @@
     lastMouseX = null,
     lastMouseY = null,
     texSize = 64,
-    checkerboardImage, fileImage;
+    checkerboardImage, fileImage,
+    textureType = 'file';
 
   var buildCheckerboard = function() {
     var image1 = [];
@@ -57,11 +58,13 @@
     gl.bindTexture( gl.TEXTURE_2D, texture );
     gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
 
-    // this line is for fileImage
-    // gl.texImage2D( gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, image );
+    if (textureType === 'file') {
+      gl.texImage2D( gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, image );
+    }
 
-    // this line is for checkerboardImage
-    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, texSize, texSize, 0, gl.RGBA, gl.UNSIGNED_BYTE, image);
+    if (textureType === 'pattern') {
+      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, texSize, texSize, 0, gl.RGBA, gl.UNSIGNED_BYTE, image);
+    }
 
     gl.generateMipmap( gl.TEXTURE_2D );
     gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST_MIPMAP_LINEAR );
@@ -160,6 +163,17 @@
     lastMouseY = newY;
   };
 
+  var handleTextureSelection = function(evt) {
+    if (evt.target.id === 'fileTexture') {
+      textureType = 'file';
+      configureTexture(fileImage);
+    }
+    if (evt.target.id === 'patternTexture') {
+      textureType = 'pattern';
+      configureTexture(checkerboardImage);
+    }
+  };
+
   var App = {
 
     init: function() {
@@ -169,10 +183,11 @@
       gl = WebGLUtils.setupWebGL( canvas, {preserveDrawingBuffer: true} );
       if ( !gl ) { alert( 'WebGL isn\'t available' ); }
 
-      // Register mouse handlers for interaction
+      // Register event handlers
       canvas.onmousedown = handleMouseDown;
       document.onmouseup = handleMouseUp;
       document.onmousemove = handleMouseMove;
+      document.getElementById('textureSelection').addEventListener('click', handleTextureSelection);
 
       // Configure WebGL
       gl.viewport( 0, 0, canvas.width, canvas.height );
@@ -222,14 +237,15 @@
 
       // Initialize textures
       checkerboardImage = buildCheckerboard();
-      configureTexture(checkerboardImage);
-      render();
-      // fileImage = new Image();
-      // fileImage.src = 'images/SA2011_black.gif';
-      // fileImage.onload = function() {
-      //     configureTexture( fileImage );
-      //     render();
-      // };
+      fileImage = new Image();
+      fileImage.onload = function() {
+          configureTexture( fileImage );
+          render();
+      };
+      fileImage.onerror = function() {
+        console.error('Unable to load image');
+      };
+      fileImage.src = 'images/SA2011_black.gif';
 
     }
 
