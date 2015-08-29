@@ -459,7 +459,7 @@ if (!String.prototype.startsWith) {
       gl.polygonOffset(1.0, 2.0);
 
       // Camera view
-      var radius = 0.0;
+      var radius = 5.0;
       var theta  = radians(1.0);
       var phi    = radians(1.0);
       var at = vec3(0.0, 0.0, 0.0);
@@ -472,13 +472,19 @@ if (!String.prototype.startsWith) {
       _camera.viewMatrix = lookAt(eye, at, up);
 
       // Camera projection
-      var far = 10;
-      var left = -3.0;
-      var right = 3.0;
-      var bottom = -3.0;
-      var ytop =3.0;
-      var near = -10;
-      _camera.projectionMatrix = ortho(left, right, bottom, ytop, near, far);
+      // var far = 10;
+      // var left = -3.0;
+      // var right = 3.0;
+      // var bottom = -3.0;
+      // var ytop =3.0;
+      // var near = -10;
+      // _camera.projectionMatrix = ortho(left, right, bottom, ytop, near, far);
+      var  fovy = 45.0;
+      var aspect =  _canvas.width/_canvas.height;
+      // var aspect =  1;
+      var zNear = 0.1;
+      var zFar = 5.0;
+      _camera.projectionMatrix = perspective(fovy, aspect, zNear, zFar);
 
       setDefaults();
       render();
