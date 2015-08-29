@@ -73,11 +73,12 @@
   };
 
   var adjustCanvas = function() {
-    var width = canvas.clientWidth,
-      height = canvas.clientHeight;
+    var width = canvas.clientWidth - 300,
+      height = canvas.clientHeight - 500;
     canvas.width = width;
     canvas.height = height;
     gl.viewport(0, 0, width, height);
+    gl.uniformMatrix4fv(gl.getUniformLocation( program, 'projectionMatrix' ), false, flatten(projectionMatrix) );
     // uncomment if can get perspective working
     // projectionMatrix = perspective(fov, (width/height), near, far);
     // gl.uniformMatrix4fv(uProjection, false, flatten(perspective));
@@ -90,7 +91,7 @@
     gl.uniformMatrix4fv(gl.getUniformLocation(program, 'modelViewMatrix' ), false, flatten(modelViewMatrix) );
 
     // if switch to perspective then this will be done in adjustCanvas
-    gl.uniformMatrix4fv(gl.getUniformLocation( program, 'projectionMatrix' ), false, flatten(projectionMatrix) );
+    // gl.uniformMatrix4fv(gl.getUniformLocation( program, 'projectionMatrix' ), false, flatten(projectionMatrix) );
 
     gl.drawElements(gl.TRIANGLES, shape.indices.length, gl.UNSIGNED_SHORT, 0);
 
@@ -101,20 +102,21 @@
   };
 
   var buildProjectionMatrix = function() {
-    var far = 10;
-    var left = -3.0;
+    var far = 50;
+    var left = -5.0;
     var right = 3.0;
     var bottom = -3.0;
-    var ytop =3.0;
-    var near = -10;
+    var ytop =5.0;
+    var near = -50;
     return ortho(left, right, bottom, ytop, near, far);
+    // return mat4();
   };
 
   var buildViewMatrix = function() {
     var radius = 0.0;
     var theta  = radians(1.0);
     var phi    = radians(1.0);
-    var at = vec3(0.0, 0.0, 0.0);
+    var at = vec3(20.0, 20.0, 20.0);
     var up = vec3(0.0, 1.0, 0.0);
     var eye = vec3(
       radius*Math.sin(theta)*Math.cos(phi),
@@ -122,6 +124,7 @@
       radius*Math.cos(theta)
     );
     return lookAt(eye, at, up);
+    // return mat4();
   };
 
   var buildModelViewMatrix = function() {

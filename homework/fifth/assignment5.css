@@ -21,7 +21,7 @@ body {
 canvas {
   width: 100vw; /* "view-width" units */
   height: 100vw;
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   z-index: -1; /* Place the canvas behind any controls */
