@@ -245,7 +245,7 @@
       fileImage.onerror = function() {
         console.error('Unable to load image');
       };
-      fileImage.src = 'images/SA2011_black.gif';
+      fileImage.src = 'images/moon.gif';
 
     }
 
