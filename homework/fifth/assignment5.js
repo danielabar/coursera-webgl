@@ -17,17 +17,56 @@
     texture,
     mouseDown = false,
     lastMouseX = null,
-    lastMouseY = null;
+    lastMouseY = null,
+    texSize = 64,
+    checkerboardImage, fileImage;
+
+  var buildCheckerboard = function() {
+    var image1 = [];
+    for (var i =0; i<texSize; i++) {
+      image1[i] = [];
+    }
+    for (var i =0; i<texSize; i++) {
+      for ( var j = 0; j < texSize; j++) {
+        image1[i][j] = new Float32Array(4);
+      }
+    }
+    for (var i =0; i<texSize; i++) {
+      for (var j=0; j<texSize; j++) {
+        var c = (((i & 0x8) == 0) ^ ((j & 0x8)  == 0));
+        image1[i][j] = [c, c, c, 1];
+      }
+    }
+
+    // Convert floats to ubytes for texture
+    var checkImage = new Uint8Array(4*texSize*texSize);
+    for ( var i = 0; i < texSize; i++ ) {
+      for ( var j = 0; j < texSize; j++ ) {
+        for(var k =0; k<4; k++) {
+          checkImage[4*texSize*i+4*j+k] = 255*image1[i][j][k];
+        }
+      }
+    }
+
+    return checkImage;
+  };
 
   var configureTexture = function(image) {
     texture = gl.createTexture();
+
     gl.bindTexture( gl.TEXTURE_2D, texture );
     gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
-    gl.texImage2D( gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, image );
+
+    // this line is for fileImage
+    // gl.texImage2D( gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, image );
+
+    // this line is for checkerboardImage
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, texSize, texSize, 0, gl.RGBA, gl.UNSIGNED_BYTE, image);
+
     gl.generateMipmap( gl.TEXTURE_2D );
     gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST_MIPMAP_LINEAR );
     gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST );
-    gl.uniform1i(gl.getUniformLocation(program, "texture"), 0);
+    gl.uniform1i(gl.getUniformLocation(program, 'texture'), 0);
   };
 
   var adjustCanvas = function() {
@@ -36,21 +75,15 @@
     canvas.width = width;
     canvas.height = height;
     gl.viewport(0, 0, width, height);
+    // uncomment if can get perspective working
     // projectionMatrix = perspective(fov, (width/height), near, far);
     // gl.uniformMatrix4fv(uProjection, false, flatten(perspective));
   };
-
-  // var rotateModelView = function() {
-  //   theta[0] += 1.0;
-  //   theta[1] += 0.1;
-  //   modelViewMatrix = buildModelViewMatrix();
-  // };
 
   var render = function() {
     adjustCanvas();
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-    // rotateModelView();
     gl.uniformMatrix4fv(gl.getUniformLocation(program, 'modelViewMatrix' ), false, flatten(modelViewMatrix) );
 
     // if switch to perspective then this will be done in adjustCanvas
@@ -138,8 +171,6 @@
 
       // Register mouse handlers for interaction
       canvas.onmousedown = handleMouseDown;
-      // canvas.onmouseup = handleMouseUp;
-      // canvas.onmousemove = handleMouseMove;
       document.onmouseup = handleMouseUp;
       document.onmousemove = handleMouseMove;
 
@@ -189,13 +220,16 @@
       // Send color
       gl.uniform4fv(gl.getUniformLocation(program, 'fColor'), flatten(shapeColor));
 
-      // Initialize texture
-      var image = new Image();
-      image.src = 'images/SA2011_black.gif';
-      image.onload = function() {
-          configureTexture( image );
-          render();
-      };
+      // Initialize textures
+      checkerboardImage = buildCheckerboard();
+      configureTexture(checkerboardImage);
+      render();
+      // fileImage = new Image();
+      // fileImage.src = 'images/SA2011_black.gif';
+      // fileImage.onload = function() {
+      //     configureTexture( fileImage );
+      //     render();
+      // };
 
     }
 
