@@ -40,17 +40,17 @@
     // gl.uniformMatrix4fv(uProjection, false, flatten(perspective));
   };
 
-  var rotateModelView = function() {
-    theta[0] += 1.0;
-    theta[1] += 0.1;
-    modelViewMatrix = buildModelViewMatrix();
-  };
+  // var rotateModelView = function() {
+  //   theta[0] += 1.0;
+  //   theta[1] += 0.1;
+  //   modelViewMatrix = buildModelViewMatrix();
+  // };
 
   var render = function() {
     adjustCanvas();
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-    rotateModelView();
+    // rotateModelView();
     gl.uniformMatrix4fv(gl.getUniformLocation(program, 'modelViewMatrix' ), false, flatten(modelViewMatrix) );
 
     // if switch to perspective then this will be done in adjustCanvas
@@ -98,41 +98,34 @@
     return mult(modelMatrix, viewMatrix);
   };
 
-  // var handleMouseDown = function(evt) {
-  //   mouseDown = true;
-  //   lastMouseX = evt.clientX;
-  //   lastMouseY = evt.clientY;
-  // };
-  //
-  // var handleMouseUp = function() {
-  //   console.log('mouse up');
-  //   mouseDown = false;
-  // };
-  //
-  // var handleMouseMove = function(evt) {
-  //   if (!mouseDown) {
-  //     return;
-  //   }
-  //   console.log('mouse move');
-  //   var newX = evt.clientX;
-  //   var newY = evt.clientY;
-  //
-  //   var deltaX = newX - lastMouseX;
-  //   theta[1] = radians(deltaX / 10);
-  //   // var newRotationMatrix = mat4.create();
-  //   // mat4.identity(newRotationMatrix);
-  //   // mat4.rotate(newRotationMatrix, degToRad(deltaX / 10), [0, 1, 0]);
-  //
-  //   var deltaY = newY - lastMouseY;
-  //   theta[0] = radians(deltaY / 10);
-  //   // mat4.rotate(newRotationMatrix, degToRad(deltaY / 10), [1, 0, 0]);
-  //   // mat4.multiply(newRotationMatrix, moonRotationMatrix, moonRotationMatrix);
-  //
-  //   lastMouseX = newX;
-  //   lastMouseY = newY;
-  //
-  //   modelViewMatrix = buildModelViewMatrix();
-  // };
+  var handleMouseDown = function(evt) {
+    mouseDown = true;
+    lastMouseX = evt.clientX;
+    lastMouseY = evt.clientY;
+  };
+
+  var handleMouseUp = function() {
+    mouseDown = false;
+  };
+
+  var handleMouseMove = function(evt) {
+    if (!mouseDown) {
+      return;
+    }
+    var newX = evt.clientX;
+    var newY = evt.clientY;
+
+    var deltaX = newX - lastMouseX;
+    theta[1] -= deltaX / 10;
+
+    var deltaY = newY - lastMouseY;
+    theta[0] -= deltaY / 10;
+
+    modelViewMatrix = buildModelViewMatrix();
+
+    lastMouseX = newX;
+    lastMouseY = newY;
+  };
 
   var App = {
 
@@ -144,11 +137,11 @@
       if ( !gl ) { alert( 'WebGL isn\'t available' ); }
 
       // Register mouse handlers for interaction
-      // canvas.onmousedown = handleMouseDown;
+      canvas.onmousedown = handleMouseDown;
       // canvas.onmouseup = handleMouseUp;
       // canvas.onmousemove = handleMouseMove;
-      // document.onmouseup = handleMouseUp;
-      // document.onmousemove = handleMouseMove;
+      document.onmouseup = handleMouseUp;
+      document.onmousemove = handleMouseMove;
 
       // Configure WebGL
       gl.viewport( 0, 0, canvas.width, canvas.height );
