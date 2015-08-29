@@ -1,0 +1,28 @@
+/* ---------------------------------- */
+/* Global Styles */
+/* ---------------------------------- */
+
+html {
+  box-sizing: border-box;
+}
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
+body {
+  overflow: hidden;
+}
+
+
+/* ---------------------------------- */
+/* Canvas */
+/* ---------------------------------- */
+
+canvas {
+  width: 100vw; /* "view-width" units */
+  height: 100vw;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -1; /* Place the canvas behind any controls */
+}
