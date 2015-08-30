@@ -175,6 +175,23 @@
     }
   };
 
+  var loadTextureFile = function(textureFileUrl) {
+    fileImage = new Image();
+    fileImage.onload = function() {
+        configureTexture( fileImage );
+        render();
+    };
+    fileImage.onerror = function() {
+      console.error('Unable to load image: ' + textureFileUrl);
+    };
+    fileImage.src = textureFileUrl;
+  };
+
+  var handleFileTextureSelection = function(evt) {
+    var textureFileUrl = 'images/' + evt.target.dataset.textureFile;
+    loadTextureFile(textureFileUrl);
+  };
+
   var App = {
 
     init: function() {
@@ -189,6 +206,7 @@
       document.onmouseup = handleMouseUp;
       document.onmousemove = handleMouseMove;
       document.getElementById('textureSelection').addEventListener('click', handleTextureSelection);
+      document.getElementById('fileTextureSelection').addEventListener('click', handleFileTextureSelection);
 
       // Configure WebGL
       gl.viewport( 0, 0, canvas.width, canvas.height );
@@ -238,17 +256,7 @@
 
       // Initialize textures
       checkerboardImage = buildCheckerboard();
-      fileImage = new Image();
-      fileImage.onload = function() {
-          configureTexture( fileImage );
-          render();
-      };
-      fileImage.onerror = function() {
-        console.error('Unable to load image');
-      };
-      fileImage.src = 'images/moon.gif';
-      // fileImage.src = 'images/flower_texture.jpg';
-
+      loadTextureFile('images/moon.gif');
     }
 
   };
