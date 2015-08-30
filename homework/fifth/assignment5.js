@@ -276,22 +276,20 @@
     // format cube map texture
     gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
     gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
-    gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_WRAP_R, gl.CLAMP_TO_EDGE);
     gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
     gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
 
     gl.activeTexture( gl.TEXTURE0 );
     gl.uniform1i(gl.getUniformLocation(program, "texMap"),0);
+    console.log('configured cube map');
   };
 
   var cubeMapLoaded = function() {
-    var cubeMapLoaded = function() {
-      if (cubeMapImages.posx && cubeMapImages.negx &&
-          cubeMapImages.posy && cubeMapImages.negy &&
-          cubeMapImages.posz && cubeMapImages.negz) {
-        configureCubeMap();
-      }
-    };
+    if (cubeMapImages.posx && cubeMapImages.negx &&
+        cubeMapImages.posy && cubeMapImages.negy &&
+        cubeMapImages.posz && cubeMapImages.negz) {
+      configureCubeMap();
+    }
   };
 
   var loadCubeMapImage = function(position, url, cb) {
@@ -383,34 +381,6 @@
       // Load shaders
       program = initShaders(gl, 'vertex-shader', 'fragment-shader');
       gl.useProgram(program);
-
-      // Load index data
-      var iBuffer = gl.createBuffer();
-      gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, iBuffer);
-      gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(shape.indices), gl.STATIC_DRAW);
-
-      // Load vertex data
-      var vBuffer = gl.createBuffer();
-      gl.bindBuffer(gl.ARRAY_BUFFER, vBuffer);
-      gl.bufferData(gl.ARRAY_BUFFER, flatten(shape.vertices), gl.STATIC_DRAW);
-
-      // Associate shader variable with vertex data buffer
-      var vPosition = gl.getAttribLocation( program, 'vPosition' );
-      gl.vertexAttribPointer( vPosition, 3, gl.FLOAT, false, 0, 0 );
-      gl.enableVertexAttribArray( vPosition );
-
-      // Load texture data
-      var tBuffer = gl.createBuffer();
-      gl.bindBuffer(gl.ARRAY_BUFFER, tBuffer);
-      gl.bufferData(gl.ARRAY_BUFFER, flatten(shape.textureCoords), gl.STATIC_DRAW);
-
-      // Associate shader variable with texture data buffer
-      var vTexCoord = gl.getAttribLocation(program, 'vTexCoord');
-      gl.vertexAttribPointer(vTexCoord, 2, gl.FLOAT, false, 0, 0);
-      gl.enableVertexAttribArray(vTexCoord);
-
-      // Send color
-      gl.uniform4fv(gl.getUniformLocation(program, 'fColor'), flatten(shapeColor));
 
       // Initialize textures
       checkerboardImage = buildCheckerboard();
