@@ -31,7 +31,8 @@ var lightAmbient = vec4(0.2, 0.2, 0.2, 1.0 );
 var lightDiffuse = vec4( 1.0, 1.0, 1.0, 1.0 );
 var lightSpecular = vec4( 1.0, 1.0, 1.0, 1.0 );
 
-var materialAmbient = vec4( 1.0, 0.0, 1.0, 1.0 );
+// var materialAmbient = vec4( 1.0, 0.0, 1.0, 1.0 );
+var materialAmbient = vec4( 1.0, 1.0, 1.0, 1.0 );
 var materialDiffuse = vec4( 1.0, 0.8, 0.0, 1.0 );
 var materialSpecular = vec4( 1.0, 1.0, 1.0, 1.0 );
 var materialShininess = 20.0;
@@ -194,16 +195,12 @@ window.onload = function init() {
     projectionMatrixLoc = gl.getUniformLocation( program, "projectionMatrix" );
     normalMatrixLoc = gl.getUniformLocation( program, "normalMatrix" );
 
-    loadCubeMapImage('negx', 'images/negx.jpg', cubeMapLoaded);
-    loadCubeMapImage('negy', 'images/negy.jpg', cubeMapLoaded);
-    loadCubeMapImage('negz', 'images/negz.jpg', cubeMapLoaded);
-    loadCubeMapImage('posx', 'images/posx.jpg', cubeMapLoaded);
-    loadCubeMapImage('posy', 'images/posy.jpg', cubeMapLoaded);
-    loadCubeMapImage('posz', 'images/posz.jpg', cubeMapLoaded);
-
-    // configureCubeMap();
-    // gl.activeTexture( gl.TEXTURE0 );
-    // gl.uniform1i(gl.getUniformLocation(program, "texMap"),0);
+    loadCubeMapImage('negx', 'images/lycksele/negx.jpg', cubeMapLoaded);
+    loadCubeMapImage('negy', 'images/lycksele/negy.jpg', cubeMapLoaded);
+    loadCubeMapImage('negz', 'images/lycksele/negz.jpg', cubeMapLoaded);
+    loadCubeMapImage('posx', 'images/lycksele/posx.jpg', cubeMapLoaded);
+    loadCubeMapImage('posy', 'images/lycksele/posy.jpg', cubeMapLoaded);
+    loadCubeMapImage('posz', 'images/lycksele/posz.jpg', cubeMapLoaded);
 
     document.getElementById("Button0").onclick = function(){radius *= 2.0;};
     document.getElementById("Button1").onclick = function(){radius *= 0.5;};
@@ -238,8 +235,6 @@ window.onload = function init() {
        "lightPosition"),flatten(lightPosition) );
     gl.uniform1f( gl.getUniformLocation(program,
        "shininess"),materialShininess );
-
-    // render();
 };
 
 
