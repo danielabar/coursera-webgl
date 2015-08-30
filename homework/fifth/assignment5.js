@@ -29,7 +29,24 @@
     lastMouseY = null,
     texSize = 64,
     checkerboardImage, fileImage,
-    textureType = 'file';
+    textureType = 'file',
+    normalMatrix = mat4(),
+    cubeMapImages = {},
+    cubeMap;
+
+  var lightPosition = vec4(1.0, 1.0, 1.0, 0.0 );
+  var lightAmbient = vec4(1.0, 1.0, 1.0, 1.0 );
+  var lightDiffuse = vec4( 1.0, 1.0, 1.0, 1.0 );
+  var lightSpecular = vec4( 1.0, 1.0, 1.0, 1.0 );
+
+  var materialAmbient = vec4( 1.0, 1.0, 1.0, 1.0 );
+  var materialDiffuse = vec4( 1.0, 0.8, 0.0, 1.0 );
+  var materialSpecular = vec4( 1.0, 1.0, 1.0, 1.0 );
+  var materialShininess = 20.0;
+
+  var ambientProduct = mult(lightAmbient, materialAmbient);
+  var diffuseProduct = mult(lightDiffuse, materialDiffuse);
+  var specularProduct = mult(lightSpecular, materialSpecular);
 
   var buildCheckerboard = function() {
     var image1 = [];
@@ -93,10 +110,72 @@
   };
 
   var render = function() {
+    var vBuffer,
+      vPosition;
+
     adjustCanvas();
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
     gl.uniformMatrix4fv(gl.getUniformLocation(program, 'modelViewMatrix' ), false, flatten(modelViewMatrix) );
+
+    if (textureType === 'reflection') {
+      var nBuffer = gl.createBuffer();
+      gl.bindBuffer( gl.ARRAY_BUFFER, nBuffer);
+      gl.bufferData( gl.ARRAY_BUFFER, flatten(shape.normals), gl.STATIC_DRAW );
+
+      var vNormal = gl.getAttribLocation( program, "vNormal" );
+      gl.vertexAttribPointer( vNormal, 3, gl.FLOAT, false, 0, 0 );
+      gl.enableVertexAttribArray( vNormal);
+
+      vBuffer = gl.createBuffer();
+      gl.bindBuffer(gl.ARRAY_BUFFER, vBuffer);
+      gl.bufferData(gl.ARRAY_BUFFER, flatten(shape.vertices), gl.STATIC_DRAW);
+
+      vPosition = gl.getAttribLocation( program, "vPosition");
+      gl.vertexAttribPointer(vPosition, 3, gl.FLOAT, false, 0, 0);
+      gl.enableVertexAttribArray(vPosition);
+
+      // Send normal matrix
+      var normalMatrixLoc = gl.getUniformLocation( program, "normalMatrix" );
+      gl.uniformMatrix3fv(normalMatrixLoc, false, flatten(normalMatrix) );
+
+      // Send lighting
+      gl.uniform4fv( gl.getUniformLocation(program, "ambientProduct"),flatten(ambientProduct) );
+      gl.uniform4fv( gl.getUniformLocation(program, "diffuseProduct"),flatten(diffuseProduct) );
+      gl.uniform4fv( gl.getUniformLocation(program, "specularProduct"),flatten(specularProduct) );
+      gl.uniform4fv( gl.getUniformLocation(program, "lightPosition"),flatten(lightPosition) );
+      gl.uniform1f( gl.getUniformLocation(program, "shininess"),materialShininess );
+
+    } else {
+      // Load index data
+      var iBuffer = gl.createBuffer();
+      gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, iBuffer);
+      gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(shape.indices), gl.STATIC_DRAW);
+
+      // Load vertex data
+      vBuffer = gl.createBuffer();
+      gl.bindBuffer(gl.ARRAY_BUFFER, vBuffer);
+      gl.bufferData(gl.ARRAY_BUFFER, flatten(shape.vertices), gl.STATIC_DRAW);
+
+      // Associate shader variable with vertex data buffer
+      vPosition = gl.getAttribLocation( program, 'vPosition' );
+      gl.vertexAttribPointer( vPosition, 3, gl.FLOAT, false, 0, 0 );
+      gl.enableVertexAttribArray( vPosition );
+
+      // Load texture data
+      var tBuffer = gl.createBuffer();
+      gl.bindBuffer(gl.ARRAY_BUFFER, tBuffer);
+      gl.bufferData(gl.ARRAY_BUFFER, flatten(shape.textureCoords), gl.STATIC_DRAW);
+
+      // Associate shader variable with texture data buffer
+      var vTexCoord = gl.getAttribLocation(program, 'vTexCoord');
+      gl.vertexAttribPointer(vTexCoord, 2, gl.FLOAT, false, 0, 0);
+      gl.enableVertexAttribArray(vTexCoord);
+
+      // Send color
+      gl.uniform4fv(gl.getUniformLocation(program, 'fColor'), flatten(shapeColor));
+    }
+
     gl.drawElements(gl.TRIANGLES, shape.indices.length, gl.UNSIGNED_SHORT, 0);
 
     setTimeout(
@@ -117,13 +196,19 @@
   };
 
   var buildModelViewMatrix = function() {
-    var modelMatrix = mat4();
+    var modelMatrix = mat4(),
+      mv;
 
     modelMatrix = mult(modelMatrix, rotate(theta[0], [1, 0, 0] ));
     modelMatrix = mult(modelMatrix, rotate(theta[1], [0, 1, 0] ));
     modelMatrix = mult(modelMatrix, rotate(theta[2], [0, 0, 1] ));
 
-    return mult(viewMatrix, modelMatrix);
+    mv = mult(viewMatrix, modelMatrix);
+
+    normalMatrix = inverseMat3(flatten(mv));
+    normalMatrix = transpose(normalMatrix);
+
+    return mv;
   };
 
   var handleMouseDown = function(evt) {
@@ -156,6 +241,9 @@
   };
 
   var handlePatternTextureSelection = function(evt) {
+    program = initShaders(gl, 'vertex-shader', 'fragment-shader');
+    gl.useProgram(program);
+
     textureType = 'pattern';
     configureTexture(checkerboardImage);
   };
@@ -172,10 +260,70 @@
     fileImage.src = textureFileUrl;
   };
 
+  var configureCubeMap = function() {
+    cubeMap = gl.createTexture();
+
+    gl.bindTexture(gl.TEXTURE_CUBE_MAP, cubeMap);
+    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
+
+    gl.texImage2D(gl.TEXTURE_CUBE_MAP_POSITIVE_X, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, cubeMapImages.posx );
+    gl.texImage2D(gl.TEXTURE_CUBE_MAP_NEGATIVE_X, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, cubeMapImages.negx );
+    gl.texImage2D(gl.TEXTURE_CUBE_MAP_POSITIVE_Y, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, cubeMapImages.posy );
+    gl.texImage2D(gl.TEXTURE_CUBE_MAP_NEGATIVE_Y, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, cubeMapImages.negy );
+    gl.texImage2D(gl.TEXTURE_CUBE_MAP_POSITIVE_Z, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, cubeMapImages.posz );
+    gl.texImage2D(gl.TEXTURE_CUBE_MAP_NEGATIVE_Z, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, cubeMapImages.negz );
+
+    // format cube map texture
+    gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+    gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+    gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+
+    gl.activeTexture( gl.TEXTURE0 );
+    gl.uniform1i(gl.getUniformLocation(program, "texMap"),0);
+  };
+
+  var cubeMapLoaded = function() {
+    if (cubeMapImages.posx && cubeMapImages.negx &&
+        cubeMapImages.posy && cubeMapImages.negy &&
+        cubeMapImages.posz && cubeMapImages.negz) {
+      configureCubeMap();
+    }
+  };
+
+  var loadCubeMapImage = function(position, url, cb) {
+    var fileImage = new Image();
+    fileImage.onload = function() {
+      cubeMapImages[position] = fileImage;
+      cb();
+    };
+    fileImage.src = url;
+  };
+
+  var loadCubeMapImages = function() {
+    loadCubeMapImage('negx', 'images/lycksele/negx.jpg', cubeMapLoaded);
+    loadCubeMapImage('negy', 'images/lycksele/negy.jpg', cubeMapLoaded);
+    loadCubeMapImage('negz', 'images/lycksele/negz.jpg', cubeMapLoaded);
+    loadCubeMapImage('posx', 'images/lycksele/posx.jpg', cubeMapLoaded);
+    loadCubeMapImage('posy', 'images/lycksele/posy.jpg', cubeMapLoaded);
+    loadCubeMapImage('posz', 'images/lycksele/posz.jpg', cubeMapLoaded);
+  };
+
   var handleFileTextureSelection = function(evt) {
+    program = initShaders(gl, 'vertex-shader', 'fragment-shader');
+    gl.useProgram(program);
+
     var textureFileUrl = 'images/' + evt.target.dataset.textureFile;
     textureType = 'file';
     loadTextureFile(textureFileUrl);
+  };
+
+  var handleReflectionSelection = function() {
+    program = initShaders(gl, 'vertex-shader-2', 'fragment-shader-2');
+    gl.useProgram(program);
+
+    textureType = 'reflection';
+    loadCubeMapImages();
   };
 
   var handleCameraControl = function() {
@@ -212,6 +360,7 @@
       document.onmousemove = handleMouseMove;
       document.getElementById('patternTextureSelection').addEventListener('click', handlePatternTextureSelection);
       document.getElementById('fileTextureSelection').addEventListener('click', handleFileTextureSelection);
+      document.getElementById('reflectionSelection').addEventListener('click', handleReflectionSelection);
       document.getElementById('cameraControl').addEventListener('change', handleCameraControl);
       document.getElementById('eyeControl').addEventListener('change', handleEyeControl);
 
@@ -231,34 +380,6 @@
       // Load shaders
       program = initShaders(gl, 'vertex-shader', 'fragment-shader');
       gl.useProgram(program);
-
-      // Load index data
-      var iBuffer = gl.createBuffer();
-      gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, iBuffer);
-      gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(shape.indices), gl.STATIC_DRAW);
-
-      // Load vertex data
-      var vBuffer = gl.createBuffer();
-      gl.bindBuffer(gl.ARRAY_BUFFER, vBuffer);
-      gl.bufferData(gl.ARRAY_BUFFER, flatten(shape.vertices), gl.STATIC_DRAW);
-
-      // Associate shader variable with vertex data buffer
-      var vPosition = gl.getAttribLocation( program, 'vPosition' );
-      gl.vertexAttribPointer( vPosition, 3, gl.FLOAT, false, 0, 0 );
-      gl.enableVertexAttribArray( vPosition );
-
-      // Load texture data
-      var tBuffer = gl.createBuffer();
-      gl.bindBuffer(gl.ARRAY_BUFFER, tBuffer);
-      gl.bufferData(gl.ARRAY_BUFFER, flatten(shape.textureCoords), gl.STATIC_DRAW);
-
-      // Associate shader variable with texture data buffer
-      var vTexCoord = gl.getAttribLocation(program, 'vTexCoord');
-      gl.vertexAttribPointer(vTexCoord, 2, gl.FLOAT, false, 0, 0);
-      gl.enableVertexAttribArray(vTexCoord);
-
-      // Send color
-      gl.uniform4fv(gl.getUniformLocation(program, 'fColor'), flatten(shapeColor));
 
       // Initialize textures
       checkerboardImage = buildCheckerboard();
