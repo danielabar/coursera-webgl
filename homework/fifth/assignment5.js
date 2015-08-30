@@ -82,8 +82,8 @@
   };
 
   var adjustCanvas = function() {
-    var width = canvas.clientWidth - 300,
-      height = canvas.clientHeight - 500;
+    var width = canvas.clientWidth,
+      height = canvas.clientHeight;
     canvas.width = width;
     canvas.height = height;
     gl.viewport(0, 0, width, height);
