@@ -67,9 +67,9 @@ var loadCubeMapImage = function(position, url, cb) {
 };
 
 var cubeMapLoaded = function() {
-  if (cubeMapImages.top && cubeMapImages.bottom &&
-      cubeMapImages.front && cubeMapImages.back &&
-      cubeMapImages.left && cubeMapImages.right) {
+  if (cubeMapImages.posx && cubeMapImages.negx &&
+      cubeMapImages.posy && cubeMapImages.negy &&
+      cubeMapImages.posz && cubeMapImages.negz) {
     configureCubeMap();
     render();
   }
@@ -83,12 +83,12 @@ function configureCubeMap() {
     gl.bindTexture(gl.TEXTURE_CUBE_MAP, cubeMap);
     gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
 
-    gl.texImage2D(gl.TEXTURE_CUBE_MAP_POSITIVE_X, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, cubeMapImages.left );
-    gl.texImage2D(gl.TEXTURE_CUBE_MAP_NEGATIVE_X, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, cubeMapImages.right );
-    gl.texImage2D(gl.TEXTURE_CUBE_MAP_POSITIVE_Y, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, cubeMapImages.top );
-    gl.texImage2D(gl.TEXTURE_CUBE_MAP_NEGATIVE_Y, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, cubeMapImages.bottom );
-    gl.texImage2D(gl.TEXTURE_CUBE_MAP_POSITIVE_Z, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, cubeMapImages.front );
-    gl.texImage2D(gl.TEXTURE_CUBE_MAP_NEGATIVE_Z, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, cubeMapImages.back );
+    gl.texImage2D(gl.TEXTURE_CUBE_MAP_POSITIVE_X, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, cubeMapImages.posx );
+    gl.texImage2D(gl.TEXTURE_CUBE_MAP_NEGATIVE_X, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, cubeMapImages.negx );
+    gl.texImage2D(gl.TEXTURE_CUBE_MAP_POSITIVE_Y, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, cubeMapImages.posy );
+    gl.texImage2D(gl.TEXTURE_CUBE_MAP_NEGATIVE_Y, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, cubeMapImages.negy );
+    gl.texImage2D(gl.TEXTURE_CUBE_MAP_POSITIVE_Z, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, cubeMapImages.posz );
+    gl.texImage2D(gl.TEXTURE_CUBE_MAP_NEGATIVE_Z, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, cubeMapImages.negz );
 
     gl.texParameteri(gl.TEXTURE_CUBE_MAP,gl.TEXTURE_MAG_FILTER,gl.NEAREST);
     gl.texParameteri(gl.TEXTURE_CUBE_MAP,gl.TEXTURE_MIN_FILTER,gl.NEAREST);
@@ -194,12 +194,12 @@ window.onload = function init() {
     projectionMatrixLoc = gl.getUniformLocation( program, "projectionMatrix" );
     normalMatrixLoc = gl.getUniformLocation( program, "normalMatrix" );
 
-    loadCubeMapImage('top', 'images/top.jpg', cubeMapLoaded);
-    loadCubeMapImage('bottom', 'images/bottom.jpg', cubeMapLoaded);
-    loadCubeMapImage('front', 'images/front.jpg', cubeMapLoaded);
-    loadCubeMapImage('back', 'images/back.jpg', cubeMapLoaded);
-    loadCubeMapImage('left', 'images/left.jpg', cubeMapLoaded);
-    loadCubeMapImage('right', 'images/right.jpg', cubeMapLoaded);
+    loadCubeMapImage('negx', 'images/negx.jpg', cubeMapLoaded);
+    loadCubeMapImage('negy', 'images/negy.jpg', cubeMapLoaded);
+    loadCubeMapImage('negz', 'images/negz.jpg', cubeMapLoaded);
+    loadCubeMapImage('posx', 'images/posx.jpg', cubeMapLoaded);
+    loadCubeMapImage('posy', 'images/posy.jpg', cubeMapLoaded);
+    loadCubeMapImage('posz', 'images/posz.jpg', cubeMapLoaded);
 
     // configureCubeMap();
     // gl.activeTexture( gl.TEXTURE0 );
