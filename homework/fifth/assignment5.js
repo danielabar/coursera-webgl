@@ -13,7 +13,6 @@
     viewMatrix = mat4(),
     modelViewMatrix = mat4(),
     projectionMatrix = mat4(),
-    // shapeColor = vec4(1.0, 0.0, 0.0, 1.0),
     shapeColor = vec4(1.0, 1.0, 1.0, 1.0),
     texture,
     mouseDown = false,
@@ -79,6 +78,10 @@
     canvas.width = width;
     canvas.height = height;
     gl.viewport(0, 0, width, height);
+
+    projectionMatrix = buildProjectionMatrix();
+    gl.uniformMatrix4fv(gl.getUniformLocation( program, 'projectionMatrix' ), false, flatten(projectionMatrix) );
+
     // uncomment if can get perspective working
     // projectionMatrix = perspective(fov, (width/height), near, far);
     // gl.uniformMatrix4fv(uProjection, false, flatten(perspective));
@@ -91,7 +94,7 @@
     gl.uniformMatrix4fv(gl.getUniformLocation(program, 'modelViewMatrix' ), false, flatten(modelViewMatrix) );
 
     // if switch to perspective then this will be done in adjustCanvas
-    gl.uniformMatrix4fv(gl.getUniformLocation( program, 'projectionMatrix' ), false, flatten(projectionMatrix) );
+    // gl.uniformMatrix4fv(gl.getUniformLocation( program, 'projectionMatrix' ), false, flatten(projectionMatrix) );
 
     gl.drawElements(gl.TRIANGLES, shape.indices.length, gl.UNSIGNED_SHORT, 0);
 
@@ -102,25 +105,22 @@
   };
 
   var buildProjectionMatrix = function() {
-    var far = 10;
-    var left = -4.0;
-    var right = 2.0;
-    var bottom = -2.0;
-    var ytop = 4.0;
-    var near = -10;
-    return ortho(left, right, bottom, ytop, near, far);
+    var fovy = 45.0;
+    var near = 1.0;
+    var far = -1.0;
+    return perspective(fovy, canvas.width / canvas.height, near, far);
   };
 
   var buildViewMatrix = function() {
-    var radius = 0.0;
-    var theta  = radians(1.0);
-    var phi    = radians(1.0);
-    var at = vec3(0.0, 0.0, 0.0);
+    var zoom = 4.0;
+    var theta  = 30.0;
+    var phi    = 30.0;
+    var at = vec3(0.5, -0.5, 0.0);
     var up = vec3(0.0, 1.0, 0.0);
     var eye = vec3(
-      radius*Math.sin(theta)*Math.cos(phi),
-      radius*Math.sin(theta)*Math.sin(phi),
-      radius*Math.cos(theta)
+      zoom * Math.sin(radians(theta)) * Math.cos(radians(phi)),
+      zoom * Math.sin(radians(theta)) * Math.sin(radians(phi)),
+      zoom * Math.cos(radians(theta))
     );
     return lookAt(eye, at, up);
   };
@@ -132,7 +132,7 @@
     modelMatrix = mult(modelMatrix, rotate(theta[1], [0, 1, 0] ));
     modelMatrix = mult(modelMatrix, rotate(theta[2], [0, 0, 1] ));
 
-    return mult(modelMatrix, viewMatrix);
+    return mult(viewMatrix, modelMatrix);
   };
 
   var handleMouseDown = function(evt) {
