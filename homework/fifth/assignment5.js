@@ -10,8 +10,17 @@
     shape,
     theta = [45.0, 45.0, 45.0],
     modelMatrix = mat4(),
+    zoom = 4.0,
+    eyeTheta = 30.0,
+    eyePhi = 30.0,
+    eyeAtX = 0.5,
+    eyeAtY = -0.5,
+    eyeAtZ = 0.0,
     viewMatrix = mat4(),
     modelViewMatrix = mat4(),
+    fovy = 45.0,
+    near = 1.0,
+    far = -1.0,
     projectionMatrix = mat4(),
     shapeColor = vec4(1.0, 1.0, 1.0, 1.0),
     texture,
@@ -79,12 +88,8 @@
     canvas.height = height;
     gl.viewport(0, 0, width, height);
 
-    projectionMatrix = buildProjectionMatrix();
+    projectionMatrix = perspective(fovy, canvas.width / canvas.height, near, far);
     gl.uniformMatrix4fv(gl.getUniformLocation( program, 'projectionMatrix' ), false, flatten(projectionMatrix) );
-
-    // uncomment if can get perspective working
-    // projectionMatrix = perspective(fov, (width/height), near, far);
-    // gl.uniformMatrix4fv(uProjection, false, flatten(perspective));
   };
 
   var render = function() {
@@ -92,10 +97,6 @@
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
     gl.uniformMatrix4fv(gl.getUniformLocation(program, 'modelViewMatrix' ), false, flatten(modelViewMatrix) );
-
-    // if switch to perspective then this will be done in adjustCanvas
-    // gl.uniformMatrix4fv(gl.getUniformLocation( program, 'projectionMatrix' ), false, flatten(projectionMatrix) );
-
     gl.drawElements(gl.TRIANGLES, shape.indices.length, gl.UNSIGNED_SHORT, 0);
 
     setTimeout(
@@ -104,23 +105,13 @@
     );
   };
 
-  var buildProjectionMatrix = function() {
-    var fovy = 45.0;
-    var near = 1.0;
-    var far = -1.0;
-    return perspective(fovy, canvas.width / canvas.height, near, far);
-  };
-
   var buildViewMatrix = function() {
-    var zoom = 4.0;
-    var theta  = 30.0;
-    var phi    = 30.0;
-    var at = vec3(0.5, -0.5, 0.0);
+    var at = vec3(eyeAtX, eyeAtY, eyeAtZ);
     var up = vec3(0.0, 1.0, 0.0);
     var eye = vec3(
-      zoom * Math.sin(radians(theta)) * Math.cos(radians(phi)),
-      zoom * Math.sin(radians(theta)) * Math.sin(radians(phi)),
-      zoom * Math.cos(radians(theta))
+      zoom * Math.sin(radians(eyeTheta)) * Math.cos(radians(eyePhi)),
+      zoom * Math.sin(radians(eyeTheta)) * Math.sin(radians(eyePhi)),
+      zoom * Math.cos(radians(eyeTheta))
     );
     return lookAt(eye, at, up);
   };
@@ -187,6 +178,25 @@
     loadTextureFile(textureFileUrl);
   };
 
+  var handleCameraControl = function() {
+    near = document.getElementById('cameraNear').valueAsNumber;
+    far = document.getElementById('cameraFar').valueAsNumber;
+    fovy = document.getElementById('cameraFovy').valueAsNumber;
+    // no need to rebuild projection matrix here, handled in render
+  };
+
+  var handleEyeControl = function() {
+    zoom = document.getElementById('eyeZoom').valueAsNumber;
+    eyeTheta = document.getElementById('eyeTheta').valueAsNumber;
+    eyePhi = document.getElementById('eyePhi').valueAsNumber;
+    eyeAtX = document.getElementById('eyeAtX').valueAsNumber;
+    eyeAtY = document.getElementById('eyeAtY').valueAsNumber;
+    eyeAtZ = document.getElementById('eyeAtZ').valueAsNumber;
+
+    viewMatrix = buildViewMatrix();
+    modelViewMatrix = buildModelViewMatrix();
+  };
+
   var App = {
 
     init: function() {
@@ -202,6 +212,8 @@
       document.onmousemove = handleMouseMove;
       document.getElementById('patternTextureSelection').addEventListener('click', handlePatternTextureSelection);
       document.getElementById('fileTextureSelection').addEventListener('click', handleFileTextureSelection);
+      document.getElementById('cameraControl').addEventListener('change', handleCameraControl);
+      document.getElementById('eyeControl').addEventListener('change', handleEyeControl);
 
       // Configure WebGL
       gl.viewport( 0, 0, canvas.width, canvas.height );
@@ -214,7 +226,6 @@
       // Model and view
       shape = Sphere.generate();
       viewMatrix = buildViewMatrix();
-      projectionMatrix = buildProjectionMatrix();
       modelViewMatrix = buildModelViewMatrix();
 
       // Load shaders
