@@ -13,7 +13,8 @@
     viewMatrix = mat4(),
     modelViewMatrix = mat4(),
     projectionMatrix = mat4(),
-    shapeColor = vec4(1.0, 0.0, 0.0, 1.0),
+    // shapeColor = vec4(1.0, 0.0, 0.0, 1.0),
+    shapeColor = vec4(1.0, 1.0, 1.0, 1.0),
     texture,
     mouseDown = false,
     lastMouseX = null,
@@ -246,6 +247,7 @@
         console.error('Unable to load image');
       };
       fileImage.src = 'images/moon.gif';
+      // fileImage.src = 'images/flower_texture.jpg';
 
     }
 
