@@ -164,15 +164,9 @@
     lastMouseY = newY;
   };
 
-  var handleTextureSelection = function(evt) {
-    if (evt.target.id === 'fileTexture') {
-      textureType = 'file';
-      configureTexture(fileImage);
-    }
-    if (evt.target.id === 'patternTexture') {
-      textureType = 'pattern';
-      configureTexture(checkerboardImage);
-    }
+  var handlePatternTextureSelection = function(evt) {
+    textureType = 'pattern';
+    configureTexture(checkerboardImage);
   };
 
   var loadTextureFile = function(textureFileUrl) {
@@ -189,6 +183,7 @@
 
   var handleFileTextureSelection = function(evt) {
     var textureFileUrl = 'images/' + evt.target.dataset.textureFile;
+    textureType = 'file';
     loadTextureFile(textureFileUrl);
   };
 
@@ -205,7 +200,7 @@
       canvas.onmousedown = handleMouseDown;
       document.onmouseup = handleMouseUp;
       document.onmousemove = handleMouseMove;
-      document.getElementById('textureSelection').addEventListener('click', handleTextureSelection);
+      document.getElementById('patternTextureSelection').addEventListener('click', handlePatternTextureSelection);
       document.getElementById('fileTextureSelection').addEventListener('click', handleFileTextureSelection);
 
       // Configure WebGL
