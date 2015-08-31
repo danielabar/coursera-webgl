@@ -36,6 +36,97 @@
   }
   </script>
 
+  <script id="vertex-shader-2" type="x-shader/x-vertex">
+
+  // assume both position and normal are in homogeneous form
+
+  attribute vec4 vPosition;
+  attribute vec3 vNormal;
+
+  varying vec4 fColor;
+
+  varying vec3 R;
+
+
+  uniform vec4 ambientProduct, diffuseProduct, specularProduct;
+  uniform mat4 modelViewMatrix;
+  uniform mat4 projectionMatrix;
+  uniform vec4 lightPosition;
+  uniform float shininess;
+  uniform mat3 normalMatrix;
+
+
+  void
+  main()
+  {
+
+      // pos is vertex position in eye coordinates
+
+      vec3 pos = (modelViewMatrix * vPosition).xyz;
+
+      // vector from vertex position to light source
+
+      vec3 L;
+
+      // check for directional light
+
+      if(lightPosition.w == 0.0) L = normalize(lightPosition.xyz);
+      else L = normalize( lightPosition.xyz - pos );
+
+      // Because the eye point the is at the orgin
+      // the vector from the vertex position to the eye is
+
+      vec3 E = -normalize( pos );
+
+      // halfway vector
+
+      vec3 H = normalize( L + E );
+
+      // Transform vertex normal into eye coordinates
+
+      vec3 N = normalize( normalMatrix*vNormal.xyz);
+
+      R = reflect(pos, N);
+
+
+      // Compute terms in the illumination equation
+      vec4 ambient = ambientProduct;
+
+      float Kd = max( dot(L, N), 0.0 );
+      vec4  diffuse = Kd*diffuseProduct;
+
+      float Ks = pow( max(dot(N, H), 0.0), shininess );
+      vec4  specular = Ks * specularProduct;
+
+      if( dot(L, N) < 0.0 ) {
+  	specular = vec4(0.0, 0.0, 0.0, 1.0);
+      }
+
+      gl_Position = projectionMatrix * modelViewMatrix * vPosition;
+
+      fColor = ambient + diffuse +specular;
+
+      fColor.a = 1.0;
+  }
+  </script>
+
+  <script id="fragment-shader-2" type="x-shader/x-fragment">
+
+  precision mediump float;
+
+  varying vec4 fColor;
+  uniform samplerCube texMap;
+  varying vec3 R;
+
+  void
+  main()
+  {
+      vec4 texColor = textureCube(texMap, R);
+      gl_FragColor = fColor*texColor;
+
+  }
+  </script>
+
 
   <!--  WebGL Utils -->
   <script type="text/javascript" src="../../Common/webgl-utils.js"></script>
@@ -59,11 +150,121 @@
   </canvas>
 
   <div class="side-controls">
-    <div id="textureSelection" class="control-group">
-      <button id="fileTexture">File</button>
-      <button id="patternTexture">Pattern</button>
+
+    <!-- file texture -->
+    <div id="fileTextureSelection" class="control-group">
+      <div class="group-header">
+        <h4>File Texture</h4>
+      </div>
+      <button data-texture-file="moon.gif">Moon</button>
+      <button data-texture-file="flower.jpg">Flower</button>
+    </div>
+
+    <!-- pattern texture -->
+    <div id="patternTextureSelection" class="control-group">
+      <div class="group-header">
+        <h4>Pattern Texture</h4>
+      </div>
+      <button id="patternTexture">Checkerboard</button>
+    </div>
+
+    <div id="reflectionSelection" class="control-group">
+      <div class="group-header">
+        <h4>Reflection</h4>
+      </div>
+      <button id="lycksele">Lycksele</button>
+    </div>
+
+    <!-- camera -->
+    <div id="cameraControl" class="control-group">
+      <div class="group-header">
+        <h4>Camera</h4>
+      </div>
+      <div class="form-group">
+        <label for="cameraNear">Near</label>
+        <input type=range id=cameraNear min=-20 value=1.0 max=20 step=0.1 oninput="outputCameraNear(value)">
+        <output for=cameraNear id=cn>1.0</output>
+      </div>
+      <div class="form-group">
+        <label for="cameraFar">Far</label>
+        <input type=range id=cameraFar min=-20 value=-1.0 max=20 step=0.1 oninput="outputCameraFar(value)">
+        <output for=cameraFar id=cf>-1.0</output>
+      </div>
+      <div class="form-group">
+        <label for="cameraFovy">Fovy</label>
+        <input type=range id=cameraFovy min=0 value=45.0 max=180 step=1.0 oninput="outputCameraFovy(value)">
+        <output for=cameraFovy id=cfvy>45.0</output>
+      </div>
+    </div>
+
+    <!-- eye -->
+    <div id="eyeControl" class="control-group">
+      <div class="group-header">
+        <h4>Eye</h4>
+      </div>
+      <div class="form-group">
+        <label for="eyeZoom">Zoom</label>
+        <input type=range id=eyeZoom min=0.0 value=5.3 max=10.0 step=0.1 oninput="outputEyeZoom(value)">
+        <output for=eyeZoom id=ez>5.3</output>
+      </div>
+      <div class="form-group">
+        <label for="eyeTheta">Theta</label>
+        <input type=range id=eyeTheta min=0.0 value=30.0 max=360.0 step=1.0 oninput="outputEyeTheta(value)">
+        <output for=eyeTheta id=et>30.0</output>
+      </div>
+      <div class="form-group">
+        <label for="eyePhi">Phi</label>
+        <input type=range id=eyePhi min=0.0 value=30.0 max=360.0 step=1.0 oninput="outputEyePhi(value)">
+        <output for=eyePhi id=ep>30.0</output>
+      </div>
+      <div class="form-group">
+        <label for="eyeAtX">At X</label>
+        <input type=range id=eyeAtX min=-10.0 value=0.8 max=10.0 step=0.1 oninput="outputEyeAtX(value)">
+        <output for=eyeAtX id=eax>0.8</output>
+      </div>
+      <div class="form-group">
+        <label for="eyeAtY">At Y</label>
+        <input type=range id=eyeAtY min=-10.0 value=-0.4 max=10.0 step=0.1 oninput="outputEyeAtY(value)">
+        <output for=eyeAtY id=eay>-0.4</output>
+      </div>
+      <div class="form-group">
+        <label for="eyeAtZ">At Z</label>
+        <input type=range id=eyeAtZ min=-10.0 value=1.0 max=10.0 step=0.1 oninput="outputEyeAtZ(value)">
+        <output for=eyeAtZ id=eaz>1.0</output>
+      </div>
     </div>
   </div>
+
+<!-- slider updates -->
+<script>
+var outputCameraNear = function(value) {
+  document.querySelector('#cn').value = value;
+}
+var outputCameraFar = function(value) {
+  document.querySelector('#cf').value = value;
+}
+var outputCameraFovy = function(value) {
+  document.querySelector('#cfvy').value = value;
+}
+var outputEyeZoom = function(value) {
+  document.querySelector('#ez').value = value;
+}
+var outputEyeTheta = function(value) {
+  document.querySelector('#et').value = value;
+}
+var outputEyePhi = function(value) {
+  document.querySelector('#ep').value = value;
+}
+var outputEyeAtX = function(value) {
+  document.querySelector('#eax').value = value;
+}
+var outputEyeAtY = function(value) {
+  document.querySelector('#eay').value = value;
+}
+var outputEyeAtZ = function(value) {
+  document.querySelector('#eaz').value = value;
+}
+</script>
 
 </body>
 </html>
