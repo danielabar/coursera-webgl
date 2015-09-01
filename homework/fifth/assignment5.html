@@ -151,22 +151,36 @@
 
   <div class="side-controls">
 
-    <!-- file texture -->
-    <div id="fileTextureSelection" class="control-group">
-      <div class="group-header">
-        <h4>File Texture</h4>
+    <!-- smooth shading -->
+    <div class="multi-group control-group">
+
+      <div class="form-group">
+        <div class="group-header">
+          <h4>Mapping Method</h4>
+        </div>
+        <input type="radio" data-texture-mapping="spherical" name="textureMapping" value="spherical" checked>Spherical
+        <input type="radio" data-texture-mapping="planar" name="textureMapping" value="planar">Planar
       </div>
-      <button data-texture-file="moon.gif">Moon</button>
-      <button data-texture-file="flower.jpg">Flower</button>
+
+      <!-- file texture -->
+      <div id="fileTextureSelection" class="control-group">
+        <div class="group-header">
+          <h4>File Texture</h4>
+        </div>
+        <button data-texture-file="moon.gif">Moon</button>
+        <button data-texture-file="flower.jpg">Flower</button>
+      </div>
+
+      <!-- pattern texture -->
+      <div id="patternTextureSelection" class="control-group">
+        <div class="group-header">
+          <h4>Pattern Texture</h4>
+        </div>
+        <button id="patternTexture">Checkerboard</button>
+      </div>
+
     </div>
 
-    <!-- pattern texture -->
-    <div id="patternTextureSelection" class="control-group">
-      <div class="group-header">
-        <h4>Pattern Texture</h4>
-      </div>
-      <button id="patternTexture">Checkerboard</button>
-    </div>
 
     <div id="reflectionSelection" class="control-group">
       <div class="group-header">
