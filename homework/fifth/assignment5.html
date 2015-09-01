@@ -135,6 +135,7 @@
   <script type="text/javascript" src="../../Common/MV.js"></script>
 
   <!-- App -->
+  <script type="text/javascript" src="dom-utils.js"></script>
   <script type="text/javascript" src="sphere.js"></script>
   <script type="text/javascript" src="assignment5.js"></script>
 </head>
@@ -154,12 +155,12 @@
     <!-- smooth shading -->
     <div class="multi-group control-group">
 
-      <div class="form-group">
+      <div id="mappingMethodSelection" class="form-group">
         <div class="group-header">
           <h4>Mapping Method</h4>
         </div>
-        <input type="radio" data-texture-mapping="spherical" name="textureMapping" value="spherical" checked>Spherical
-        <input type="radio" data-texture-mapping="planar" name="textureMapping" value="planar">Planar
+        <input type="radio" name="textureMapping" value="spherical" checked>Spherical
+        <input type="radio" name="textureMapping" value="planar">Planar
       </div>
 
       <!-- file texture -->

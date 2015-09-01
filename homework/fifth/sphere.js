@@ -12,7 +12,6 @@
         radius = 1.0,
         vertices = [],
         normals = [],
-        textureCoords = [],
         indices = [],
         texCoords = {
           spherical: [],
@@ -32,10 +31,6 @@
           var y = cosTheta;
           var z = sinPhi * sinTheta;
 
-
-          var u = 1 - (longNumber / longs);
-          var v = 1 - (latNumber / lats);
-
           normals.push(x);
           normals.push(y);
           normals.push(z);
@@ -45,9 +40,6 @@
 
           texCoords.planar.push(x);
           texCoords.planar.push(y);
-
-          textureCoords.push(u);
-          textureCoords.push(v);
 
           vertices.push(radius * x);
           vertices.push(radius * y);
@@ -73,7 +65,7 @@
         vertices: vertices,
         indices: indices,
         normals: normals,
-        textureCoords: textureCoords
+        texCoords: texCoords
       };
     }
 

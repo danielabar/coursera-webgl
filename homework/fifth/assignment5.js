@@ -1,12 +1,13 @@
 /**
  * App
  */
-(function(window, Sphere) {
+(function(window, Sphere, DomUtils) {
   'use strict';
 
   var gl,
     canvas,
     program,
+    textureMappingMethod = 'spherical',
     shape,
     theta = [45.0, 45.0, 45.0],
     modelMatrix = mat4(),
@@ -165,7 +166,7 @@
       // Load texture data
       var tBuffer = gl.createBuffer();
       gl.bindBuffer(gl.ARRAY_BUFFER, tBuffer);
-      gl.bufferData(gl.ARRAY_BUFFER, flatten(shape.textureCoords), gl.STATIC_DRAW);
+      gl.bufferData(gl.ARRAY_BUFFER, flatten(shape.texCoords[textureMappingMethod]), gl.STATIC_DRAW);
 
       // Associate shader variable with texture data buffer
       var vTexCoord = gl.getAttribLocation(program, 'vTexCoord');
@@ -309,6 +310,10 @@
     loadCubeMapImage('posz', 'images/lycksele/posz.jpg', cubeMapLoaded);
   };
 
+  var handleMappingMethodSelection = function() {
+    textureMappingMethod = DomUtils.getCheckedValue('textureMapping');
+  };
+
   var handleFileTextureSelection = function(evt) {
     program = initShaders(gl, 'vertex-shader', 'fragment-shader');
     gl.useProgram(program);
@@ -358,6 +363,7 @@
       canvas.onmousedown = handleMouseDown;
       document.onmouseup = handleMouseUp;
       document.onmousemove = handleMouseMove;
+      document.getElementById('mappingMethodSelection').addEventListener('click', handleMappingMethodSelection);
       document.getElementById('patternTextureSelection').addEventListener('click', handlePatternTextureSelection);
       document.getElementById('fileTextureSelection').addEventListener('click', handleFileTextureSelection);
       document.getElementById('reflectionSelection').addEventListener('click', handleReflectionSelection);
@@ -390,7 +396,7 @@
 
   window.App = App;
 
-}(window, window.Sphere));
+}(window, window.Sphere, window.DomUtils));
 
 
 /**
