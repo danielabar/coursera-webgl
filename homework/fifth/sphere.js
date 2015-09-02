@@ -15,7 +15,8 @@
         indices = [],
         texCoords = {
           spherical: [],
-          planar: []
+          planar: [],
+          cylindrical: []
         };
 
       for (var latNumber = 0; latNumber <= lats; ++latNumber) {
@@ -40,6 +41,11 @@
 
           texCoords.planar.push(x);
           texCoords.planar.push(y);
+
+          // http://mathworld.wolfram.com/CylindricalCoordinates.html
+          var cylTheta = Math.pow( Math.tan(y/x), -1 );
+          texCoords.cylindrical.push(cylTheta);
+          texCoords.cylindrical.push(2); // height?
 
           vertices.push(radius * x);
           vertices.push(radius * y);
