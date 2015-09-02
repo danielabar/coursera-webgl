@@ -135,6 +135,7 @@
   <script type="text/javascript" src="../../Common/MV.js"></script>
 
   <!-- App -->
+  <script type="text/javascript" src="dom-utils.js"></script>
   <script type="text/javascript" src="sphere.js"></script>
   <script type="text/javascript" src="assignment5.js"></script>
 </head>
@@ -151,22 +152,36 @@
 
   <div class="side-controls">
 
-    <!-- file texture -->
-    <div id="fileTextureSelection" class="control-group">
-      <div class="group-header">
-        <h4>File Texture</h4>
+    <!-- smooth shading -->
+    <div class="multi-group control-group">
+
+      <div id="mappingMethodSelection" class="form-group">
+        <div class="group-header">
+          <h4>Mapping Method</h4>
+        </div>
+        <input type="radio" name="textureMapping" value="spherical" checked>Spherical
+        <input type="radio" name="textureMapping" value="planar">Planar
       </div>
-      <button data-texture-file="moon.gif">Moon</button>
-      <button data-texture-file="flower.jpg">Flower</button>
+
+      <!-- file texture -->
+      <div id="fileTextureSelection" class="control-group">
+        <div class="group-header">
+          <h4>File Texture</h4>
+        </div>
+        <button data-texture-file="moon.gif">Moon</button>
+        <button data-texture-file="flower.jpg">Flower</button>
+      </div>
+
+      <!-- pattern texture -->
+      <div id="patternTextureSelection" class="control-group">
+        <div class="group-header">
+          <h4>Pattern Texture</h4>
+        </div>
+        <button id="patternTexture">Checkerboard</button>
+      </div>
+
     </div>
 
-    <!-- pattern texture -->
-    <div id="patternTextureSelection" class="control-group">
-      <div class="group-header">
-        <h4>Pattern Texture</h4>
-      </div>
-      <button id="patternTexture">Checkerboard</button>
-    </div>
 
     <div id="reflectionSelection" class="control-group">
       <div class="group-header">
@@ -182,13 +197,13 @@
       </div>
       <div class="form-group">
         <label for="cameraNear">Near</label>
-        <input type=range id=cameraNear min=-20 value=1.0 max=20 step=0.1 oninput="outputCameraNear(value)">
-        <output for=cameraNear id=cn>1.0</output>
+        <input type=range id=cameraNear min=-20 value=10.0 max=20 step=0.1 oninput="outputCameraNear(value)">
+        <output for=cameraNear id=cn>10.0</output>
       </div>
       <div class="form-group">
         <label for="cameraFar">Far</label>
-        <input type=range id=cameraFar min=-20 value=-1.0 max=20 step=0.1 oninput="outputCameraFar(value)">
-        <output for=cameraFar id=cf>-1.0</output>
+        <input type=range id=cameraFar min=-20 value=1.0 max=20 step=0.1 oninput="outputCameraFar(value)">
+        <output for=cameraFar id=cf>1.0</output>
       </div>
       <div class="form-group">
         <label for="cameraFovy">Fovy</label>
@@ -203,14 +218,14 @@
         <h4>Eye</h4>
       </div>
       <div class="form-group">
-        <label for="eyeZoom">Zoom</label>
-        <input type=range id=eyeZoom min=0.0 value=5.3 max=10.0 step=0.1 oninput="outputEyeZoom(value)">
-        <output for=eyeZoom id=ez>5.3</output>
+        <label for="eyeZoom">Radius</label>
+        <input type=range id=eyeZoom min=0.0 value=4.9 max=10.0 step=0.1 oninput="outputEyeZoom(value)">
+        <output for=eyeZoom id=ez>4.9</output>
       </div>
       <div class="form-group">
         <label for="eyeTheta">Theta</label>
-        <input type=range id=eyeTheta min=0.0 value=30.0 max=360.0 step=1.0 oninput="outputEyeTheta(value)">
-        <output for=eyeTheta id=et>30.0</output>
+        <input type=range id=eyeTheta min=0.0 value=26.0 max=360.0 step=1.0 oninput="outputEyeTheta(value)">
+        <output for=eyeTheta id=et>26.0</output>
       </div>
       <div class="form-group">
         <label for="eyePhi">Phi</label>

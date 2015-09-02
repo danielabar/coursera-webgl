@@ -40,9 +40,17 @@ canvas {
   width: 300px;
   height: 100%;
   padding: 15px;
-  background: grey;
+  background: #191919;
   color: #fff;
   cursor: default;
+}
+
+.multi-group {
+
+}
+
+.multi-group .form-group {
+  margin-bottom: 15px;
 }
 
 .control-group {
@@ -50,6 +58,10 @@ canvas {
   padding: 15px;
   border: 1px solid #000;
   border-radius: 3px;
+  background: #333333;
+  -webkit-box-shadow: 5px 5px 15px 0px rgba(25,25,25,1);
+     -moz-box-shadow: 5px 5px 15px 0px rgba(25,25,25,1);
+          box-shadow: 5px 5px 15px 0px rgba(25,25,25,1);
 }
 
 .group-header {
