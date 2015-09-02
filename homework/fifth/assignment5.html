@@ -4,6 +4,7 @@
   <link href='https://fonts.googleapis.com/css?family=Roboto:400,300,500,700' rel='stylesheet' type='text/css'>
 	<meta charset="UTF-8">
   <title>Daniela Baron | Assignment 5 | Coursera WebGL</title>
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
   <link rel="stylesheet" href="../../css/reset.css">
   <link rel="stylesheet" href="assignment5.css">
 
@@ -190,62 +191,69 @@
       <button id="lycksele">Lycksele</button>
     </div>
 
-    <!-- camera -->
-    <div id="cameraControl" class="control-group">
+    <!-- perspective -->
+    <div class="multi-group control-group">
       <div class="group-header">
-        <h4>Camera</h4>
+        <h4>Perspective</h4>
       </div>
-      <div class="form-group">
-        <label for="cameraNear">Near</label>
-        <input type=range id=cameraNear min=-20 value=10.0 max=20 step=0.1 oninput="outputCameraNear(value)">
-        <output for=cameraNear id=cn>10.0</output>
-      </div>
-      <div class="form-group">
-        <label for="cameraFar">Far</label>
-        <input type=range id=cameraFar min=-20 value=1.0 max=20 step=0.1 oninput="outputCameraFar(value)">
-        <output for=cameraFar id=cf>1.0</output>
-      </div>
-      <div class="form-group">
-        <label for="cameraFovy">Fovy</label>
-        <input type=range id=cameraFovy min=0 value=45.0 max=180 step=1.0 oninput="outputCameraFovy(value)">
-        <output for=cameraFovy id=cfvy>45.0</output>
-      </div>
-    </div>
 
-    <!-- eye -->
-    <div id="eyeControl" class="control-group">
-      <div class="group-header">
-        <h4>Eye</h4>
+      <!-- camera -->
+      <div id="cameraControl" class="control-group">
+        <div class="group-header">
+          <h4><i class="fa fa-camera"></i></h4>
+        </div>
+        <div class="form-group">
+          <label for="cameraNear">Near</label>
+          <input type=range id=cameraNear min=-20 value=10.0 max=20 step=0.1 oninput="outputCameraNear(value)">
+          <output for=cameraNear id=cn>10.0</output>
+        </div>
+        <div class="form-group">
+          <label for="cameraFar">Far</label>
+          <input type=range id=cameraFar min=-20 value=1.0 max=20 step=0.1 oninput="outputCameraFar(value)">
+          <output for=cameraFar id=cf>1.0</output>
+        </div>
+        <div class="form-group">
+          <label for="cameraFovy">Fovy</label>
+          <input type=range id=cameraFovy min=0 value=45.0 max=180 step=1.0 oninput="outputCameraFovy(value)">
+          <output for=cameraFovy id=cfvy>45.0</output>
+        </div>
       </div>
-      <div class="form-group">
-        <label for="eyeZoom">Radius</label>
-        <input type=range id=eyeZoom min=0.0 value=4.9 max=10.0 step=0.1 oninput="outputEyeZoom(value)">
-        <output for=eyeZoom id=ez>4.9</output>
-      </div>
-      <div class="form-group">
-        <label for="eyeTheta">Theta</label>
-        <input type=range id=eyeTheta min=0.0 value=26.0 max=360.0 step=1.0 oninput="outputEyeTheta(value)">
-        <output for=eyeTheta id=et>26.0</output>
-      </div>
-      <div class="form-group">
-        <label for="eyePhi">Phi</label>
-        <input type=range id=eyePhi min=0.0 value=30.0 max=360.0 step=1.0 oninput="outputEyePhi(value)">
-        <output for=eyePhi id=ep>30.0</output>
-      </div>
-      <div class="form-group">
-        <label for="eyeAtX">At X</label>
-        <input type=range id=eyeAtX min=-10.0 value=0.8 max=10.0 step=0.1 oninput="outputEyeAtX(value)">
-        <output for=eyeAtX id=eax>0.8</output>
-      </div>
-      <div class="form-group">
-        <label for="eyeAtY">At Y</label>
-        <input type=range id=eyeAtY min=-10.0 value=-0.4 max=10.0 step=0.1 oninput="outputEyeAtY(value)">
-        <output for=eyeAtY id=eay>-0.4</output>
-      </div>
-      <div class="form-group">
-        <label for="eyeAtZ">At Z</label>
-        <input type=range id=eyeAtZ min=-10.0 value=1.0 max=10.0 step=0.1 oninput="outputEyeAtZ(value)">
-        <output for=eyeAtZ id=eaz>1.0</output>
+
+      <!-- eye -->
+      <div id="eyeControl" class="control-group">
+        <div class="group-header">
+          <h4><i class="fa fa-eye"></i></h4>
+        </div>
+        <div class="form-group">
+          <label for="eyeZoom">Radius</label>
+          <input type=range id=eyeZoom min=0.0 value=4.9 max=10.0 step=0.1 oninput="outputEyeZoom(value)">
+          <output for=eyeZoom id=ez>4.9</output>
+        </div>
+        <div class="form-group">
+          <label for="eyeTheta">Theta</label>
+          <input type=range id=eyeTheta min=0.0 value=26.0 max=360.0 step=1.0 oninput="outputEyeTheta(value)">
+          <output for=eyeTheta id=et>26.0</output>
+        </div>
+        <div class="form-group">
+          <label for="eyePhi">Phi</label>
+          <input type=range id=eyePhi min=0.0 value=30.0 max=360.0 step=1.0 oninput="outputEyePhi(value)">
+          <output for=eyePhi id=ep>30.0</output>
+        </div>
+        <div class="form-group">
+          <label for="eyeAtX">At X</label>
+          <input type=range id=eyeAtX min=-10.0 value=0.8 max=10.0 step=0.1 oninput="outputEyeAtX(value)">
+          <output for=eyeAtX id=eax>0.8</output>
+        </div>
+        <div class="form-group">
+          <label for="eyeAtY">At Y</label>
+          <input type=range id=eyeAtY min=-10.0 value=-0.4 max=10.0 step=0.1 oninput="outputEyeAtY(value)">
+          <output for=eyeAtY id=eay>-0.4</output>
+        </div>
+        <div class="form-group">
+          <label for="eyeAtZ">At Z</label>
+          <input type=range id=eyeAtZ min=-10.0 value=1.0 max=10.0 step=0.1 oninput="outputEyeAtZ(value)">
+          <output for=eyeAtZ id=eaz>1.0</output>
+        </div>
       </div>
     </div>
   </div>

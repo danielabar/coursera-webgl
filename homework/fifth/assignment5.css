@@ -38,12 +38,13 @@ canvas {
   position: fixed;
   top: 0;
   right: 0;
-  width: 300px;
+  width: 350px;
   height: 100%;
   padding: 15px;
   background: #191919;
   color: #fff;
   cursor: default;
+  overflow-y: scroll;
 }
 
 .multi-group {
