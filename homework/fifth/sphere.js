@@ -43,9 +43,12 @@
           texCoords.planar.push(y);
 
           // http://mathworld.wolfram.com/CylindricalCoordinates.html
-          var cylTheta = Math.pow( Math.tan(y/x), -1 );
+          // var cylTheta = Math.pow( Math.atan(y/x), -1 );
+          var cylTheta = Math.atan(y/x);
+          // var cylTheta = Math.atan(y/z);
           texCoords.cylindrical.push(cylTheta);
-          texCoords.cylindrical.push(2); // height?
+          // texCoords.cylindrical.push(theta);
+          texCoords.cylindrical.push(z); // height?
 
           vertices.push(radius * x);
           vertices.push(radius * y);
