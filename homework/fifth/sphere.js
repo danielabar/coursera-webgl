@@ -12,8 +12,11 @@
         radius = 1.0,
         vertices = [],
         normals = [],
-        textureCoords = [],
-        indices = [];
+        indices = [],
+        texCoords = {
+          spherical: [],
+          planar: []
+        };
 
       for (var latNumber = 0; latNumber <= lats; ++latNumber) {
         for (var longNumber = 0; longNumber <= longs; ++longNumber) {
@@ -27,15 +30,16 @@
           var x = cosPhi * sinTheta;
           var y = cosTheta;
           var z = sinPhi * sinTheta;
-          var u = 1 - (longNumber / longs);
-          var v = 1 - (latNumber / lats);
 
           normals.push(x);
           normals.push(y);
           normals.push(z);
 
-          textureCoords.push(u);
-          textureCoords.push(v);
+          texCoords.spherical.push(1 - (longNumber / longs));
+          texCoords.spherical.push(1 - (latNumber / lats));
+
+          texCoords.planar.push(x);
+          texCoords.planar.push(y);
 
           vertices.push(radius * x);
           vertices.push(radius * y);
@@ -61,7 +65,7 @@
         vertices: vertices,
         indices: indices,
         normals: normals,
-        textureCoords: textureCoords
+        texCoords: texCoords
       };
     }
 

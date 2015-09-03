@@ -11,6 +11,7 @@ html {
 
 body {
   overflow: hidden;
+  font-family: Roboto, Arial, sans-serif;
 }
 
 
@@ -37,12 +38,21 @@ canvas {
   position: fixed;
   top: 0;
   right: 0;
-  width: 300px;
+  width: 350px;
   height: 100%;
   padding: 15px;
-  background: grey;
+  background: #191919;
   color: #fff;
   cursor: default;
+  overflow-y: scroll;
+}
+
+.multi-group {
+
+}
+
+.multi-group .form-group {
+  margin-bottom: 15px;
 }
 
 .control-group {
@@ -50,10 +60,19 @@ canvas {
   padding: 15px;
   border: 1px solid #000;
   border-radius: 3px;
+  background: #333333;
+  -webkit-box-shadow: 5px 5px 15px 0px rgba(25,25,25,1);
+     -moz-box-shadow: 5px 5px 15px 0px rgba(25,25,25,1);
+          box-shadow: 5px 5px 15px 0px rgba(25,25,25,1);
 }
 
 .group-header {
   margin-bottom: 10px;
+}
+
+.group-header h4 {
+  text-transform: uppercase;
+  color: #CCCCCC;
 }
 
 button:hover,
