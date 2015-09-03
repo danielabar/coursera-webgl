@@ -43,12 +43,9 @@
           texCoords.planar.push(y);
 
           // http://mathworld.wolfram.com/CylindricalCoordinates.html
-          // var cylTheta = Math.pow( Math.atan(y/x), -1 );
-          var cylTheta = Math.atan(y/x);
-          // var cylTheta = Math.atan(y/z);
-          texCoords.cylindrical.push(cylTheta);
-          // texCoords.cylindrical.push(theta);
-          texCoords.cylindrical.push(z); // height?
+          // http://keisan.casio.com/exec/system/1359534695
+          texCoords.cylindrical.push(theta);
+          texCoords.cylindrical.push(cosPhi);
 
           vertices.push(radius * x);
           vertices.push(radius * y);
