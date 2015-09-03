@@ -47,12 +47,12 @@ canvas {
   overflow-y: scroll;
 }
 
-.multi-group {
-
+.multi-group .radio-form-group {
+  margin-bottom: 10px;
 }
 
 .multi-group .form-group {
-  margin-bottom: 15px;
+  margin-bottom: 5px;
 }
 
 .control-group {
@@ -78,4 +78,18 @@ canvas {
 button:hover,
 input:hover {
   cursor: pointer;
+}
+
+.form-group label{
+  display: inline-block;
+  width: 50px;
+}
+
+
+/* ---------------------------------- */
+/* Utilities */
+/* ---------------------------------- */
+
+.icon {
+  margin-right: 10px;
 }
