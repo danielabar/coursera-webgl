@@ -93,3 +93,20 @@ input:hover {
 .icon {
   margin-right: 10px;
 }
+
+
+/* ---------------------------------- */
+/* Messaging */
+/* ---------------------------------- */
+
+.message {
+  position: absolute;
+  top: 10px;
+  right: 350px;
+  width: 260px;
+  height: 80px;
+  color: #CCCCCC;
+  font-weight: 600;
+  font-size: 20px;
+  line-height: 1.2;
+}
