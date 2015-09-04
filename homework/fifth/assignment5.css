@@ -95,6 +95,12 @@ button {
   border-radius: 5px;
 }
 
+button:hover {
+  -webkit-box-shadow: 5px 5px 15px 0px rgba(25,25,25,1);
+     -moz-box-shadow: 5px 5px 15px 0px rgba(25,25,25,1);
+          box-shadow: 5px 5px 15px 0px rgba(25,25,25,1);
+}
+
 /* ---------------------------------- */
 /* Slider */
 /* ---------------------------------- */
