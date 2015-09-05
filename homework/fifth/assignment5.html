@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <link href='https://fonts.googleapis.com/css?family=Roboto:400,300,500,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Raleway:400,500,600' rel='stylesheet' type='text/css'>
 	<meta charset="UTF-8">
   <title>Daniela Baron | Assignment 5 | Coursera WebGL</title>
   <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
@@ -151,56 +151,69 @@
     Oops ... your browser doesn't support the HTML5 canvas element
   </canvas>
 
+  <div class="message">
+    Click and drag with mouse to rotate the sphere
+  </div>
+
   <div class="side-controls">
 
     <!-- smooth shading -->
     <div class="multi-group control-group">
 
-      <div id="mappingMethodSelection" class="form-group">
-        <div class="group-header">
-          <h4>Mapping Method</h4>
-        </div>
-        <input type="radio" name="textureMapping" value="spherical" checked>Spherical
-        <input type="radio" name="textureMapping" value="planar">Planar
+      <div id="mappingMethodSelection" class="radio-form-group">
+        <input type="radio" name="textureMapping" value="spherical" checked><span class="radio-label">Spherical</span>
+        <input type="radio" name="textureMapping" value="planar"><span class="radio-label">Planar</span>
+        <input type="radio" name="textureMapping" value="cylindrical"><span class="radio-label">Cylindrical</span>
       </div>
 
       <!-- file texture -->
       <div id="fileTextureSelection" class="control-group">
         <div class="group-header">
-          <h4>File Texture</h4>
+          <h4>File</h4>
         </div>
-        <button data-texture-file="moon.gif">Moon</button>
-        <button data-texture-file="flower.jpg">Flower</button>
+        <button title="Moon texture" data-texture-file="moon.gif">
+          <img src="images/moon-thumb.gif" alt="moon" data-texture-file="moon.gif">
+        </button>
+        <button title="Flower texture" data-texture-file="flower.jpg">
+          <img src="images/flower-thumb.jpg" alt="flower" data-texture-file="flower.jpg">
+        </button>
+        <button title="Granite texture" data-texture-file="granite.jpg">
+          <img src="images/granite-thumb.jpg" alt="granite" data-texture-file="granite.jpg">
+        </button>
+        <button title="Stones texture" data-texture-file="stones.jpg">
+          <img src="images/stones-thumb.jpg" alt="stones" data-texture-file="stones.jpg">
+        </button>
       </div>
 
       <!-- pattern texture -->
       <div id="patternTextureSelection" class="control-group">
         <div class="group-header">
-          <h4>Pattern Texture</h4>
+          <h4>Pattern</h4>
         </div>
-        <button id="patternTexture">Checkerboard</button>
+        <button title="Cherckerboard texture" id="patternTexture">
+          <img src="images/checkerboard.gif" alt="checkerboard">
+        </button>
       </div>
 
     </div>
 
-
+    <!-- reflection mapping -->
     <div id="reflectionSelection" class="control-group">
       <div class="group-header">
         <h4>Reflection</h4>
       </div>
-      <button id="lycksele">Lycksele</button>
+      <button id="lycksele" title="Lycksele, Sweden">
+        <img src="images/lycksele/lycksele-thumb.jpg" alt="lycksele">
+      </button>
     </div>
 
-    <!-- perspective -->
+    <!-- viewing controls -->
     <div class="multi-group control-group">
-      <div class="group-header">
-        <h4>Perspective</h4>
-      </div>
 
-      <!-- camera -->
+      <!-- perspective -->
       <div id="cameraControl" class="control-group">
         <div class="group-header">
-          <h4><i class="fa fa-camera"></i></h4>
+          <h4><i class="fa fa-camera icon"></i>Perspective</h4>
         </div>
         <div class="form-group">
           <label for="cameraNear">Near</label>
@@ -214,40 +227,40 @@
         </div>
         <div class="form-group">
           <label for="cameraFovy">Fovy</label>
-          <input type=range id=cameraFovy min=0 value=45.0 max=180 step=1.0 oninput="outputCameraFovy(value)">
-          <output for=cameraFovy id=cfvy>45.0</output>
+          <input type=range id=cameraFovy min=0 value=63.0 max=180 step=1.0 oninput="outputCameraFovy(value)">
+          <output for=cameraFovy id=cfvy>63.0</output>
         </div>
       </div>
 
-      <!-- eye -->
+      <!-- look at -->
       <div id="eyeControl" class="control-group">
         <div class="group-header">
-          <h4><i class="fa fa-eye"></i></h4>
+          <h4><i class="fa fa-eye icon"></i>Look At</h4>
         </div>
         <div class="form-group">
-          <label for="eyeZoom">Radius</label>
-          <input type=range id=eyeZoom min=0.0 value=4.9 max=10.0 step=0.1 oninput="outputEyeZoom(value)">
-          <output for=eyeZoom id=ez>4.9</output>
+          <label for="eyeZoom">Zoom</label>
+          <input type=range id=eyeZoom min=0.0 value=4.5 max=10.0 step=0.1 oninput="outputEyeZoom(value)">
+          <output for=eyeZoom id=ez>4.5</output>
         </div>
         <div class="form-group">
           <label for="eyeTheta">Theta</label>
-          <input type=range id=eyeTheta min=0.0 value=26.0 max=360.0 step=1.0 oninput="outputEyeTheta(value)">
-          <output for=eyeTheta id=et>26.0</output>
+          <input type=range id=eyeTheta min=0.0 value=11.0 max=360.0 step=1.0 oninput="outputEyeTheta(value)">
+          <output for=eyeTheta id=et>11.0</output>
         </div>
         <div class="form-group">
           <label for="eyePhi">Phi</label>
-          <input type=range id=eyePhi min=0.0 value=30.0 max=360.0 step=1.0 oninput="outputEyePhi(value)">
-          <output for=eyePhi id=ep>30.0</output>
+          <input type=range id=eyePhi min=0.0 value=93.0 max=360.0 step=1.0 oninput="outputEyePhi(value)">
+          <output for=eyePhi id=ep>93.0</output>
         </div>
         <div class="form-group">
           <label for="eyeAtX">At X</label>
-          <input type=range id=eyeAtX min=-10.0 value=0.8 max=10.0 step=0.1 oninput="outputEyeAtX(value)">
-          <output for=eyeAtX id=eax>0.8</output>
+          <input type=range id=eyeAtX min=-10.0 value=0.5 max=10.0 step=0.1 oninput="outputEyeAtX(value)">
+          <output for=eyeAtX id=eax>0.5</output>
         </div>
         <div class="form-group">
           <label for="eyeAtY">At Y</label>
-          <input type=range id=eyeAtY min=-10.0 value=-0.4 max=10.0 step=0.1 oninput="outputEyeAtY(value)">
-          <output for=eyeAtY id=eay>-0.4</output>
+          <input type=range id=eyeAtY min=-10.0 value=-0.9 max=10.0 step=0.1 oninput="outputEyeAtY(value)">
+          <output for=eyeAtY id=eay>-0.9</output>
         </div>
         <div class="form-group">
           <label for="eyeAtZ">At Z</label>
