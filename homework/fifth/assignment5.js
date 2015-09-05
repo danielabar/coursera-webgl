@@ -148,6 +148,14 @@
       gl.uniform1f( gl.getUniformLocation(program, "shininess"),materialShininess );
 
     } else {
+      var nBuffer2 = gl.createBuffer();
+      gl.bindBuffer( gl.ARRAY_BUFFER, nBuffer2);
+      gl.bufferData( gl.ARRAY_BUFFER, flatten(shape.normals), gl.STATIC_DRAW );
+
+      var vNormal2 = gl.getAttribLocation( program, "vNormal" );
+      gl.vertexAttribPointer( vNormal2, 3, gl.FLOAT, false, 0, 0 );
+      gl.enableVertexAttribArray( vNormal2);
+
       // Load index data
       var iBuffer = gl.createBuffer();
       gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, iBuffer);
@@ -174,7 +182,19 @@
       gl.enableVertexAttribArray(vTexCoord);
 
       // Send color
-      gl.uniform4fv(gl.getUniformLocation(program, 'fColor'), flatten(shapeColor));
+      // gl.uniform4fv(gl.getUniformLocation(program, 'fColor'), flatten(shapeColor));
+      // Send lighting
+      // Send normal matrix
+      var normalMatrixLoc2 = gl.getUniformLocation( program, "normalMatrix" );
+      gl.uniformMatrix3fv(normalMatrixLoc2, false, flatten(normalMatrix) );
+
+      // Send lighting
+      gl.uniform4fv( gl.getUniformLocation(program, "ambientProduct"),flatten(ambientProduct) );
+      gl.uniform4fv( gl.getUniformLocation(program, "diffuseProduct"),flatten(diffuseProduct) );
+      gl.uniform4fv( gl.getUniformLocation(program, "specularProduct"),flatten(specularProduct) );
+      gl.uniform4fv( gl.getUniformLocation(program, "lightPosition"),flatten(lightPosition) );
+      gl.uniform1f( gl.getUniformLocation(program, "shininess"),materialShininess );
+
     }
 
     gl.drawElements(gl.TRIANGLES, shape.indices.length, gl.UNSIGNED_SHORT, 0);
