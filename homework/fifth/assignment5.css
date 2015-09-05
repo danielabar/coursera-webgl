@@ -98,10 +98,15 @@ button {
   margin-right: 3px;
   padding: 3px;
   border-radius: 5px;
+  background: #C0C0C0;
+  outline: none;
+  border: solid 1px #C0C0C0;
   transition: box-shadow 0.5s;
 }
 
 button:hover {
+  /*background: #9A9A9A;*/
+  background: #868686;
   -webkit-box-shadow: 5px 5px 15px 0px rgba(25,25,25,1);
      -moz-box-shadow: 5px 5px 15px 0px rgba(25,25,25,1);
           box-shadow: 5px 5px 15px 0px rgba(25,25,25,1);
