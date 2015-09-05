@@ -197,6 +197,7 @@
 
     </div>
 
+    <!-- reflection mapping -->
     <div id="reflectionSelection" class="control-group">
       <div class="group-header">
         <h4>Reflection</h4>
@@ -206,9 +207,10 @@
       </button>
     </div>
 
-    <!-- perspective -->
+    <!-- viewing controls -->
     <div class="multi-group control-group">
-      <!-- camera -->
+
+      <!-- perspective -->
       <div id="cameraControl" class="control-group">
         <div class="group-header">
           <h4><i class="fa fa-camera icon"></i>Perspective</h4>
@@ -225,40 +227,40 @@
         </div>
         <div class="form-group">
           <label for="cameraFovy">Fovy</label>
-          <input type=range id=cameraFovy min=0 value=45.0 max=180 step=1.0 oninput="outputCameraFovy(value)">
-          <output for=cameraFovy id=cfvy>45.0</output>
+          <input type=range id=cameraFovy min=0 value=63.0 max=180 step=1.0 oninput="outputCameraFovy(value)">
+          <output for=cameraFovy id=cfvy>63.0</output>
         </div>
       </div>
 
-      <!-- eye -->
+      <!-- look at -->
       <div id="eyeControl" class="control-group">
         <div class="group-header">
           <h4><i class="fa fa-eye icon"></i>Look At</h4>
         </div>
         <div class="form-group">
-          <label for="eyeZoom">Radius</label>
-          <input type=range id=eyeZoom min=0.0 value=4.9 max=10.0 step=0.1 oninput="outputEyeZoom(value)">
-          <output for=eyeZoom id=ez>4.9</output>
+          <label for="eyeZoom">Zoom</label>
+          <input type=range id=eyeZoom min=0.0 value=4.5 max=10.0 step=0.1 oninput="outputEyeZoom(value)">
+          <output for=eyeZoom id=ez>4.5</output>
         </div>
         <div class="form-group">
           <label for="eyeTheta">Theta</label>
-          <input type=range id=eyeTheta min=0.0 value=23.0 max=360.0 step=1.0 oninput="outputEyeTheta(value)">
-          <output for=eyeTheta id=et>23.0</output>
+          <input type=range id=eyeTheta min=0.0 value=11.0 max=360.0 step=1.0 oninput="outputEyeTheta(value)">
+          <output for=eyeTheta id=et>11.0</output>
         </div>
         <div class="form-group">
           <label for="eyePhi">Phi</label>
-          <input type=range id=eyePhi min=0.0 value=36.0 max=360.0 step=1.0 oninput="outputEyePhi(value)">
-          <output for=eyePhi id=ep>36.0</output>
+          <input type=range id=eyePhi min=0.0 value=93.0 max=360.0 step=1.0 oninput="outputEyePhi(value)">
+          <output for=eyePhi id=ep>93.0</output>
         </div>
         <div class="form-group">
           <label for="eyeAtX">At X</label>
-          <input type=range id=eyeAtX min=-10.0 value=0.8 max=10.0 step=0.1 oninput="outputEyeAtX(value)">
-          <output for=eyeAtX id=eax>0.8</output>
+          <input type=range id=eyeAtX min=-10.0 value=0.5 max=10.0 step=0.1 oninput="outputEyeAtX(value)">
+          <output for=eyeAtX id=eax>0.5</output>
         </div>
         <div class="form-group">
           <label for="eyeAtY">At Y</label>
-          <input type=range id=eyeAtY min=-10.0 value=-0.4 max=10.0 step=0.1 oninput="outputEyeAtY(value)">
-          <output for=eyeAtY id=eay>-0.4</output>
+          <input type=range id=eyeAtY min=-10.0 value=-0.9 max=10.0 step=0.1 oninput="outputEyeAtY(value)">
+          <output for=eyeAtY id=eay>-0.9</output>
         </div>
         <div class="form-group">
           <label for="eyeAtZ">At Z</label>
