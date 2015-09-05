@@ -1,7 +1,7 @@
 /**
  * App
  */
-(function(window, Sphere, DomUtils) {
+(function(window, Sphere, DomUtils, Pattern) {
   'use strict';
 
   var gl,
@@ -29,6 +29,7 @@
     lastMouseX = null,
     lastMouseY = null,
     texSize = 64,
+    numChecks = 8,
     checkerboardImage, fileImage,
     textureType = 'file',
     normalMatrix = mat4(),
@@ -57,35 +58,35 @@
   var diffuseProduct = mult(lightDiffuse, materialDiffuse);
   var specularProduct = mult(lightSpecular, materialSpecular);
 
-  var buildCheckerboard = function() {
-    var image1 = [];
-    for (var i =0; i<texSize; i++) {
-      image1[i] = [];
-    }
-    for (var i =0; i<texSize; i++) {
-      for ( var j = 0; j < texSize; j++) {
-        image1[i][j] = new Float32Array(4);
-      }
-    }
-    for (var i =0; i<texSize; i++) {
-      for (var j=0; j<texSize; j++) {
-        var c = (((i & 0x8) == 0) ^ ((j & 0x8)  == 0));
-        image1[i][j] = [c, c, c, 1];
-      }
-    }
-
-    // Convert floats to ubytes for texture
-    var checkImage = new Uint8Array(4*texSize*texSize);
-    for ( var i = 0; i < texSize; i++ ) {
-      for ( var j = 0; j < texSize; j++ ) {
-        for(var k =0; k<4; k++) {
-          checkImage[4*texSize*i+4*j+k] = 255*image1[i][j][k];
-        }
-      }
-    }
-
-    return checkImage;
-  };
+  // var buildCheckerboard = function() {
+  //   var image1 = [];
+  //   for (var i =0; i<texSize; i++) {
+  //     image1[i] = [];
+  //   }
+  //   for (var i =0; i<texSize; i++) {
+  //     for ( var j = 0; j < texSize; j++) {
+  //       image1[i][j] = new Float32Array(4);
+  //     }
+  //   }
+  //   for (var i =0; i<texSize; i++) {
+  //     for (var j=0; j<texSize; j++) {
+  //       var c = (((i & 0x8) == 0) ^ ((j & 0x8)  == 0));
+  //       image1[i][j] = [c, c, c, 1];
+  //     }
+  //   }
+  //
+  //   // Convert floats to ubytes for texture
+  //   var checkImage = new Uint8Array(4*texSize*texSize);
+  //   for ( var i = 0; i < texSize; i++ ) {
+  //     for ( var j = 0; j < texSize; j++ ) {
+  //       for(var k =0; k<4; k++) {
+  //         checkImage[4*texSize*i+4*j+k] = 255*image1[i][j][k];
+  //       }
+  //     }
+  //   }
+  //
+  //   return checkImage;
+  // };
 
   var configureTexture = function(image) {
     texture = gl.createTexture();
@@ -428,7 +429,7 @@
       gl.useProgram(program);
 
       // Initialize textures
-      checkerboardImage = buildCheckerboard();
+      checkerboardImage = Pattern.checkerboard(texSize, numChecks);
       loadTextureFile('images/moon.gif');
     }
 
@@ -436,7 +437,7 @@
 
   window.App = App;
 
-}(window, window.Sphere, window.DomUtils));
+}(window, window.Sphere, window.DomUtils, window.Pattern));
 
 
 /**
