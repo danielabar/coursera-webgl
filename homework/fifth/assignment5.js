@@ -9,7 +9,7 @@
     program,
     textureMappingMethod = 'spherical',
     shape,
-    theta = [45.0, 45.0, 45.0],
+    theta = [-46.69, 49.7, 45],
     modelMatrix = mat4(),
     zoom = 4.5,
     eyeTheta = 11.0,
