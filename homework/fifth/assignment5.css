@@ -11,7 +11,11 @@ html {
 
 body {
   overflow: hidden;
-  font-family: Roboto, Arial, sans-serif;
+  font-family: Raleway, Arial, sans-serif;
+}
+
+*:focus {
+    outline: 0;
 }
 
 
@@ -38,7 +42,7 @@ canvas {
   position: fixed;
   top: 0;
   right: 0;
-  width: 350px;
+  width: 400px;
   height: 100%;
   padding: 15px;
   background: #191919;
@@ -47,16 +51,16 @@ canvas {
   overflow-y: scroll;
 }
 
-.multi-group {
-
+.multi-group .radio-form-group {
+  margin-bottom: 10px;
 }
 
 .multi-group .form-group {
-  margin-bottom: 15px;
+  margin-bottom: 5px;
 }
 
 .control-group {
-  margin-bottom: 15px;
+  margin-bottom: 10px;
   padding: 15px;
   border: 1px solid #000;
   border-radius: 3px;
@@ -78,4 +82,164 @@ canvas {
 button:hover,
 input:hover {
   cursor: pointer;
+}
+
+.form-group label{
+  display: inline-block;
+  width: 50px;
+}
+
+
+/* ---------------------------------- */
+/* Button */
+/* ---------------------------------- */
+
+button {
+  margin-right: 3px;
+  padding: 3px;
+  border-radius: 5px;
+  background: #D3D3D3;
+  outline: none;
+  border: solid 1px #D3D3D3;
+  transition: box-shadow 0.5s;
+  transition: background 0.5s;
+}
+
+button:hover {
+  background: #9A9A9A;
+  -webkit-box-shadow: 5px 5px 15px 0px rgba(25,25,25,1);
+     -moz-box-shadow: 5px 5px 15px 0px rgba(25,25,25,1);
+          box-shadow: 5px 5px 15px 0px rgba(25,25,25,1);
+}
+
+.radio-label {
+  display: inline-block;
+  margin-left: 1px;
+  margin-right: 8px;
+}
+
+/* ---------------------------------- */
+/* Slider */
+/* ---------------------------------- */
+
+/* http://brennaobrien.com/blog/2014/05/style-input-type-range-in-every-browser.html */
+input[type=range] {
+  /*removes default webkit styles*/
+  -webkit-appearance: none;
+
+  /*fix for FF unable to apply focus style bug */
+  border: 1px solid rgba(81, 78, 78, 1);
+
+  /*required for proper track sizing in FF*/
+  width: 180px;
+}
+input[type=range]::-webkit-slider-runnable-track {
+  width: 180px;
+  height: 5px;
+  background: #ddd;
+  border: none;
+  border-radius: 3px;
+}
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  border: none;
+  height: 16px;
+  width: 16px;
+  border-radius: 50%;
+  background: rgba(71, 82, 214, 1);
+  margin-top: -4px;
+}
+input[type=range]:focus {
+  outline: none;
+}
+input[type=range]:focus::-webkit-slider-runnable-track {
+  background: #ccc;
+}
+
+input[type=range]::-moz-range-track {
+  width: 180px;
+  height: 5px;
+  background: #ddd;
+  border: none;
+  border-radius: 3px;
+}
+input[type=range]::-moz-range-thumb {
+  border: none;
+  height: 16px;
+  width: 16px;
+  border-radius: 50%;
+  background: rgba(71, 82, 214, 1);
+}
+
+/*hide the outline behind the border*/
+input[type=range]:-moz-focusring{
+  outline: 1px solid rgba(81, 78, 78, 1);
+  outline-offset: -1px;
+}
+
+input[type=range]::-ms-track {
+  width: 180px;
+  height: 5px;
+
+  /*remove bg colour from the track, we'll use ms-fill-lower and ms-fill-upper instead */
+  background: transparent;
+
+  /*leave room for the larger thumb to overflow with a transparent border */
+  border-color: transparent;
+  border-width: 6px 0;
+
+  /*remove default tick marks*/
+  color: transparent;
+}
+input[type=range]::-ms-fill-lower {
+  background: #777;
+  border-radius: 10px;
+}
+input[type=range]::-ms-fill-upper {
+  background: #ddd;
+  border-radius: 10px;
+}
+input[type=range]::-ms-thumb {
+  border: none;
+  height: 16px;
+  width: 16px;
+  border-radius: 50%;
+  background: rgba(71, 82, 214, 1);
+}
+input[type=range]:focus::-ms-fill-lower {
+  background: #888;
+}
+input[type=range]:focus::-ms-fill-upper {
+  background: #ccc;
+}
+
+input[type="range"]:disabled {
+  background: rgb(219, 149, 221);
+  opacity: 0.2;
+}
+
+
+/* ---------------------------------- */
+/* Utilities */
+/* ---------------------------------- */
+
+.icon {
+  margin-right: 10px;
+}
+
+
+/* ---------------------------------- */
+/* Messaging */
+/* ---------------------------------- */
+
+.message {
+  position: absolute;
+  top: 10px;
+  right: 410px;
+  width: 260px;
+  height: 80px;
+  color: #CCCCCC;
+  font-weight: 600;
+  font-size: 20px;
+  line-height: 1.2;
 }
