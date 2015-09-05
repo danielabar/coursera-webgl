@@ -9,7 +9,7 @@
     program,
     textureMappingMethod = 'spherical',
     shape,
-    theta = [45.0, 45.0, 45.0],
+    theta = [-46.69, 49.7, 45],
     modelMatrix = mat4(),
     zoom = 4.5,
     eyeTheta = 11.0,
@@ -35,13 +35,21 @@
     cubeMapImages = {},
     cubeMap;
 
-  var lightPosition = vec4(1.0, 1.0, 1.0, 0.0 );
-  var lightAmbient = vec4(1.0, 1.0, 1.0, 1.0 );
+  var lightPosition = vec4(2.0, 3.0, 1.0, 0.0 );
+  var lightAmbient = vec4(0.5, 0.5, 0.5, 1.0 );
   var lightDiffuse = vec4( 1.0, 1.0, 1.0, 1.0 );
   var lightSpecular = vec4( 1.0, 1.0, 1.0, 1.0 );
 
+  /**
+   * /**
+ float[] position = { 200.0f, 300.0f, 100.0f, 0.0f };
+    float[] ambient = { 0.2f, 0.2f, 0.2f, 1.0f };
+ float[] diffuse = { 1.0f, 1.0f, 1.0f, 1.0f };
+ float[] specular ={ 1.0f, 1.0f, 1.0f, 1.0f };
+    */
+
   var materialAmbient = vec4( 1.0, 1.0, 1.0, 1.0 );
-  var materialDiffuse = vec4( 1.0, 0.8, 0.0, 1.0 );
+  var materialDiffuse = vec4( 1.0, 1.0, 1.0, 1.0 );
   var materialSpecular = vec4( 1.0, 1.0, 1.0, 1.0 );
   var materialShininess = 20.0;
 
@@ -148,6 +156,14 @@
       gl.uniform1f( gl.getUniformLocation(program, "shininess"),materialShininess );
 
     } else {
+      var nBuffer2 = gl.createBuffer();
+      gl.bindBuffer( gl.ARRAY_BUFFER, nBuffer2);
+      gl.bufferData( gl.ARRAY_BUFFER, flatten(shape.normals), gl.STATIC_DRAW );
+
+      var vNormal2 = gl.getAttribLocation( program, "vNormal" );
+      gl.vertexAttribPointer( vNormal2, 3, gl.FLOAT, false, 0, 0 );
+      gl.enableVertexAttribArray( vNormal2);
+
       // Load index data
       var iBuffer = gl.createBuffer();
       gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, iBuffer);
@@ -174,7 +190,19 @@
       gl.enableVertexAttribArray(vTexCoord);
 
       // Send color
-      gl.uniform4fv(gl.getUniformLocation(program, 'fColor'), flatten(shapeColor));
+      // gl.uniform4fv(gl.getUniformLocation(program, 'fColor'), flatten(shapeColor));
+      // Send lighting
+      // Send normal matrix
+      var normalMatrixLoc2 = gl.getUniformLocation( program, "normalMatrix" );
+      gl.uniformMatrix3fv(normalMatrixLoc2, false, flatten(normalMatrix) );
+
+      // Send lighting
+      gl.uniform4fv( gl.getUniformLocation(program, "ambientProduct"),flatten(ambientProduct) );
+      gl.uniform4fv( gl.getUniformLocation(program, "diffuseProduct"),flatten(diffuseProduct) );
+      gl.uniform4fv( gl.getUniformLocation(program, "specularProduct"),flatten(specularProduct) );
+      gl.uniform4fv( gl.getUniformLocation(program, "lightPosition"),flatten(lightPosition) );
+      gl.uniform1f( gl.getUniformLocation(program, "shininess"),materialShininess );
+
     }
 
     gl.drawElements(gl.TRIANGLES, shape.indices.length, gl.UNSIGNED_SHORT, 0);
