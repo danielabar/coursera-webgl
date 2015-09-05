@@ -288,6 +288,7 @@
     if (cubeMapImages.posx && cubeMapImages.negx &&
         cubeMapImages.posy && cubeMapImages.negy &&
         cubeMapImages.posz && cubeMapImages.negz) {
+      hideLoadingIndicator();
       configureCubeMap();
     }
   };
@@ -299,6 +300,16 @@
       cb();
     };
     fileImage.src = url;
+  };
+
+  var showLoadingIndicator = function() {
+    var el = document.getElementById('loadingIndicator');
+    el.classList.add('active');
+  };
+
+  var hideLoadingIndicator = function() {
+    var el = document.getElementById('loadingIndicator');
+    el.classList.remove('active');
   };
 
   var loadCubeMapImages = function() {
@@ -328,6 +339,7 @@
     gl.useProgram(program);
 
     textureType = 'reflection';
+    showLoadingIndicator();
     loadCubeMapImages();
   };
 
