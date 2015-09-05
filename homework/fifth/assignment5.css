@@ -42,7 +42,7 @@ canvas {
   position: fixed;
   top: 0;
   right: 0;
-  width: 390px;
+  width: 395px;
   height: 100%;
   padding: 15px;
   background: #191919;
@@ -95,6 +95,7 @@ input:hover {
 /* ---------------------------------- */
 
 button {
+  margin-right: 3px;
   padding: 3px;
   border-radius: 5px;
   transition: box-shadow 0.5s;
@@ -104,6 +105,12 @@ button:hover {
   -webkit-box-shadow: 5px 5px 15px 0px rgba(25,25,25,1);
      -moz-box-shadow: 5px 5px 15px 0px rgba(25,25,25,1);
           box-shadow: 5px 5px 15px 0px rgba(25,25,25,1);
+}
+
+.radio-label {
+  display: inline-block;
+  margin-left: 1px;
+  margin-right: 8px;
 }
 
 /* ---------------------------------- */
@@ -223,7 +230,7 @@ input[type="range"]:disabled {
 .message {
   position: absolute;
   top: 10px;
-  right: 390px;
+  right: 400px;
   width: 260px;
   height: 80px;
   color: #CCCCCC;
