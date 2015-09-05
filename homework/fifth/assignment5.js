@@ -35,13 +35,21 @@
     cubeMapImages = {},
     cubeMap;
 
-  var lightPosition = vec4(1.0, 1.0, 1.0, 0.0 );
-  var lightAmbient = vec4(1.0, 1.0, 1.0, 1.0 );
+  var lightPosition = vec4(2.0, 3.0, 1.0, 0.0 );
+  var lightAmbient = vec4(0.5, 0.5, 0.5, 1.0 );
   var lightDiffuse = vec4( 1.0, 1.0, 1.0, 1.0 );
   var lightSpecular = vec4( 1.0, 1.0, 1.0, 1.0 );
 
+  /**
+   * /**
+ float[] position = { 200.0f, 300.0f, 100.0f, 0.0f };
+    float[] ambient = { 0.2f, 0.2f, 0.2f, 1.0f };
+ float[] diffuse = { 1.0f, 1.0f, 1.0f, 1.0f };
+ float[] specular ={ 1.0f, 1.0f, 1.0f, 1.0f };
+    */
+
   var materialAmbient = vec4( 1.0, 1.0, 1.0, 1.0 );
-  var materialDiffuse = vec4( 1.0, 0.8, 0.0, 1.0 );
+  var materialDiffuse = vec4( 1.0, 1.0, 1.0, 1.0 );
   var materialSpecular = vec4( 1.0, 1.0, 1.0, 1.0 );
   var materialShininess = 20.0;
 
