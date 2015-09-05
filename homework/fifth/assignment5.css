@@ -243,3 +243,21 @@ input[type="range"]:disabled {
   font-size: 20px;
   line-height: 1.2;
 }
+
+
+/* ---------------------------------- */
+/* Loading indicator */
+/* ---------------------------------- */
+
+.loading {
+  position: absolute;
+  top: 100px;
+  left: 200px;
+  color: #CCCCCC;
+  opacity: 0;
+  transition: opacity 0.5s;
+}
+
+.loading.active {
+  opacity: 1;
+}
