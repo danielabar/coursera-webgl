@@ -316,22 +316,26 @@
   };
 
   var handleFileTextureSelection = function(evt) {
-    program = initShaders(gl, 'vertex-shader', 'fragment-shader');
-    gl.useProgram(program);
+    if (evt.target.dataset && evt.target.dataset.textureFile) {
+      program = initShaders(gl, 'vertex-shader', 'fragment-shader');
+      gl.useProgram(program);
 
-    var textureFileUrl = 'images/' + evt.target.dataset.textureFile;
-    textureType = 'file';
-    loadTextureFile(textureFileUrl);
+      var textureFileUrl = 'images/' + evt.target.dataset.textureFile;
+      textureType = 'file';
+      loadTextureFile(textureFileUrl);
+    }
   };
 
   var handleReflectionSelection = function(evt) {
-    program = initShaders(gl, 'vertex-shader-2', 'fragment-shader-2');
-    gl.useProgram(program);
+    if (evt.target.dataset && evt.target.dataset.reflectionMap) {
+      program = initShaders(gl, 'vertex-shader-2', 'fragment-shader-2');
+      gl.useProgram(program);
 
-    var reflectionFilesPath = 'images/'.concat(evt.target.dataset.reflectionMap, '/');
-    textureType = 'reflection';
-    showLoadingIndicator();
-    loadCubeMapImages(reflectionFilesPath);
+      var reflectionFilesPath = 'images/'.concat(evt.target.dataset.reflectionMap, '/');
+      textureType = 'reflection';
+      showLoadingIndicator();
+      loadCubeMapImages(reflectionFilesPath);
+    }
   };
 
   var handleCameraControl = function() {
