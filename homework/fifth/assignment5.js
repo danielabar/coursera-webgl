@@ -41,14 +41,6 @@
   var lightDiffuse = vec4( 1.0, 1.0, 1.0, 1.0 );
   var lightSpecular = vec4( 1.0, 1.0, 1.0, 1.0 );
 
-  /**
-   * /**
- float[] position = { 200.0f, 300.0f, 100.0f, 0.0f };
-    float[] ambient = { 0.2f, 0.2f, 0.2f, 1.0f };
- float[] diffuse = { 1.0f, 1.0f, 1.0f, 1.0f };
- float[] specular ={ 1.0f, 1.0f, 1.0f, 1.0f };
-    */
-
   var materialAmbient = vec4( 1.0, 1.0, 1.0, 1.0 );
   var materialDiffuse = vec4( 1.0, 1.0, 1.0, 1.0 );
   var materialSpecular = vec4( 1.0, 1.0, 1.0, 1.0 );
@@ -57,36 +49,6 @@
   var ambientProduct = mult(lightAmbient, materialAmbient);
   var diffuseProduct = mult(lightDiffuse, materialDiffuse);
   var specularProduct = mult(lightSpecular, materialSpecular);
-
-  // var buildCheckerboard = function() {
-  //   var image1 = [];
-  //   for (var i =0; i<texSize; i++) {
-  //     image1[i] = [];
-  //   }
-  //   for (var i =0; i<texSize; i++) {
-  //     for ( var j = 0; j < texSize; j++) {
-  //       image1[i][j] = new Float32Array(4);
-  //     }
-  //   }
-  //   for (var i =0; i<texSize; i++) {
-  //     for (var j=0; j<texSize; j++) {
-  //       var c = (((i & 0x8) == 0) ^ ((j & 0x8)  == 0));
-  //       image1[i][j] = [c, c, c, 1];
-  //     }
-  //   }
-  //
-  //   // Convert floats to ubytes for texture
-  //   var checkImage = new Uint8Array(4*texSize*texSize);
-  //   for ( var i = 0; i < texSize; i++ ) {
-  //     for ( var j = 0; j < texSize; j++ ) {
-  //       for(var k =0; k<4; k++) {
-  //         checkImage[4*texSize*i+4*j+k] = 255*image1[i][j][k];
-  //       }
-  //     }
-  //   }
-  //
-  //   return checkImage;
-  // };
 
   var configureTexture = function(image) {
     texture = gl.createTexture();
@@ -190,9 +152,6 @@
       gl.vertexAttribPointer(vTexCoord, 2, gl.FLOAT, false, 0, 0);
       gl.enableVertexAttribArray(vTexCoord);
 
-      // Send color
-      // gl.uniform4fv(gl.getUniformLocation(program, 'fColor'), flatten(shapeColor));
-      // Send lighting
       // Send normal matrix
       var normalMatrixLoc2 = gl.getUniformLocation( program, "normalMatrix" );
       gl.uniformMatrix3fv(normalMatrixLoc2, false, flatten(normalMatrix) );
@@ -203,7 +162,6 @@
       gl.uniform4fv( gl.getUniformLocation(program, "specularProduct"),flatten(specularProduct) );
       gl.uniform4fv( gl.getUniformLocation(program, "lightPosition"),flatten(lightPosition) );
       gl.uniform1f( gl.getUniformLocation(program, "shininess"),materialShininess );
-
     }
 
     gl.drawElements(gl.TRIANGLES, shape.indices.length, gl.UNSIGNED_SHORT, 0);
