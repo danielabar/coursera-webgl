@@ -235,7 +235,7 @@ input[type="range"]:disabled {
 
 .message {
   position: absolute;
-  top: 10px;
+  top: 15px;
   right: 410px;
   width: 260px;
   height: 80px;
@@ -261,4 +261,81 @@ input[type="range"]:disabled {
 
 .loading.active {
   opacity: 1;
+}
+
+
+/* ---------------------------------- */
+/* Nav */
+/* ---------------------------------- */
+
+nav {
+  position: absolute;
+  top: 0;
+  left: -240px;
+  width: 240px;
+  height: 100%;
+  background: #CECCCC;
+  cursor: default;
+  transition: left 0.5s;
+  z-index: 2;
+}
+
+nav.active {
+  left: 0;
+}
+
+nav li {
+  width: 80%;
+}
+
+nav a {
+  display: block;
+  margin: 10px;
+  padding: 15px;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: #4D4946;
+  transition: background 0.5s;
+}
+
+nav a:hover {
+  background: #9D6381;
+  color: #CECCCC;
+  border-radius: 4px;
+}
+
+nav .close {
+  float: right;
+  margin-top: 5px;
+  margin-right: 5px;
+  color: #4D4946;
+}
+
+.nav-icon:hover {
+  cursor: pointer;
+  color: #363331;
+}
+
+
+/* ---------------------------------- */
+/* Nav collapse */
+/* ---------------------------------- */
+
+.nav-collapse {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  color: #CCCCCC;
+  opacity: 1;
+  transition: opacity 0.5s;
+  z-index: 1;
+}
+
+.nav-collapse.hide {
+  opacity: 0;
+}
+
+.nav-collapse:hover {
+  cursor: pointer;
+  color: #fff;
 }

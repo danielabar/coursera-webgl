@@ -357,6 +357,22 @@
     modelViewMatrix = buildModelViewMatrix();
   };
 
+  var handleNavToggle = function() {
+    var nav = document.getElementById('nav'),
+      navToggle = document.getElementById('navToggle');
+    nav.classList.add('active');
+    navToggle.classList.add('hide');
+  };
+
+  var handleNavClose = function(evt) {
+    if (evt.target.id === 'navClose' || evt.target.id === 'navCloseIcon') {
+      var nav = document.getElementById('nav'),
+        navToggle = document.getElementById('navToggle');
+      nav.classList.remove('active');
+      navToggle.classList.remove('hide');
+    }
+  };
+
   var App = {
 
     init: function() {
@@ -376,6 +392,8 @@
       document.getElementById('reflectionSelection').addEventListener('click', handleReflectionSelection);
       document.getElementById('cameraControl').addEventListener('change', handleCameraControl);
       document.getElementById('eyeControl').addEventListener('change', handleEyeControl);
+      document.getElementById('navToggle').addEventListener('click', handleNavToggle);
+      document.getElementById('nav').addEventListener('click', handleNavClose);
 
       // Configure WebGL
       gl.viewport( 0, 0, canvas.width, canvas.height );
