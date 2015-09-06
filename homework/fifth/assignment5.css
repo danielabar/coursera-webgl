@@ -99,9 +99,9 @@ button {
   margin-right: 3px;
   padding: 3px;
   border-radius: 5px;
-  background: #D3D3D3;
+  background: #FBFBFB;
   outline: none;
-  border: solid 1px #D3D3D3;
+  border: solid 1px transparent;
   transition: box-shadow 0.5s;
   transition: background 0.5s;
 }
