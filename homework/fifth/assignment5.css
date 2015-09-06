@@ -235,7 +235,7 @@ input[type="range"]:disabled {
 
 .message {
   position: absolute;
-  top: 10px;
+  top: 15px;
   right: 410px;
   width: 260px;
   height: 80px;
@@ -322,6 +322,9 @@ nav .close {
 /* ---------------------------------- */
 
 .nav-collapse {
+  position: absolute;
+  top: 10px;
+  left: 10px;
   color: #CCCCCC;
   opacity: 1;
   transition: opacity 0.5s;
