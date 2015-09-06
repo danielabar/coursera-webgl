@@ -30,7 +30,7 @@
     lastMouseY = null,
     texSize = 64,
     numChecks = 8,
-    checkerboardImage, fileImage,
+    patternImage, fileImage,
     textureType = 'file',
     normalMatrix = mat4(),
     cubeMapImages = {},
@@ -271,11 +271,14 @@
   };
 
   var handlePatternTextureSelection = function(evt) {
-    program = initShaders(gl, 'vertex-shader', 'fragment-shader');
-    gl.useProgram(program);
+    if (evt.target.dataset && evt.target.dataset.texturePattern) {
+      program = initShaders(gl, 'vertex-shader', 'fragment-shader');
+      gl.useProgram(program);
 
-    textureType = 'pattern';
-    configureTexture(checkerboardImage);
+      patternImage = Pattern[evt.target.dataset.texturePattern](texSize, numChecks);
+      textureType = 'pattern';
+      configureTexture(patternImage);
+    }
   };
 
   var loadTextureFile = function(textureFileUrl) {
@@ -428,8 +431,7 @@
       program = initShaders(gl, 'vertex-shader', 'fragment-shader');
       gl.useProgram(program);
 
-      // Initialize textures
-      checkerboardImage = Pattern.checkerboard(texSize, numChecks);
+      // Initialize default file texture
       loadTextureFile('images/moon.gif');
     }
 
