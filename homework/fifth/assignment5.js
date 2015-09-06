@@ -302,13 +302,13 @@
     el.classList.remove('active');
   };
 
-  var loadCubeMapImages = function() {
-    loadCubeMapImage('negx', 'images/lycksele/negx.jpg', cubeMapLoaded);
-    loadCubeMapImage('negy', 'images/lycksele/negy.jpg', cubeMapLoaded);
-    loadCubeMapImage('negz', 'images/lycksele/negz.jpg', cubeMapLoaded);
-    loadCubeMapImage('posx', 'images/lycksele/posx.jpg', cubeMapLoaded);
-    loadCubeMapImage('posy', 'images/lycksele/posy.jpg', cubeMapLoaded);
-    loadCubeMapImage('posz', 'images/lycksele/posz.jpg', cubeMapLoaded);
+  var loadCubeMapImages = function(path) {
+    loadCubeMapImage('negx', path.concat('negx.jpg'), cubeMapLoaded);
+    loadCubeMapImage('negy', path.concat('negy.jpg'), cubeMapLoaded);
+    loadCubeMapImage('negz', path.concat('negz.jpg'), cubeMapLoaded);
+    loadCubeMapImage('posx', path.concat('posx.jpg'), cubeMapLoaded);
+    loadCubeMapImage('posy', path.concat('posy.jpg'), cubeMapLoaded);
+    loadCubeMapImage('posz', path.concat('posz.jpg'), cubeMapLoaded);
   };
 
   var handleMappingMethodSelection = function() {
@@ -324,13 +324,14 @@
     loadTextureFile(textureFileUrl);
   };
 
-  var handleReflectionSelection = function() {
+  var handleReflectionSelection = function(evt) {
     program = initShaders(gl, 'vertex-shader-2', 'fragment-shader-2');
     gl.useProgram(program);
 
+    var reflectionFilesPath = 'images/'.concat(evt.target.dataset.reflectionMap, '/');
     textureType = 'reflection';
     showLoadingIndicator();
-    loadCubeMapImages();
+    loadCubeMapImages(reflectionFilesPath);
   };
 
   var handleCameraControl = function() {
