@@ -36,7 +36,7 @@
       return imageData;
     },
 
-    confetti: function(texSize, numChecks) {
+    confetti: function(texSize) {
       var c,
         imageData = new Uint8Array(4*texSize*texSize),
         patchx,
@@ -44,15 +44,6 @@
 
       for ( var i = 0; i < texSize; i++ ) {
         for ( var j = 0; j <texSize; j++ ) {
-          patchx = Math.floor(i/(texSize/numChecks));
-          patchy = Math.floor(j/(texSize/numChecks));
-
-          // if (patchx%2 ^ patchy%2) {
-          //   c = myVar;
-          // } else {
-          //   c = myVar2;
-          // }
-
           imageData[4*i*texSize+4*j] = getRandomInt(0, 255);
           imageData[4*i*texSize+4*j+1] = getRandomInt(0, 255);
           imageData[4*i*texSize+4*j+2] = getRandomInt(0, 255);
@@ -90,19 +81,6 @@
       }
 
       return imageData;
-    },
-
-    sinusoid: function(texSize) {
-      var imageData = new Uint8Array(4*texSize*texSize);
-
-      for ( var i = 0; i < texSize; i++ ) {
-        for ( var j = 0; j <texSize; j++ ) {
-          imageData[4*i*texSize+4*j] = 127+127*Math.sin(0.1*i*j);
-          imageData[4*i*texSize+4*j+1] = 127+127*Math.sin(0.1*i*j);
-          imageData[4*i*texSize+4*j+2] = 127+127*Math.sin(0.1*i*j);
-          imageData[4*i*texSize+4*j+3] = 255;
-        }
-      }
     }
 
   };
