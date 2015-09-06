@@ -338,14 +338,8 @@
     }
   };
 
-  var handleCameraControl = function() {
-    near = document.getElementById('cameraNear').valueAsNumber;
-    far = document.getElementById('cameraFar').valueAsNumber;
+  var handleViewControl = function() {
     fovy = document.getElementById('cameraFovy').valueAsNumber;
-    // no need to rebuild projection matrix here, handled in render
-  };
-
-  var handleEyeControl = function() {
     zoom = document.getElementById('eyeZoom').valueAsNumber;
     eyeTheta = document.getElementById('eyeTheta').valueAsNumber;
     eyePhi = document.getElementById('eyePhi').valueAsNumber;
@@ -355,6 +349,7 @@
 
     viewMatrix = buildViewMatrix();
     modelViewMatrix = buildModelViewMatrix();
+    // no need to rebuild projection matrix here, handled in render
   };
 
   var handleNavToggle = function() {
@@ -390,8 +385,7 @@
       document.getElementById('patternTextureSelection').addEventListener('click', handlePatternTextureSelection);
       document.getElementById('fileTextureSelection').addEventListener('click', handleFileTextureSelection);
       document.getElementById('reflectionSelection').addEventListener('click', handleReflectionSelection);
-      document.getElementById('cameraControl').addEventListener('change', handleCameraControl);
-      document.getElementById('eyeControl').addEventListener('change', handleEyeControl);
+      document.getElementById('viewControl').addEventListener('change', handleViewControl);
       document.getElementById('navToggle').addEventListener('click', handleNavToggle);
       document.getElementById('nav').addEventListener('click', handleNavClose);
 
