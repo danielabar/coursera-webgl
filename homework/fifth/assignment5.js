@@ -302,13 +302,13 @@
     el.classList.remove('active');
   };
 
-  var loadCubeMapImages = function() {
-    loadCubeMapImage('negx', 'images/lycksele/negx.jpg', cubeMapLoaded);
-    loadCubeMapImage('negy', 'images/lycksele/negy.jpg', cubeMapLoaded);
-    loadCubeMapImage('negz', 'images/lycksele/negz.jpg', cubeMapLoaded);
-    loadCubeMapImage('posx', 'images/lycksele/posx.jpg', cubeMapLoaded);
-    loadCubeMapImage('posy', 'images/lycksele/posy.jpg', cubeMapLoaded);
-    loadCubeMapImage('posz', 'images/lycksele/posz.jpg', cubeMapLoaded);
+  var loadCubeMapImages = function(path) {
+    loadCubeMapImage('negx', path.concat('negx.jpg'), cubeMapLoaded);
+    loadCubeMapImage('negy', path.concat('posy.jpg'), cubeMapLoaded);
+    loadCubeMapImage('negz', path.concat('negz.jpg'), cubeMapLoaded);
+    loadCubeMapImage('posx', path.concat('posx.jpg'), cubeMapLoaded);
+    loadCubeMapImage('posy', path.concat('posy.jpg'), cubeMapLoaded);
+    loadCubeMapImage('posz', path.concat('posz.jpg'), cubeMapLoaded);
   };
 
   var handleMappingMethodSelection = function() {
@@ -316,21 +316,26 @@
   };
 
   var handleFileTextureSelection = function(evt) {
-    program = initShaders(gl, 'vertex-shader', 'fragment-shader');
-    gl.useProgram(program);
+    if (evt.target.dataset && evt.target.dataset.textureFile) {
+      program = initShaders(gl, 'vertex-shader', 'fragment-shader');
+      gl.useProgram(program);
 
-    var textureFileUrl = 'images/' + evt.target.dataset.textureFile;
-    textureType = 'file';
-    loadTextureFile(textureFileUrl);
+      var textureFileUrl = 'images/' + evt.target.dataset.textureFile;
+      textureType = 'file';
+      loadTextureFile(textureFileUrl);
+    }
   };
 
-  var handleReflectionSelection = function() {
-    program = initShaders(gl, 'vertex-shader-2', 'fragment-shader-2');
-    gl.useProgram(program);
+  var handleReflectionSelection = function(evt) {
+    if (evt.target.dataset && evt.target.dataset.reflectionMap) {
+      program = initShaders(gl, 'vertex-shader-2', 'fragment-shader-2');
+      gl.useProgram(program);
 
-    textureType = 'reflection';
-    showLoadingIndicator();
-    loadCubeMapImages();
+      var reflectionFilesPath = 'images/'.concat(evt.target.dataset.reflectionMap, '/');
+      textureType = 'reflection';
+      showLoadingIndicator();
+      loadCubeMapImages(reflectionFilesPath);
+    }
   };
 
   var handleCameraControl = function() {
