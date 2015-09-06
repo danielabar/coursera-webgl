@@ -262,3 +262,58 @@ input[type="range"]:disabled {
 .loading.active {
   opacity: 1;
 }
+
+
+/* ---------------------------------- */
+/* Nav */
+/* ---------------------------------- */
+
+nav {
+  position: absolute;
+  top: 0;
+  left: -240px;
+  width: 240px;
+  height: 100%;
+  background: #CECCCC;
+  transition: left 0.5s;
+}
+
+nav.active {
+  left: 0;
+}
+
+nav a {
+  display: block;
+  margin: 10px;
+  padding: 15px;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: #4D4946;
+  transition: background 0.5s;
+}
+
+nav a:hover {
+  background: #9D6381;
+  color: #CECCCC;
+  border-radius: 4px;
+}
+
+
+/* ---------------------------------- */
+/* Nav collapse */
+/* ---------------------------------- */
+
+.nav-collapse {
+  color: #CCCCCC;
+  opacity: 1;
+  transition: opacity 0.5s;
+}
+
+.nav-collapse.hide {
+  opacity: 0;
+}
+
+.nav-collapse:hover {
+  cursor: pointer;
+  color: #fff;
+}
