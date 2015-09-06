@@ -166,9 +166,10 @@
   <script type="text/javascript" src="../../Common/flatten.js"></script>
   <script type="text/javascript" src="../../Common/MV.js"></script>
 
-  <!-- App -->
+  <!-- App and dependencies -->
   <script type="text/javascript" src="dom-utils.js"></script>
   <script type="text/javascript" src="sphere.js"></script>
+  <script type="text/javascript" src="pattern.js"></script>
   <script type="text/javascript" src="assignment5.js"></script>
 </head>
 
@@ -206,16 +207,16 @@
         <div class="group-header">
           <h4>File</h4>
         </div>
-        <button title="Moon texture" data-texture-file="moon.gif">
+        <button title="Moon" data-texture-file="moon.gif">
           <img src="images/moon-thumb.gif" alt="moon" data-texture-file="moon.gif">
         </button>
-        <button title="Flower texture" data-texture-file="flower.jpg">
+        <button title="Flower" data-texture-file="flower.jpg">
           <img src="images/flower-thumb.jpg" alt="flower" data-texture-file="flower.jpg">
         </button>
-        <button title="Granite texture" data-texture-file="granite.jpg">
+        <button title="Granite" data-texture-file="granite.jpg">
           <img src="images/granite-thumb.jpg" alt="granite" data-texture-file="granite.jpg">
         </button>
-        <button title="Stones texture" data-texture-file="stones.jpg">
+        <button title="Stones" data-texture-file="stones.jpg">
           <img src="images/stones-thumb.jpg" alt="stones" data-texture-file="stones.jpg">
         </button>
       </div>
@@ -225,8 +226,14 @@
         <div class="group-header">
           <h4>Pattern</h4>
         </div>
-        <button title="Cherckerboard texture" id="patternTexture">
-          <img src="images/checkerboard.gif" alt="checkerboard">
+        <button title="Cherckerboard" data-texture-pattern="checkerboard">
+          <img src="images/checkerboard-thumb.gif" data-texture-pattern="checkerboard" alt="checkerboard">
+        </button>
+        <button title="Confetti" data-texture-pattern="confetti">
+          <img src="images/confetti-thumb.png" data-texture-pattern="confetti" alt="confetti">
+        </button>
+        <button title="Stripe" data-texture-pattern="stripe">
+          <img src="images/stripe-thumb.png" data-texture-pattern="stripe" alt="stripe">
         </button>
       </div>
 
