@@ -277,6 +277,7 @@ nav {
   background: #CECCCC;
   cursor: default;
   transition: left 0.5s;
+  z-index: 2;
 }
 
 nav.active {
@@ -324,6 +325,7 @@ nav .close {
   color: #CCCCCC;
   opacity: 1;
   transition: opacity 0.5s;
+  z-index: 1;
 }
 
 .nav-collapse.hide {

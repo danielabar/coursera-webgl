@@ -364,6 +364,16 @@
     navToggle.classList.add('hide');
   };
 
+  var handleNavClose = function(evt) {
+    console.log('*** handleNavClose: ' + evt.target.id);
+    if (evt.target.id === 'navClose' || evt.target.id === 'navCloseIcon') {
+      var nav = document.getElementById('nav'),
+        navToggle = document.getElementById('navToggle');
+      nav.classList.remove('active');
+      navToggle.classList.remove('hide');
+    }
+  };
+
   var App = {
 
     init: function() {
@@ -384,6 +394,7 @@
       document.getElementById('cameraControl').addEventListener('change', handleCameraControl);
       document.getElementById('eyeControl').addEventListener('change', handleEyeControl);
       document.getElementById('navToggle').addEventListener('click', handleNavToggle);
+      document.getElementById('nav').addEventListener('click', handleNavClose);
 
       // Configure WebGL
       gl.viewport( 0, 0, canvas.width, canvas.height );
