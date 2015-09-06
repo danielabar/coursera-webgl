@@ -166,10 +166,15 @@
 
     gl.drawElements(gl.TRIANGLES, shape.indices.length, gl.UNSIGNED_SHORT, 0);
 
-    setTimeout(
-      function () {requestAnimFrame( render );},
-      1000 / 60
-    );
+    // setTimeout(
+    //   function () {requestAnimFrame( render );},
+    //   1000 / 60
+    // );
+  };
+
+  var tick = function () {
+    requestAnimFrame(tick);
+    render();
   };
 
   var buildViewMatrix = function() {
@@ -408,6 +413,9 @@
 
       // Initialize default file texture
       loadTextureFile('images/moon.gif');
+
+      // Kick off rendering
+      tick();
     }
 
   };
