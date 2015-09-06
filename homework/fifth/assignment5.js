@@ -365,7 +365,6 @@
   };
 
   var handleNavClose = function(evt) {
-    console.log('*** handleNavClose: ' + evt.target.id);
     if (evt.target.id === 'navClose' || evt.target.id === 'navCloseIcon') {
       var nav = document.getElementById('nav'),
         navToggle = document.getElementById('navToggle');
