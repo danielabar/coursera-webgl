@@ -260,7 +260,7 @@
     cubeMap = gl.createTexture();
 
     gl.bindTexture(gl.TEXTURE_CUBE_MAP, cubeMap);
-    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
+    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
 
     gl.texImage2D(gl.TEXTURE_CUBE_MAP_POSITIVE_X, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, cubeMapImages.posx );
     gl.texImage2D(gl.TEXTURE_CUBE_MAP_NEGATIVE_X, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, cubeMapImages.negx );
@@ -309,7 +309,7 @@
 
   var loadCubeMapImages = function(path) {
     loadCubeMapImage('negx', path.concat('negx.jpg'), cubeMapLoaded);
-    loadCubeMapImage('negy', path.concat('posy.jpg'), cubeMapLoaded);
+    loadCubeMapImage('negy', path.concat('negy.jpg'), cubeMapLoaded);
     loadCubeMapImage('negz', path.concat('negz.jpg'), cubeMapLoaded);
     loadCubeMapImage('posx', path.concat('posx.jpg'), cubeMapLoaded);
     loadCubeMapImage('posy', path.concat('posy.jpg'), cubeMapLoaded);
