@@ -28,9 +28,9 @@
           var cosTheta = Math.cos(theta);
           var cosPhi = Math.cos(phi);
 
-          var x = cosPhi * sinTheta;
+          var x = Math.sin(phi) * Math.sin(theta);
           var y = cosTheta;
-          var z = sinPhi * sinTheta;
+          var z = Math.cos(phi) * Math.sin(theta)
 
           normals.push(x);
           normals.push(y);

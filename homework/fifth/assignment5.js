@@ -398,11 +398,7 @@
       gl.viewport( 0, 0, canvas.width, canvas.height );
       gl.clearColor(0.0, 0.0, 0.0, 1.0);
       gl.enable(gl.DEPTH_TEST);
-
-      // experiment
       gl.enable(gl.CULL_FACE);
-      gl.frontFace(gl.CW);
-
       gl.enable(gl.POLYGON_OFFSET_FILL);
       gl.polygonOffset(1.0, 2.0);
 
