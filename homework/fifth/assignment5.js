@@ -222,10 +222,10 @@
     var newY = evt.clientY;
 
     var deltaX = newX - lastMouseX;
-    theta[1] -= deltaX / 10;
+    theta[1] += deltaX / 10;
 
     var deltaY = newY - lastMouseY;
-    theta[0] -= deltaY / 10;
+    theta[0] += deltaY / 10;
 
     modelViewMatrix = buildModelViewMatrix();
 
@@ -398,7 +398,11 @@
       gl.viewport( 0, 0, canvas.width, canvas.height );
       gl.clearColor(0.0, 0.0, 0.0, 1.0);
       gl.enable(gl.DEPTH_TEST);
+
+      // experiment
       gl.enable(gl.CULL_FACE);
+      gl.frontFace(gl.CW);
+
       gl.enable(gl.POLYGON_OFFSET_FILL);
       gl.polygonOffset(1.0, 2.0);
 
