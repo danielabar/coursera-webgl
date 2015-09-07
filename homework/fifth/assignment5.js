@@ -36,8 +36,8 @@
     cubeMapImages = {},
     cubeMap;
 
-  var lightPosition = vec4(2.0, 3.0, 1.0, 0.0 );
-  var lightAmbient = vec4(0.5, 0.5, 0.5, 1.0 );
+  var lightPosition = vec4(200.0, 300.0, 100.0, 0.0 );
+  var lightAmbient = vec4(0.2, 0.2, 0.2, 1.0 );
   var lightDiffuse = vec4( 1.0, 1.0, 1.0, 1.0 );
   var lightSpecular = vec4( 1.0, 1.0, 1.0, 1.0 );
 
