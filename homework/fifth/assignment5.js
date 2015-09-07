@@ -309,7 +309,7 @@
 
   var loadCubeMapImages = function(path) {
     loadCubeMapImage('negx', path.concat('negx.jpg'), cubeMapLoaded);
-    loadCubeMapImage('negy', path.concat('posy.jpg'), cubeMapLoaded);
+    loadCubeMapImage('negy', path.concat('negy.jpg'), cubeMapLoaded);
     loadCubeMapImage('negz', path.concat('negz.jpg'), cubeMapLoaded);
     loadCubeMapImage('posx', path.concat('posx.jpg'), cubeMapLoaded);
     loadCubeMapImage('posy', path.concat('posy.jpg'), cubeMapLoaded);
