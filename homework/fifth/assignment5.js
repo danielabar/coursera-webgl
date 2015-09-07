@@ -222,10 +222,10 @@
     var newY = evt.clientY;
 
     var deltaX = newX - lastMouseX;
-    theta[1] -= deltaX / 10;
+    theta[1] += deltaX / 10;
 
     var deltaY = newY - lastMouseY;
-    theta[0] -= deltaY / 10;
+    theta[0] += deltaY / 10;
 
     modelViewMatrix = buildModelViewMatrix();
 
